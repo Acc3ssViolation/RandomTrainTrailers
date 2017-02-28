@@ -168,7 +168,7 @@ namespace RandomTrainTrailers
                 {
                     get
                     {
-                        return Min <= Max && Max > 0 && Min > -1;
+                        return Min <= Max && Min >= 0;
                     }
                 }
             }
