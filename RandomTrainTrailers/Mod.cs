@@ -7,14 +7,14 @@ namespace RandomTrainTrailers
     public class Mod : IUserMod
     {
         public const string name = "Random Train Trailers";
-        public const string versionString = "1.1";
+        public const string versionString = "1.2";
         public const string settingsFile = "RandomTrainTrailers";
 
         public string Description
         {
             get
             {
-                return "Version " + versionString + ". Gives the option to have random trailers spawn for trains and other vehicles.";
+                return "Gives the option to have random trailers spawn for trains and other vehicles.";
             }
         }
 
@@ -22,7 +22,7 @@ namespace RandomTrainTrailers
         {
             get
             {
-                return name;
+                return name + " " + versionString;
             }
         }
 

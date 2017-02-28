@@ -152,6 +152,27 @@ namespace RandomTrainTrailers
 
         public class Vehicle
         {
+            public class TrailerCount
+            {
+                [XmlAttribute("min")]
+                public int Min { get; set; }
+                [XmlAttribute("max")]
+                public int Max { get; set; }
+
+                public TrailerCount()
+                {
+                    Min = Max = -1;
+                }
+
+                public bool IsValid
+                {
+                    get
+                    {
+                        return Min <= Max && Max > 0 && Min > -1;
+                    }
+                }
+            }
+
             public struct Collection
             {
                 public TrailerCollection m_trailerCollection;
@@ -200,6 +221,12 @@ namespace RandomTrainTrailers
             /// </summary>
             [XmlAttribute("end"), DefaultValue(0)]
             public int EndOffset { get; set; }
+
+            /// <summary>
+            /// Overrides the trailer count when not null.
+            /// </summary>
+            [DefaultValue(null), XmlElement("TrailerCount")]
+            public TrailerCount TrailerCountOverride { get; set; }
 
             /// <summary>
             /// Trailers the picker may use for this train.

@@ -76,6 +76,7 @@ namespace RandomTrainTrailers.Detour
                 Randomizer randomizer = new Randomizer((int)vehicleID);
 
                 // Mod begin
+                int trailerCount = info.m_trailers.Length;
                 TrailerDefinition.TrailerCollection trailerCollection = null;
                 var vehicleDef = TrailerManager.GetVehicleConfig(info.name);
                 var random = new System.Random();
@@ -115,6 +116,12 @@ namespace RandomTrainTrailers.Detour
                         {
                             trailerCDF[i] = trailerCollection.Trailers[i].Weight + (i > 0 ? trailerCDF[i - 1] : 0);
                         }
+
+                        // Randomize trailer count
+                        if(vehicleDef.TrailerCountOverride != null && vehicleDef.TrailerCountOverride.IsValid)
+                        {
+                            trailerCount = random.Next(vehicleDef.TrailerCountOverride.Min, vehicleDef.TrailerCountOverride.Max + 1);
+                        }
                     }
                     else
                     {
@@ -124,17 +131,17 @@ namespace RandomTrainTrailers.Detour
                 }
                 // Mod end
 
-                for(int i = 0; i < info.m_trailers.Length; i++)
+                for(int i = 0; i < trailerCount; i++)
                 {
-                    if(randomizer.Int32(100u) < info.m_trailers[i].m_probability)
+                    if(randomizer.Int32(100u) < info.m_trailers[i % info.m_trailers.Length].m_probability)
                     {
-                        VehicleInfo trailerInfo = info.m_trailers[i].m_info;
-                        bool isInverted = randomizer.Int32(100u) < info.m_trailers[i].m_invertProbability;
+                        VehicleInfo trailerInfo;
+                        bool isInverted;
 
                         // Mod start
                         if(vehicleDef != null && 
                             i >= vehicleDef.StartOffset &&
-                            i < info.m_trailers.Length - vehicleDef.EndOffset)
+                            i < trailerCount - vehicleDef.EndOffset)
                         {
                             // We may randomize this trailer
 
@@ -151,11 +158,11 @@ namespace RandomTrainTrailers.Detour
 
                             if(trailerCollection.Trailers[randomTrailerIndex].IsMultiTrailer())
                             {
+                                // Spawn all multi trailer sub trailers
                                 for(int subTrailerIndex = 0; subTrailerIndex < trailerCollection.Trailers[randomTrailerIndex].SubTrailers.Count; subTrailerIndex++)
                                 {
                                     trailerInfo = trailerCollection.Trailers[randomTrailerIndex].SubTrailers[subTrailerIndex].GetInfo();
                                     isInverted = randomizer.Int32(100u) < trailerCollection.Trailers[randomTrailerIndex].SubTrailers[subTrailerIndex].InvertProbability;
-
 
                                     // Copy of default spawn code section below
                                     zPos += ((!hasVerticalTrailers) ? (trailerInfo.m_generatedInfo.m_size.z * 0.5f) : trailerInfo.m_generatedInfo.m_size.y);
@@ -198,12 +205,18 @@ namespace RandomTrainTrailers.Detour
 
                                 continue;   //for(int i = 0; i < info.m_trailers.Length; i++)
                             }
-                            else // IsMultiTrailer
+                            else
                             {
-                                // Change trailerinfo and inverted flag to those of the randomly selected trailer
+                                // Just select the trailer
                                 trailerInfo = trailerCollection.Trailers[randomTrailerIndex].GetInfo();
                                 isInverted = randomizer.Int32(100u) < trailerCollection.Trailers[randomTrailerIndex].InvertProbability;
                             }
+                        }
+                        else
+                        {
+                            // Get default trailer
+                            trailerInfo = info.m_trailers[i].m_info;
+                            isInverted = randomizer.Int32(100u) < info.m_trailers[i].m_invertProbability;
                         }
                         // Mod end
 

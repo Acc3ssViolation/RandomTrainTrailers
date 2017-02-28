@@ -219,6 +219,9 @@ namespace RandomTrainTrailers
             Util.Log("Finished adding definition.", true);
         }
 
+        /// <summary>
+        /// Dumps the dictionary to log
+        /// </summary>
         private static void DumpToLog()
         {
             StringBuilder sb = new StringBuilder();
@@ -229,6 +232,15 @@ namespace RandomTrainTrailers
                 sb.AppendLine("\tChance: " + vehicle.RandomTrailerChance);
                 sb.AppendLine("\tStart: " + vehicle.StartOffset);
                 sb.AppendLine("\tEnd: " + vehicle.EndOffset);
+                if(vehicle.TrailerCountOverride != null)
+                {
+                    sb.AppendLine("\tMin Trailers: " + vehicle.TrailerCountOverride.Min);
+                    sb.AppendLine("\tMax Trailers: " + vehicle.TrailerCountOverride.Max);
+                    if(!vehicle.TrailerCountOverride.IsValid)
+                    {
+                        sb.AppendLine("\tINVALID TRAILER COUNT OVERRIDE SETTINGS");
+                    }
+                }
                 sb.AppendLine("\tCollections:");
                 foreach(var collection in vehicle.m_trailerCollections)
                 {
