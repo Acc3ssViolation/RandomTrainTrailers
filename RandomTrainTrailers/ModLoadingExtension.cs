@@ -6,13 +6,16 @@ using UnityEngine;
 using ICities;
 using RandomTrainTrailers.Detour;
 using ColossalFramework.UI;
+using RandomTrainTrailers.UI;
 
 namespace RandomTrainTrailers
 {
     public class ModLoadingExtension : LoadingExtensionBase
     {
         private VehicleDetour m_detours;
-        private GameObject m_gameObject; 
+        private GameObject m_gameObject;
+
+        public GameObject UIObject { get; private set; }
 
         public override void OnLevelLoaded(LoadMode mode)
         {
@@ -20,10 +23,16 @@ namespace RandomTrainTrailers
             {
                 m_detours = new VehicleDetour();
                 m_detours.Deploy();
-                //VehiclePrefabs.FindPrefabs();                     Uncomment this when reallowing "all trailers allowed" option
+                VehiclePrefabs.FindPrefabs();
                 TrailerManager.Setup();
                 m_gameObject = new GameObject(Mod.name);
                 m_gameObject.AddComponent<DebugBehaviour>();
+
+                // Create UI
+                UIView view = UIView.GetAView();
+                UIObject = new GameObject("RandomTrainTrailers");
+                UIObject.transform.SetParent(view.transform);
+                UIObject.AddComponent<UIMainPanel>();
             }
         }
 
@@ -37,6 +46,11 @@ namespace RandomTrainTrailers
             if(m_gameObject != null)
             {
                 GameObject.Destroy(m_gameObject.gameObject);
+            }
+
+            if(UIObject != null)
+            {
+                GameObject.Destroy(UIObject);
             }
         }
     }

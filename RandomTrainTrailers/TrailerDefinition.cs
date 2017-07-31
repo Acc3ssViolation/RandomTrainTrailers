@@ -238,6 +238,62 @@ namespace RandomTrainTrailers
             /// </summary>
             public List<BlacklistItem> LocalBlacklist { get; set; }
 
+            [XmlIgnore]
+            public int _TrailerCountOverrideMin
+            {
+                get
+                {
+                    if(TrailerCountOverride == null)
+                    {
+                        return -1;
+                    }
+                    return TrailerCountOverride.Min;
+                }
+                set
+                {
+                    if(value >= 0)
+                    {
+                        if(TrailerCountOverride == null)
+                        {
+                            TrailerCountOverride = new TrailerCount();
+                        }
+                        TrailerCountOverride.Min = value;
+                    }
+                    else
+                    {
+                        TrailerCountOverride = null;
+                    }
+                }
+            }
+
+            [XmlIgnore]
+            public int _TrailerCountOverrideMax
+            {
+                get
+                {
+                    if(TrailerCountOverride == null)
+                    {
+                        return -1;
+                    }
+                    return TrailerCountOverride.Max;
+                }
+                set
+                {
+                    if(value >= 0)
+                    {
+                        if(TrailerCountOverride == null)
+                        {
+                            TrailerCountOverride = new TrailerCount();
+                        }
+                        TrailerCountOverride.Max = value;
+                    }
+                    else
+                    {
+                        TrailerCountOverride = null;
+                    }
+                }
+            }
+
             private VehicleInfo m_info;
 
             [XmlIgnore]
@@ -366,9 +422,14 @@ namespace RandomTrainTrailers
                     {
                         var info = trailer.GetInfo();
                         if(info != null)
+                        {
                             m_infos.Add(info);
+                        }
                         else
+                        {
+                            m_infos = null;
                             return null;
+                        }
                     }
                 }
                 return m_infos;

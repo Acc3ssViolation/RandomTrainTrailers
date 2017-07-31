@@ -1,20 +1,21 @@
 ﻿using ICities;
 using ColossalFramework;
 using ColossalFramework.UI;
+using UnityEngine;
 
 namespace RandomTrainTrailers
 {
     public class Mod : IUserMod
     {
         public const string name = "Random Train Trailers";
-        public const string versionString = "1.2";
+        public const string versionString = "1.4.1";
         public const string settingsFile = "RandomTrainTrailers";
 
         public string Description
         {
             get
             {
-                return "Gives the option to have random trailers spawn for trains and other vehicles.";
+                return "Now with UI! Gives the option to have random trailers spawn for trains and other vehicles.";
             }
         }
 
@@ -40,6 +41,32 @@ namespace RandomTrainTrailers
         public void OnSettingsUI(UIHelperBase helper)
         {
             UIHelperBase group = helper.AddGroup(name);
+            UITextField field = null;
+            field = (UITextField)group.AddTextfield("Global trailer limit", TrailerManager.globalTrailerLimit.value.ToString(), (s) =>
+            {
+                int value = 0;
+                if(int.TryParse(s, out value))
+                {
+                    field.textColor = Color.white;
+                    TrailerManager.globalTrailerLimit.value = value;
+                }
+                else
+                {
+                    field.textColor = Color.red;
+                }
+            }, (s) => {
+                int value = 0;
+                if(int.TryParse(s, out value))
+                {
+                    field.textColor = Color.white;
+                    TrailerManager.globalTrailerLimit.value = value;
+                }
+                else
+                {
+                    field.text = TrailerManager.globalTrailerLimit.value.ToString();
+                }
+            });
+
             UICheckBox checkBox = (UICheckBox)group.AddCheckbox("Enable full log", Util.enableLogs, (b) => {
                 Util.enableLogs.value = b;
             });

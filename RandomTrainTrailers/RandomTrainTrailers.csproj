@@ -68,6 +68,18 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TrailerDefinition.cs" />
     <Compile Include="TrailerManager.cs" />
+    <Compile Include="UI\UIAssetRow.cs" />
+    <Compile Include="UI\UIBlacklistRow.cs" />
+    <Compile Include="UI\UIMultiTrailerPanel.cs" />
+    <Compile Include="UI\UICollectionsPanel.cs" />
+    <Compile Include="UI\UIFastList.cs" />
+    <Compile Include="UI\UIFindAssetPanel.cs" />
+    <Compile Include="UI\UIIntField.cs" />
+    <Compile Include="UI\UIMainPanel.cs" />
+    <Compile Include="UI\UISubTrailerRow.cs" />
+    <Compile Include="UI\UITrailerRow.cs" />
+    <Compile Include="UI\UITrainAssetItem.cs" />
+    <Compile Include="UI\UIUtils.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="VehiclePrefabs.cs" />
   </ItemGroup>

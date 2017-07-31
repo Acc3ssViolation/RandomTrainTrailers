@@ -129,6 +129,13 @@ namespace RandomTrainTrailers.Detour
                         vehicleDef = null;
                     }
                 }
+
+                // Apply global trailer limit
+                int globalMaxTrailerCount = TrailerManager.GetTrailerCountOverride();
+                if(globalMaxTrailerCount > 0)
+                {
+                    trailerCount = Math.Min(trailerCount, globalMaxTrailerCount);
+                }
                 // Mod end
 
                 for(int i = 0; i < trailerCount; i++)

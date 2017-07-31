@@ -1,5 +1,8 @@
 ﻿using ColossalFramework;
+using ColossalFramework.Globalization;
 using ColossalFramework.IO;
+using ColossalFramework.UI;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RandomTrainTrailers
@@ -44,6 +47,11 @@ namespace RandomTrainTrailers
             Debug.LogWarning(Mod.name + ": " + message.ToString());
         }
 
+        public static void ShowWarningMessage(string message)
+        {
+            UIView.library.ShowModal<ExceptionPanel>("ExceptionPanel").SetMessage(Mod.name, message, false);
+        }
+
         public static VehicleInfo FindVehicle(string prefabName, string packageName)
         {
             var prefab = PrefabCollection<VehicleInfo>.FindLoaded(prefabName) ??
@@ -53,6 +61,34 @@ namespace RandomTrainTrailers
                          PrefabCollection<VehicleInfo>.FindLoaded(packageName + "." + PathEscaper.Escape(prefabName) + "_Data");
 
             return prefab;
+        }
+
+        public static string GetVehicleDisplayName(string assetname)
+        {
+            string locale = Locale.GetUnchecked("VEHICLE_TITLE", assetname);
+           
+            if(locale.StartsWith("VEHICLE_TITLE"))
+            {
+                return assetname;
+            }
+            return locale;
+        }
+
+        public static IList<T> SwapChecked<T>(this IList<T> list, int indexA, int indexB)
+        {
+            if(indexA >= 0 && indexB >= 0 && indexA < list.Count && indexB < list.Count)
+            {
+                return list.Swap(indexA, indexB);
+            }
+            return list;
+        }
+
+        public static IList<T> Swap<T>(this IList<T> list, int indexA, int indexB)
+        {
+            T tmp = list[indexA];
+            list[indexA] = list[indexB];
+            list[indexB] = tmp;
+            return list;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ColossalFramework;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace RandomTrainTrailers
 {
     public static class TrailerManager
     {
+        public static SavedInt globalTrailerLimit = new SavedInt("globalTrailerLimit", Mod.settingsFile, -1, true);
         static Dictionary<string, TrailerDefinition.Vehicle> vehicleDict = new Dictionary<string, TrailerDefinition.Vehicle>();
         static Dictionary<string, TrailerDefinition.TrailerCollection> collectionDict = new Dictionary<string, TrailerDefinition.TrailerCollection>();
 
@@ -23,9 +25,55 @@ namespace RandomTrainTrailers
 
             var def = DefaultTrailerConfig.DefaultDefinition;
             ApplyDefinition(ref def);
-            LoadUserDefinition();
+            LoadUserDefinition();           // Load User Def LAST to allow for overrides
 
             DumpToLog();
+        }
+
+        public static TrailerDefinition GetUserDefinitionFromDisk()
+        {
+            // User definition is stored in the game app data
+            string path = Path.Combine(ColossalFramework.IO.DataLocation.localApplicationData, "RTT-Definition.xml");
+            try
+            {
+                if(File.Exists(path))
+                {
+                    TrailerDefinition definition;
+
+                    using(StreamReader sr = new StreamReader(path))
+                    {
+                        XmlSerializer serializer = new XmlSerializer(typeof(TrailerDefinition));
+                        definition = (TrailerDefinition)serializer.Deserialize(sr);
+                    }
+
+                    return definition;
+                }
+            }
+            catch(Exception e)
+            {
+                Util.LogError("Exception trying to load definition\r\n" + path + "\r\nException:\r\n" + e.Message + "\r\n" + e.StackTrace);
+            }
+            return null;
+        }
+
+        public static bool StoreUserDefinitionOnDisk(TrailerDefinition definition)
+        {
+            // User definition is stored in the game app data
+            string path = Path.Combine(ColossalFramework.IO.DataLocation.localApplicationData, "RTT-Definition.xml");
+            try
+            {
+                using(StreamWriter sw = new StreamWriter(path, false))
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(TrailerDefinition));
+                    serializer.Serialize(sw, definition);
+                }
+                return true;
+            }
+            catch(Exception e)
+            {
+                Util.LogError("Exception trying to save definition\r\n" + path + "\r\nException:\r\n" + e.Message + "\r\n" + e.StackTrace);
+            }
+            return false;
         }
 
         private static void LoadUserDefinition()
@@ -84,6 +132,7 @@ namespace RandomTrainTrailers
             Util.Log(blacklist.Aggregate("Trailer blacklist:\r\n", (list, item) => list + item + "\r\n"));
             */
 
+
             Util.Log("Adding trailer collections...", true);
             // Add trailer collections
             foreach(var collection in definition.Collections)
@@ -99,7 +148,8 @@ namespace RandomTrainTrailers
                     }
                     else
                     {
-                        Util.LogError("Duplicate collection name! " + collection.Name);
+                        Util.LogWarning("Duplicate collection name, overriding previous collection! " + collection.Name);
+                        collectionDict[collection.Name] = collection;
                     }                   
                 }
                 else
@@ -196,10 +246,23 @@ namespace RandomTrainTrailers
             // Remove vehicles that have no trailers
             definition.Vehicles.RemoveAll((v) =>
             {
-                var remove = v.m_trailerCollections[0].m_trailerCollection.Trailers.Count < 1;              // The first one is the vehicle's own trailer collection
-                if(remove)
-                    Util.LogWarning("Removing " + v.AssetName + " due to a lack of trailers!");
-                return remove;
+                if(v.m_trailerCollections.Count == 1)
+                {
+                    // Only the inline trailer collection is present
+                    var remove = v.m_trailerCollections[0].m_trailerCollection.Trailers.Count < 1;
+                    if(remove)
+                        Util.LogWarning("Removing " + v.AssetName + " due to a lack of trailers!");
+                    return remove;
+                }
+                else
+                {
+                    // There are other collections (and trailers), remove inline if it's empty
+                    if(v.m_trailerCollections[0].m_trailerCollection.Trailers.Count == 0)
+                    {
+                        v.m_trailerCollections.RemoveAt(0);
+                    }
+                    return false;
+                }
             });
 
             // All vehicles should now be valid
@@ -212,7 +275,8 @@ namespace RandomTrainTrailers
                 }
                 else
                 {
-                    Util.LogError("Duplicate trailer definition: " + vehicle.AssetName);
+                    Util.LogWarning("Duplicate vehicle definition, overriding: " + vehicle.AssetName);
+                    vehicleDict[vehicle.AssetName] = vehicle;
                 }
             }
 
@@ -311,6 +375,16 @@ namespace RandomTrainTrailers
             TrailerDefinition.Vehicle vehicle = null;
             vehicleDict.TryGetValue(assetName, out vehicle);
             return vehicle;
+        }
+
+        public static Dictionary<string, TrailerDefinition.Vehicle> GetVehicleDictionary()
+        {
+            return vehicleDict;
+        }
+
+        public static int GetTrailerCountOverride()
+        {
+            return globalTrailerLimit;
         }
     }
 }
