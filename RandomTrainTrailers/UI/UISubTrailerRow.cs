@@ -15,8 +15,6 @@ namespace RandomTrainTrailers.UI
             public TrailerDefinition.Trailer data;
         }
 
-        private UIMainPanel mainPanel;
-
         private UILabel labelAssetName;
         private UIButton buttonRemove;
         private UIButton buttonUp;

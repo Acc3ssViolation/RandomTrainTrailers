@@ -4,75 +4,99 @@ using ColossalFramework;
 using System.Reflection;
 using ColossalFramework.Math;
 using System;
+using Harmony;
 
 namespace RandomTrainTrailers.Detour
 {
-    /// <summary>
-    /// Handles detouring of Vehicle methods
-    /// </summary>
-    public class VehicleDetour
+    ///// <summary>
+    ///// Handles detouring of Vehicle methods
+    ///// </summary>
+    //public class VehicleDetour
+    //{
+    //    public void Deploy()
+    //    {
+    //        var harmony = HarmonyInstance.Create(Mod.harmonyPackage);
+    //        Version currentVersion;
+    //        if(harmony.VersionInfo(out currentVersion).ContainsKey(Mod.harmonyPackage))
+    //        {
+    //            Util.LogWarning("Harmony patches already present");
+    //            return;
+    //        }
+    //        Util.Log("Harmony v" + currentVersion);
+
+            
+    //        var fuckmeonce = typeof(Vehicle).GetMethod("Spawn");
+    //        var fuckmetwice = typeof(VehicleDetour).GetMethod("Spawn", BindingFlags.Static | BindingFlags.Public);
+    //        var vehicleSpawnSource = typeof(Vehicle).GetMethod("Spawn");
+    //        var vehicleSpawnPrefix = typeof(VehiclePatch_Spawn).GetMethod("Prefix", BindingFlags.Static | BindingFlags.Public);
+
+    //        Util.Log("Patching Vehicle.Spawn...");
+    //        //harmony.Patch(vehicleSpawnSource, new HarmonyMethod(vehicleSpawnPrefix), null);
+    //        harmony.Patch(fuckmeonce, new HarmonyMethod(fuckmetwice), null);
+    //        //harmony.PatchAll(Assembly.GetExecutingAssembly());
+    //        Util.Log("Harmony patches applied");
+    //    }
+
+    //    public void Revert()
+    //    {
+    //        //Dunno?
+    //    }
+
+    //    public static bool Spawn(ushort vehicleID)
+    //    {
+    //        Util.Log("FUCK ME HARD NR " + vehicleID);
+    //        return true;
+    //    }
+
+    //    public static bool CalculateTotalLength(ushort vehicleID)
+    //    {
+    //        Util.Log("DETOOURRRA: " + vehicleID);
+    //        return true;
+    //    }
+
+    //    public static bool CanLeave(ushort vehicleID, ref Vehicle vehicleData)
+    //    {
+    //        Util.Log("DETOUUUUR: " + vehicleID + " ?? " + vehicleData.Info.name);
+    //        return true;
+    //    }
+
+    //    /// <summary>
+    //    /// Redirect for Vehicle.Spawn
+    //    /// </summary>
+    //    /// <param name="vehicleID"></param>
+    //    /*public static void SpawnRedirect(ref Vehicle vehicle, ushort vehicleID)
+    //    {
+    //        Vehicle vehicle = Singleton<VehicleManager>.instance.m_vehicles.m_buffer[vehicleID];
+    //        Spawn(ref vehicle, vehicleID);
+    //        ushort trailingVehicle = Singleton<VehicleManager>.instance.m_vehicles.m_buffer[vehicleID].m_trailingVehicle;
+    //        vehicle.m_trailingVehicle = trailingVehicle;
+    //        Singleton<VehicleManager>.instance.m_vehicles.m_buffer[vehicleID] = vehicle;
+    //    }*/
+
+    //}
+
+    //[HarmonyPatch(typeof(Vehicle), "Spawn")]
+    public static class VehiclePatch_Spawn
     {
-        private List<DetourItem> m_detours;
-
-        public VehicleDetour()
+        public static void Spawn_Imp(ref Vehicle __instance, ushort vehicleID)
         {
-            m_detours = new List<DetourItem>();
-            MethodInfo original, detour;
+            VehicleInfo info = __instance.Info;
 
+            //Util.Log("Spawning vehicle " + info.name);
 
-            original = typeof(Vehicle).GetMethod("Spawn");
-            detour = GetType().GetMethod("SpawnRedirect", BindingFlags.Instance | BindingFlags.NonPublic);
-            m_detours.Add(new DetourItem("Vehicle.Spawn", original, detour));
-        }
-
-        public void Deploy()
-        {
-            foreach(var detour in m_detours)
+            if((__instance.m_flags & Vehicle.Flags.Spawned) == (Vehicle.Flags)0)
             {
-                detour.Deploy();
+                __instance.m_flags |= Vehicle.Flags.Spawned;
+                Singleton<VehicleManager>.instance.AddToGrid(vehicleID, ref __instance, info.m_isLargeVehicle);
             }
-        }
-
-        public void Revert()
-        {
-            foreach(var detour in m_detours)
-            {
-                detour.Revert();
-            }
-        }
-
-        /// <summary>
-        /// Redirect for Vehicle.Spawn
-        /// </summary>
-        /// <param name="vehicleID"></param>
-        void SpawnRedirect(ushort vehicleID)
-        {
-            Vehicle vehicle = Singleton<VehicleManager>.instance.m_vehicles.m_buffer[vehicleID];
-            Spawn(ref vehicle, vehicleID);
-            ushort trailingVehicle = Singleton<VehicleManager>.instance.m_vehicles.m_buffer[vehicleID].m_trailingVehicle;
-            vehicle.m_trailingVehicle = trailingVehicle;
-            Singleton<VehicleManager>.instance.m_vehicles.m_buffer[vehicleID] = vehicle;
-        }
-
-        void Spawn(ref Vehicle vehicle, ushort vehicleID)
-        {
-            VehicleManager instance = Singleton<VehicleManager>.instance;
-
-            VehicleInfo info = vehicle.Info;
-
-            if((vehicle.m_flags & Vehicle.Flags.Spawned) == (Vehicle.Flags)0)
-            {
-                vehicle.m_flags |= Vehicle.Flags.Spawned;
-                instance.AddToGrid(vehicleID, ref vehicle, info.m_isLargeVehicle);
-            }
-            if(vehicle.m_leadingVehicle == 0 && vehicle.m_trailingVehicle == 0 && info.m_trailers != null)
+            if(__instance.m_leadingVehicle == 0 && __instance.m_trailingVehicle == 0 && info.m_trailers != null)
             {
                 bool hasVerticalTrailers = info.m_vehicleAI.VerticalTrailers();
                 ushort prevId = vehicleID;
-                bool isReversed = (instance.m_vehicles.m_buffer[(int)prevId].m_flags & Vehicle.Flags.Reversed) != (Vehicle.Flags)0;
-                Vehicle.Frame lastFrameData = vehicle.GetLastFrameData();
+                bool isReversed = (Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)prevId].m_flags & Vehicle.Flags.Reversed) != (Vehicle.Flags)0;
+                Vehicle.Frame lastFrameData = __instance.GetLastFrameData();
                 float zPos = (!hasVerticalTrailers) ? (info.m_generatedInfo.m_size.z * 0.5f) : 0f;
-                zPos -= (((vehicle.m_flags & Vehicle.Flags.Inverted) == (Vehicle.Flags)0) ? info.m_attachOffsetBack : info.m_attachOffsetFront);
+                zPos -= (((__instance.m_flags & Vehicle.Flags.Inverted) == (Vehicle.Flags)0) ? info.m_attachOffsetBack : info.m_attachOffsetFront);
                 Randomizer randomizer = new Randomizer((int)vehicleID);
 
                 // Mod begin
@@ -83,8 +107,10 @@ namespace RandomTrainTrailers.Detour
                 int[] trailerCDF = null;
                 if(vehicleDef != null)
                 {
+                    //Util.Log("Vehicle " + info.name + " has definition");
                     if(randomizer.Int32(100u) < vehicleDef.RandomTrailerChance)
                     {
+                        //Util.Log("Vehicle " + info.name + " will be randomized");
                         // Use random trailers
                         // Select a collection
                         if(vehicleDef.m_trailerCollections.Count > 1)
@@ -103,13 +129,13 @@ namespace RandomTrainTrailers.Detour
                             {
                                 Util.LogError("Index out of bounds! " + colIndex);
                             }
-                            trailerCollection = vehicleDef.m_trailerCollections[colIndex].m_trailerCollection;                            
+                            trailerCollection = vehicleDef.m_trailerCollections[colIndex].m_trailerCollection;
                         }
                         else
                         {
                             trailerCollection = vehicleDef.m_trailerCollections[0].m_trailerCollection;
                         }
-                        
+
                         // Compile CDF array for weighted random selection
                         trailerCDF = new int[trailerCollection.Trailers.Count];
                         for(int i = 0; i < trailerCollection.Trailers.Count; i++)
@@ -127,6 +153,7 @@ namespace RandomTrainTrailers.Detour
                     {
                         // Use default trailers
                         vehicleDef = null;
+                        //Util.Log("Vehicle " + info.name + " will be DEFAULT");
                     }
                 }
 
@@ -146,7 +173,7 @@ namespace RandomTrainTrailers.Detour
                         bool isInverted;
 
                         // Mod start
-                        if(vehicleDef != null && 
+                        if(vehicleDef != null &&
                             i >= vehicleDef.StartOffset &&
                             i < trailerCount - vehicleDef.EndOffset)
                         {
@@ -176,28 +203,28 @@ namespace RandomTrainTrailers.Detour
                                     zPos -= ((!isInverted) ? trailerInfo.m_attachOffsetFront : trailerInfo.m_attachOffsetBack);
                                     Vector3 position2 = lastFrameData.m_position - lastFrameData.m_rotation * new Vector3(0f, (!hasVerticalTrailers) ? 0f : zPos, (!hasVerticalTrailers) ? zPos : 0f);
                                     ushort trailerId2;
-                                    if(instance.CreateVehicle(out trailerId2, ref Singleton<SimulationManager>.instance.m_randomizer, trailerInfo, position2, (TransferManager.TransferReason)vehicle.m_transferType, false, false))
+                                    if(Singleton<VehicleManager>.instance.CreateVehicle(out trailerId2, ref Singleton<SimulationManager>.instance.m_randomizer, trailerInfo, position2, (TransferManager.TransferReason)__instance.m_transferType, false, false))
                                     {
-                                        instance.m_vehicles.m_buffer[(int)prevId].m_trailingVehicle = trailerId2;
-                                        instance.m_vehicles.m_buffer[(int)trailerId2].m_leadingVehicle = prevId;
+                                        Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)prevId].m_trailingVehicle = trailerId2;
+                                        Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)trailerId2].m_leadingVehicle = prevId;
                                         if(isInverted)
                                         {
-                                            Vehicle[] expr_24A_cp_0 = instance.m_vehicles.m_buffer;
+                                            Vehicle[] expr_24A_cp_0 = Singleton<VehicleManager>.instance.m_vehicles.m_buffer;
                                             ushort expr_24A_cp_1 = trailerId2;
                                             expr_24A_cp_0[(int)expr_24A_cp_1].m_flags = (expr_24A_cp_0[(int)expr_24A_cp_1].m_flags | Vehicle.Flags.Inverted);
                                         }
                                         if(isReversed)
                                         {
-                                            Vehicle[] expr_270_cp_0 = instance.m_vehicles.m_buffer;
+                                            Vehicle[] expr_270_cp_0 = Singleton<VehicleManager>.instance.m_vehicles.m_buffer;
                                             ushort expr_270_cp_1 = trailerId2;
                                             expr_270_cp_0[(int)expr_270_cp_1].m_flags = (expr_270_cp_0[(int)expr_270_cp_1].m_flags | Vehicle.Flags.Reversed);
                                         }
-                                        instance.m_vehicles.m_buffer[(int)trailerId2].m_frame0.m_rotation = lastFrameData.m_rotation;
-                                        instance.m_vehicles.m_buffer[(int)trailerId2].m_frame1.m_rotation = lastFrameData.m_rotation;
-                                        instance.m_vehicles.m_buffer[(int)trailerId2].m_frame2.m_rotation = lastFrameData.m_rotation;
-                                        instance.m_vehicles.m_buffer[(int)trailerId2].m_frame3.m_rotation = lastFrameData.m_rotation;
-                                        trailerInfo.m_vehicleAI.FrameDataUpdated(trailerId2, ref instance.m_vehicles.m_buffer[(int)trailerId2], ref instance.m_vehicles.m_buffer[(int)trailerId2].m_frame0);
-                                        instance.m_vehicles.m_buffer[(int)trailerId2].Spawn(trailerId2);
+                                        Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)trailerId2].m_frame0.m_rotation = lastFrameData.m_rotation;
+                                        Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)trailerId2].m_frame1.m_rotation = lastFrameData.m_rotation;
+                                        Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)trailerId2].m_frame2.m_rotation = lastFrameData.m_rotation;
+                                        Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)trailerId2].m_frame3.m_rotation = lastFrameData.m_rotation;
+                                        trailerInfo.m_vehicleAI.FrameDataUpdated(trailerId2, ref Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)trailerId2], ref Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)trailerId2].m_frame0);
+                                        Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)trailerId2].Spawn(trailerId2);
                                         prevId = trailerId2;
                                     }
                                     zPos += ((!hasVerticalTrailers) ? (trailerInfo.m_generatedInfo.m_size.z * 0.5f) : 0f);
@@ -232,28 +259,28 @@ namespace RandomTrainTrailers.Detour
                         zPos -= ((!isInverted) ? trailerInfo.m_attachOffsetFront : trailerInfo.m_attachOffsetBack);
                         Vector3 position = lastFrameData.m_position - lastFrameData.m_rotation * new Vector3(0f, (!hasVerticalTrailers) ? 0f : zPos, (!hasVerticalTrailers) ? zPos : 0f);
                         ushort trailerId;
-                        if(instance.CreateVehicle(out trailerId, ref Singleton<SimulationManager>.instance.m_randomizer, trailerInfo, position, (TransferManager.TransferReason)vehicle.m_transferType, false, false))
+                        if(Singleton<VehicleManager>.instance.CreateVehicle(out trailerId, ref Singleton<SimulationManager>.instance.m_randomizer, trailerInfo, position, (TransferManager.TransferReason)__instance.m_transferType, false, false))
                         {
-                            instance.m_vehicles.m_buffer[(int)prevId].m_trailingVehicle = trailerId;
-                            instance.m_vehicles.m_buffer[(int)trailerId].m_leadingVehicle = prevId;
+                            Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)prevId].m_trailingVehicle = trailerId;
+                            Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)trailerId].m_leadingVehicle = prevId;
                             if(isInverted)
                             {
-                                Vehicle[] expr_24A_cp_0 = instance.m_vehicles.m_buffer;
+                                Vehicle[] expr_24A_cp_0 = Singleton<VehicleManager>.instance.m_vehicles.m_buffer;
                                 ushort expr_24A_cp_1 = trailerId;
                                 expr_24A_cp_0[(int)expr_24A_cp_1].m_flags = (expr_24A_cp_0[(int)expr_24A_cp_1].m_flags | Vehicle.Flags.Inverted);
                             }
                             if(isReversed)
                             {
-                                Vehicle[] expr_270_cp_0 = instance.m_vehicles.m_buffer;
+                                Vehicle[] expr_270_cp_0 = Singleton<VehicleManager>.instance.m_vehicles.m_buffer;
                                 ushort expr_270_cp_1 = trailerId;
                                 expr_270_cp_0[(int)expr_270_cp_1].m_flags = (expr_270_cp_0[(int)expr_270_cp_1].m_flags | Vehicle.Flags.Reversed);
                             }
-                            instance.m_vehicles.m_buffer[(int)trailerId].m_frame0.m_rotation = lastFrameData.m_rotation;
-                            instance.m_vehicles.m_buffer[(int)trailerId].m_frame1.m_rotation = lastFrameData.m_rotation;
-                            instance.m_vehicles.m_buffer[(int)trailerId].m_frame2.m_rotation = lastFrameData.m_rotation;
-                            instance.m_vehicles.m_buffer[(int)trailerId].m_frame3.m_rotation = lastFrameData.m_rotation;
-                            trailerInfo.m_vehicleAI.FrameDataUpdated(trailerId, ref instance.m_vehicles.m_buffer[(int)trailerId], ref instance.m_vehicles.m_buffer[(int)trailerId].m_frame0);
-                            instance.m_vehicles.m_buffer[(int)trailerId].Spawn(trailerId);
+                            Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)trailerId].m_frame0.m_rotation = lastFrameData.m_rotation;
+                            Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)trailerId].m_frame1.m_rotation = lastFrameData.m_rotation;
+                            Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)trailerId].m_frame2.m_rotation = lastFrameData.m_rotation;
+                            Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)trailerId].m_frame3.m_rotation = lastFrameData.m_rotation;
+                            trailerInfo.m_vehicleAI.FrameDataUpdated(trailerId, ref Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)trailerId], ref Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)trailerId].m_frame0);
+                            Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)trailerId].Spawn(trailerId);
                             prevId = trailerId;
                         }
                         zPos += ((!hasVerticalTrailers) ? (trailerInfo.m_generatedInfo.m_size.z * 0.5f) : 0f);
@@ -261,6 +288,12 @@ namespace RandomTrainTrailers.Detour
                     }
                 }
             }
+        }
+
+        public static bool Prefix(ref Vehicle __instance, ushort vehicleID)
+        {
+            Spawn_Imp(ref __instance, vehicleID);
+            return true;
         }
     }
 }

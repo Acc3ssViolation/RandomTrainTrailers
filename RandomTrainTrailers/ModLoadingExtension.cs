@@ -12,17 +12,22 @@ namespace RandomTrainTrailers
 {
     public class ModLoadingExtension : LoadingExtensionBase
     {
-        private VehicleDetour m_detours;
+        private HarmonyDetourAIs m_detours;
         private GameObject m_gameObject;
 
         public GameObject UIObject { get; private set; }
+
+        public override void OnCreated(ILoading loading)
+        {
+            base.OnCreated(loading);
+            m_detours = new HarmonyDetourAIs();
+            m_detours.Deploy();
+        }
 
         public override void OnLevelLoaded(LoadMode mode)
         {
             if(Mod.IsValidLoadMode(mode))
             {
-                m_detours = new VehicleDetour();
-                m_detours.Deploy();
                 VehiclePrefabs.FindPrefabs();
                 TrailerManager.Setup();
                 m_gameObject = new GameObject(Mod.name);
