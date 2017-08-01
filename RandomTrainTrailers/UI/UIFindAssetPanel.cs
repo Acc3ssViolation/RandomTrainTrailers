@@ -26,7 +26,14 @@ namespace RandomTrainTrailers.UI
         UIButton m_select;
         public const int HEIGHT = 550;
         public const int WIDTH = 700;
+        public const int WIDTHLEFT = 500;
+        public const int WIDTHRIGHT = 200;
         private DisplayMode m_mode;
+
+        UITextureSprite m_preview;
+        PreviewRenderer m_previewRenderer;
+
+        VehiclePrefabs.VehicleData m_lastSelectedData;
 
         public override void Awake()
         {
@@ -119,10 +126,26 @@ namespace RandomTrainTrailers.UI
             };
             m_searchField.width = WIDTH - m_searchField.relativePosition.x - 10;
 
+            // Preview
+            UIPanel panel = AddUIComponent<UIPanel>();
+            panel.backgroundSprite = "GenericPanel";
+            panel.width = WIDTHRIGHT - 10;
+            panel.height = HEIGHT - 375;
+            panel.relativePosition = new Vector3(WIDTHLEFT, verticalOffset + 40);
+
+            m_preview = panel.AddUIComponent<UITextureSprite>();
+            m_preview.size = panel.size;
+            m_preview.relativePosition = Vector3.zero;
+
+            m_previewRenderer = gameObject.AddComponent<PreviewRenderer>();
+            m_previewRenderer.size = m_preview.size * 2; // Twice the size for anti-aliasing
+
+            m_preview.texture = m_previewRenderer.texture;
+
             // fastlist
             m_fastList = UIFastList.Create<UIAssetRow>(this);
             m_fastList.backgroundSprite = "UnlockingPanel";
-            m_fastList.width = WIDTH - 20;
+            m_fastList.width = WIDTHLEFT - 20;
             m_fastList.height = HEIGHT - verticalOffset - 90;
             m_fastList.canSelect = true;
             m_fastList.relativePosition = new Vector3(10, verticalOffset + 40);
@@ -130,10 +153,18 @@ namespace RandomTrainTrailers.UI
             {
                 if(index >= 0 && m_fastList.rowsData.m_size > 0)
                 {
+                    m_lastSelectedData = m_fastList.selectedItem as VehiclePrefabs.VehicleData;
+                    m_previewRenderer.cameraRotation = -60;// 120f;
+                    m_previewRenderer.zoom = 4.0f;
+                    if(m_lastSelectedData?.info != null)
+                    {
+                        m_previewRenderer.RenderVehicle(m_lastSelectedData.info);
+                    }
                     m_select.enabled = true;
                 }
                 else
                 {
+                    m_lastSelectedData = null;
                     m_select.enabled = false;
                 }
             };
@@ -159,8 +190,47 @@ namespace RandomTrainTrailers.UI
                     Close();
                 }
             };
+
+            // Preview events
+            panel.eventMouseDown += (c, p) =>
+            {
+                eventMouseMove += RotateCamera;
+                if(m_lastSelectedData?.info != null)
+                {
+                    m_previewRenderer.RenderVehicle(m_lastSelectedData.info);
+                }
+            };
+
+            panel.eventMouseUp += (c, p) =>
+            {
+                eventMouseMove -= RotateCamera;
+                if(m_lastSelectedData?.info != null)
+                {
+                    m_previewRenderer.RenderVehicle(m_lastSelectedData.info);
+                }
+            };
+
+            panel.eventMouseWheel += (c, p) =>
+            {
+                m_previewRenderer.zoom -= Mathf.Sign(p.wheelDelta) * 0.25f;
+                if(m_lastSelectedData?.info != null)
+                {
+                    m_previewRenderer.RenderVehicle(m_lastSelectedData.info);
+                }
+            };
+
             UpdateFastList();
         }
+
+        private void RotateCamera(UIComponent c, UIMouseEventParameter p)
+        {
+            m_previewRenderer.cameraRotation -= p.moveDelta.x / m_preview.width * 360f;
+            if(m_lastSelectedData?.info != null)
+            {
+                m_previewRenderer.RenderVehicle(m_lastSelectedData.info);
+            }
+        }
+
 
         private void UpdateFastList()
         {
