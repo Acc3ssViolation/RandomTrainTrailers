@@ -45,6 +45,7 @@ namespace RandomTrainTrailers.UI
         UIIntField m_trailerMin;
         UIIntField m_trailerMax;
         UICheckBox m_useDefault;
+        UICheckBox m_useCargo;
 
         // Trailer add buttons
         UIButton m_addTrailer;
@@ -62,6 +63,7 @@ namespace RandomTrainTrailers.UI
                 return m_userDefinition;
             }
         }
+
         public TrailerDefinition m_userDefinition;
         public TrailerDefinition.Vehicle m_selectedVehicleData;
 
@@ -76,6 +78,11 @@ namespace RandomTrainTrailers.UI
             {
                 TrailerManager.StoreUserDefinitionOnDisk(m_userDefinition);
             }
+        }
+
+        internal void OnLevelUnloading()
+        {
+            SaveUserDef();
         }
 
         public override void Awake()
@@ -108,13 +115,17 @@ namespace RandomTrainTrailers.UI
             go.transform.parent = this.gameObject.transform;
             go.AddComponent<UIFindAssetPanel>();
 
-            go = new GameObject("RTTFindAssetPanel");
+            go = new GameObject("RTTCollectionsPanel");
             go.transform.parent = this.gameObject.transform;
             go.AddComponent<UICollectionsPanel>();
 
-            go = new GameObject("RTTFindAssetPanel");
+            go = new GameObject("RTTMultiTrailerPanel");
             go.transform.parent = this.gameObject.transform;
             go.AddComponent<UIMultiTrailerPanel>();
+
+            go = new GameObject("RTTFlagsPanel");
+            go.transform.parent = this.gameObject.transform;
+            go.AddComponent<UIFlagsPanel>();
 
             // Adding main button
             UITabstrip toolStrip = view.FindUIComponent<UITabstrip>("MainToolstrip");
@@ -556,6 +567,18 @@ namespace RandomTrainTrailers.UI
             };
             y += padding + m_useDefault.height;
 
+            m_useCargo = UIUtils.CreateCheckBox(vehiclePanel);
+            m_useCargo.text = "Cargo changes trailers";
+            m_useCargo.relativePosition = new Vector3(0, y);
+            m_useCargo.eventCheckChanged += (c, value) => {
+
+                if(m_selectedVehicleData != null)
+                {
+                    m_selectedVehicleData.UseCargoContents = value;
+                }
+            };
+            y += padding + m_useCargo.height;
+
             // No vehicle text
             m_labelNoVehicles = AddUIComponent<UILabel>();
             m_labelNoVehicles.textScale = 1.5f;
@@ -582,8 +605,9 @@ namespace RandomTrainTrailers.UI
                 LoadUserDef();
                 UpdateTrainList();
                 UpdatePanels();
+                TrailerManager.Setup();
             };
-            m_loadButton.tooltip = "Loads config from disk.";
+            m_loadButton.tooltip = "Loads config from disk and applies it to the current game.";
 
 
             LoadUserDef();
@@ -682,7 +706,7 @@ namespace RandomTrainTrailers.UI
 
         public void UpdatePanels()
         {
-            Util.Log("Selected index for fastlist: " + vehicleDropdown.selectedIndex);
+           // Util.Log("Selected index for fastlist: " + vehicleDropdown.selectedIndex);
             //Util.Log("selectedTrainData: " + (selectedTrainData != null ? selectedTrainData.name : "NULL"));
             FastList<object> newRowsData = new FastList<object>();
             FastList<object> newRowsData2 = new FastList<object>();
@@ -711,6 +735,12 @@ namespace RandomTrainTrailers.UI
                 m_trailerMin.SetValue(m_selectedVehicleData._TrailerCountOverrideMin);
                 m_trailerMax.SetValue(m_selectedVehicleData._TrailerCountOverrideMax);
                 m_useDefault.isChecked = m_selectedVehicleData.AllowDefaultTrailers;
+                m_useCargo.isVisible = Mod.enableUseCargo;
+                if(Mod.enableUseCargo)
+                {
+                    m_useCargo.isChecked = m_selectedVehicleData.UseCargoContents;
+                }
+                
             }
             else
             {

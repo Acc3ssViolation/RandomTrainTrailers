@@ -29,6 +29,7 @@ namespace RandomTrainTrailers.UI
         public const int WIDTHLEFT = 500;
         public const int WIDTHRIGHT = 200;
         private DisplayMode m_mode;
+        private DisplayMode m_prevMode;
 
         UITextureSprite m_preview;
         PreviewRenderer m_previewRenderer;
@@ -234,6 +235,8 @@ namespace RandomTrainTrailers.UI
 
         private void UpdateFastList()
         {
+            var pos = m_fastList.listPosition;
+
             FastList<object> newRowsData = new FastList<object>();
 
             VehiclePrefabs.VehicleType type = VehiclePrefabs.VehicleType.Unknown;
@@ -286,11 +289,34 @@ namespace RandomTrainTrailers.UI
                         }
                     }
                 }
+
+                // Show default collections as well, useful for the all-cargo-type ones.
+                collections = DefaultTrailerConfig.DefaultDefinition?.Collections;
+                if(collections != null)
+                {
+                    foreach(var collection in collections)
+                    {
+                        if(string.IsNullOrEmpty(m_searchField.text) ||
+                        collection.Name.ToLower().Contains(m_searchField.text.ToLower()))
+                        {
+                            newRowsData.Add(new VehiclePrefabs.VehicleData()
+                            {
+                                localeName = collection.Name,
+                                isTrailer = true
+                            });
+                        }
+                    }
+                }
             }
 
 
             m_fastList.rowHeight = UIAssetRow.HEIGHT;
             m_fastList.rowsData = newRowsData;
+
+            if(m_prevMode == m_mode)
+            {
+                m_fastList.DisplayAt(pos);
+            }
         }
 
         private void Close()
@@ -301,6 +327,7 @@ namespace RandomTrainTrailers.UI
 
         public void Show(Action<VehiclePrefabs.VehicleData> callback, DisplayMode mode)
         {
+            m_prevMode = m_mode;
             m_mode = mode;
             m_callback = callback;
             Show(true);

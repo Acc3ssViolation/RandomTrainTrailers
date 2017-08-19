@@ -55,7 +55,7 @@ namespace RandomTrainTrailers.UI
             else
             {
                 m_assetName.text = "";
-                m_isTrailer.text = "Collection";
+                m_isTrailer.text = itemData.isTrailer ? "Default Collection" : "Collection";
             }
 
             if(isRowOdd)

@@ -330,7 +330,7 @@ namespace RandomTrainTrailers.UI
 
         public void UpdatePanels()
         {
-            Util.Log("Selected index for fastlist: " + m_collectionDropdown.selectedIndex);
+            //Util.Log("Selected index for fastlist: " + m_collectionDropdown.selectedIndex);
             //Util.Log("selectedTrainData: " + (selectedTrainData != null ? selectedTrainData.name : "NULL"));
             FastList<object> newRowsData = new FastList<object>();
 

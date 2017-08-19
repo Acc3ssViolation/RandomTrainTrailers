@@ -104,44 +104,13 @@ namespace RandomTrainTrailers.Detour
                 TrailerDefinition.TrailerCollection trailerCollection = null;
                 var vehicleDef = TrailerManager.GetVehicleConfig(info.name);
                 var random = new System.Random();
-                int[] trailerCDF = null;
                 if(vehicleDef != null)
                 {
                     //Util.Log("Vehicle " + info.name + " has definition");
                     if(randomizer.Int32(100u) < vehicleDef.RandomTrailerChance)
                     {
                         //Util.Log("Vehicle " + info.name + " will be randomized");
-                        // Use random trailers
-                        // Select a collection
-                        if(vehicleDef.m_trailerCollections.Count > 1)
-                        {
-                            int[] colCDF = new int[vehicleDef.m_trailerCollections.Count];
-                            for(int i = 0; i < vehicleDef.m_trailerCollections.Count; i++)
-                            {
-                                colCDF[i] = vehicleDef.m_trailerCollections[i].m_weight + (i > 0 ? colCDF[i - 1] : 0);
-                            }
-                            int colIndex = Array.BinarySearch(colCDF, random.Next(colCDF[colCDF.Length - 1] + 1));
-                            if(colIndex < 0)
-                            {
-                                colIndex = ~colIndex;
-                            }
-                            if(colIndex < 0 || colIndex > vehicleDef.m_trailerCollections.Count - 1)
-                            {
-                                Util.LogError("Index out of bounds! " + colIndex);
-                            }
-                            trailerCollection = vehicleDef.m_trailerCollections[colIndex].m_trailerCollection;
-                        }
-                        else
-                        {
-                            trailerCollection = vehicleDef.m_trailerCollections[0].m_trailerCollection;
-                        }
-
-                        // Compile CDF array for weighted random selection
-                        trailerCDF = new int[trailerCollection.Trailers.Count];
-                        for(int i = 0; i < trailerCollection.Trailers.Count; i++)
-                        {
-                            trailerCDF[i] = trailerCollection.Trailers[i].Weight + (i > 0 ? trailerCDF[i - 1] : 0);
-                        }
+                        trailerCollection = vehicleDef.GetRandomCollection();
 
                         // Randomize trailer count
                         if(vehicleDef.TrailerCountOverride != null && vehicleDef.TrailerCountOverride.IsValid)
@@ -180,15 +149,7 @@ namespace RandomTrainTrailers.Detour
                             // We may randomize this trailer
 
                             // Select random trailer index using the cdf array
-                            int randomTrailerIndex = Array.BinarySearch(trailerCDF, random.Next(trailerCDF[trailerCDF.Length - 1] + 1));
-                            if(randomTrailerIndex < 0)
-                            {
-                                randomTrailerIndex = ~randomTrailerIndex;
-                            }
-                            if(randomTrailerIndex < 0 || randomTrailerIndex > trailerCollection.Trailers.Count - 1)
-                            {
-                                Util.LogError("Index out of bounds! " + randomTrailerIndex);
-                            }
+                            int randomTrailerIndex = trailerCollection.GetRandomTrailerIndex();
 
                             if(trailerCollection.Trailers[randomTrailerIndex].IsMultiTrailer())
                             {

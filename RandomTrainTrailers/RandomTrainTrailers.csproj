@@ -61,6 +61,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CargoParcel.cs" />
     <Compile Include="DebugBehaviour.cs" />
     <Compile Include="DefaultTrailerConfig.cs" />
     <Compile Include="Detour\HarmonyDetourAIs.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="TrailerManager.cs" />
     <Compile Include="UI\UIAssetRow.cs" />
     <Compile Include="UI\UIBlacklistRow.cs" />
+    <Compile Include="UI\UIFlagsPanel.cs" />
     <Compile Include="UI\UIMultiTrailerPanel.cs" />
     <Compile Include="UI\UICollectionsPanel.cs" />
     <Compile Include="UI\UIFastList.cs" />

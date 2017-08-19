@@ -48,7 +48,7 @@ namespace RandomTrainTrailers
                     data.localeName = Util.GetVehicleDisplayName(prefab.name);
 
                     string locale = Locale.GetUnchecked("VEHICLE_TITLE", prefab.name);
-                    if(locale.StartsWith("VEHICLE_TITLE") || locale.StartsWith("Trailer") || locale.StartsWith("Wagon"))    // I tend to use Wagon prefixes for locally saved trailers
+                    if(locale.StartsWith("VEHICLE_TITLE") || locale.StartsWith("Trailer") || locale.StartsWith("Wagon") || prefab.m_placementStyle == ItemClass.Placement.Procedural)
                     {
                         data.isTrailer = true;
                     }

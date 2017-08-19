@@ -64,6 +64,67 @@ namespace RandomTrainTrailers
         /// </summary>
         public class TrailerCollection
         {
+            public class CargoData
+            {
+                public int[][] m_trailerCDF;
+                public Trailer[][] m_trailers;
+
+                public CargoData()
+                {
+                    m_trailers = new Trailer[CargoParcel.ResourceTypes.Length][];
+                }
+
+                /// <summary>
+                /// Returns a random, weighed trailer index for the given cargo type. -1 on failure.
+                /// </summary>
+                /// <param name="cargoIndex"></param>
+                /// <returns></returns>
+                public int GetRandomTrailerIndex(int cargoIndex)
+                {
+                    // Compile CDF array for weighted random selection
+                    UpdateCDF();
+
+                    // -1 if we have no trailers
+                    if(m_trailerCDF[cargoIndex].Length == 0)
+                    {
+                        return -1;
+                    }
+
+                    // Select random trailer index using the cdf array
+                    int randomTrailerIndex = Array.BinarySearch(m_trailerCDF[cargoIndex], Util.Random.Next(m_trailerCDF[cargoIndex][m_trailerCDF[cargoIndex].Length - 1] + 1));
+                    if(randomTrailerIndex < 0)
+                    {
+                        randomTrailerIndex = ~randomTrailerIndex;
+                    }
+                    if(randomTrailerIndex < 0 || randomTrailerIndex > m_trailers[cargoIndex].Length - 1)
+                    {
+                        Util.LogError("Index out of bounds! " + randomTrailerIndex);
+                    }
+
+                    return randomTrailerIndex;
+                }
+
+                public void UpdateCDF(bool force = false)
+                {
+                    if(m_trailerCDF == null)
+                    {
+                        m_trailerCDF = new int[CargoParcel.ResourceTypes.Length][];
+                    }
+
+                    if(m_trailerCDF[0] == null || force)
+                    {
+                        for(int cargoIndex = 0; cargoIndex < CargoParcel.ResourceTypes.Length; cargoIndex++)
+                        {
+                            m_trailerCDF[cargoIndex] = new int[m_trailers[cargoIndex].Length];
+                            for(int i = 0; i < m_trailers[cargoIndex].Length; i++)
+                            {
+                                m_trailerCDF[cargoIndex][i] = m_trailers[cargoIndex][i].Weight + (i > 0 ? m_trailerCDF[cargoIndex][i - 1] : 0);
+                            }
+                        }
+                    }
+                }
+            }
+
             /// <summary>
             /// Name of the collection used for identification.
             /// </summary>
@@ -74,6 +135,12 @@ namespace RandomTrainTrailers
             /// The trailers of this collection.
             /// </summary>
             public List<Trailer> Trailers { get; set; }
+
+            [XmlIgnore]
+            private int[] m_trailerCDF;
+
+            [XmlIgnore]
+            public CargoData m_cargoData;
 
             public TrailerCollection() : this("New Collection")
             {
@@ -98,6 +165,37 @@ namespace RandomTrainTrailers
                 }
 
                 return copy;
+            }
+
+            public Trailer GetRandomTrailer()
+            {
+                return Trailers[GetRandomTrailerIndex()];
+            }
+
+            public int GetRandomTrailerIndex()
+            {
+                if(m_trailerCDF == null)
+                {
+                    // Compile CDF array for weighted random selection
+                    m_trailerCDF = new int[Trailers.Count];
+                    for(int i = 0; i < Trailers.Count; i++)
+                    {
+                        m_trailerCDF[i] = Trailers[i].Weight + (i > 0 ? m_trailerCDF[i - 1] : 0);
+                    }
+                }
+
+                // Select random trailer index using the cdf array
+                int randomTrailerIndex = Array.BinarySearch(m_trailerCDF, Util.Random.Next(m_trailerCDF[m_trailerCDF.Length - 1] + 1));
+                if(randomTrailerIndex < 0)
+                {
+                    randomTrailerIndex = ~randomTrailerIndex;
+                }
+                if(randomTrailerIndex < 0 || randomTrailerIndex > Trailers.Count - 1)
+                {
+                    Util.LogError("Index out of bounds! " + randomTrailerIndex);
+                }
+
+                return randomTrailerIndex;
             }
         }
 
@@ -228,6 +326,9 @@ namespace RandomTrainTrailers
             [DefaultValue(null), XmlElement("TrailerCount")]
             public TrailerCount TrailerCountOverride { get; set; }
 
+            [DefaultValue(false), XmlAttribute("useCargo")]
+            public bool UseCargoContents { get; set; }
+
             /// <summary>
             /// Trailers the picker may use for this train.
             /// </summary>
@@ -298,6 +399,8 @@ namespace RandomTrainTrailers
 
             [XmlIgnore]
             public List<Collection> m_trailerCollections;
+            [XmlIgnore]
+            int[] m_collectionCDF;
 
             public Vehicle()
             {
@@ -309,6 +412,7 @@ namespace RandomTrainTrailers
                 LocalBlacklist = new List<BlacklistItem>();
                 EndOffset = 0;
                 StartOffset = 0;
+                UseCargoContents = false;
             }
 
             public VehicleInfo GetInfo()
@@ -342,8 +446,40 @@ namespace RandomTrainTrailers
                 copy.VehicleType = VehicleType;
                 copy.StartOffset = StartOffset;
                 copy.EndOffset = EndOffset;
+                copy.UseCargoContents = UseCargoContents;
 
                 return copy;
+            }
+
+            public TrailerCollection GetRandomCollection()
+            {
+                // Select a collection
+                if(m_trailerCollections.Count > 1)
+                {
+                    if(m_collectionCDF == null)
+                    {
+                        m_collectionCDF = new int[m_trailerCollections.Count];
+                        for(int i = 0; i < m_trailerCollections.Count; i++)
+                        {
+                            m_collectionCDF[i] = m_trailerCollections[i].m_weight + (i > 0 ? m_collectionCDF[i - 1] : 0);
+                        }
+                    }
+                   
+                    int colIndex = Array.BinarySearch(m_collectionCDF, Util.Random.Next(m_collectionCDF[m_collectionCDF.Length - 1] + 1));
+                    if(colIndex < 0)
+                    {
+                        colIndex = ~colIndex;
+                    }
+                    if(colIndex < 0 || colIndex > m_trailerCollections.Count - 1)
+                    {
+                        Util.LogError("Index out of bounds! " + colIndex);
+                    }
+                    return m_trailerCollections[colIndex].m_trailerCollection;
+                }
+                else
+                {
+                    return m_trailerCollections[0].m_trailerCollection;
+                }
             }
         }
 
@@ -379,6 +515,12 @@ namespace RandomTrainTrailers
             [XmlAttribute("collection"), DefaultValue(false)]
             public bool IsCollection { get; set; }
 
+            /// <summary>
+            /// The cargo types mask that this wagon can carry. Used for cargo-based trailer selection.
+            /// </summary>
+            [DefaultValue(CargoFlags.None)]
+            public CargoFlags CargoType { get; set; }
+
             private VehicleInfo m_info;
             private List<VehicleInfo> m_infos;
 
@@ -407,7 +549,7 @@ namespace RandomTrainTrailers
                 {
                     m_info = Util.FindVehicle(AssetName, "");
                     if(m_info == null)
-                        Util.LogError(AssetName + " can not be found!");
+                        Util.LogWarning(AssetName + " can not be found!");
                     AssetName = m_info != null ? m_info.name : AssetName;
                 }
                 return m_info;
@@ -447,6 +589,8 @@ namespace RandomTrainTrailers
                 copy.AssetName = AssetName;
                 copy.InvertProbability = InvertProbability;
                 copy.Weight = Weight;
+                copy.IsCollection = IsCollection;
+                copy.CargoType = CargoType;
 
                 if(IsMultiTrailer())
                 {
