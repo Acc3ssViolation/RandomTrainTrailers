@@ -454,7 +454,6 @@ namespace RandomTrainTrailers
 
         /// <summary>
         /// Removes any invalid trailer entries from the list.
-        /// ref is only used to indicate the list contents will be changed the reference itself will not be changed.
         /// </summary>
         /// <param name="trailers">The list of trailers to clean.</param>
         /// <param name="localBlacklist">HashSet containing the names of trailers to always remove.</param>
@@ -468,13 +467,13 @@ namespace RandomTrainTrailers
                 {
                     remove = t.IsCollection || t.GetInfos() == null || t.SubTrailers.Count < 1 || localBlacklist.Contains(t.AssetName);
 
-                    if(remove) removedTrailers.Add(t.AssetName);
+                    //if(remove) removedTrailers.Add(t.AssetName);
                 }
                 else
                 {
                     remove = t.IsCollection || t.GetInfo() == null || localBlacklist.Contains(t.AssetName);
 
-                    if(remove) removedTrailers.Add(t.AssetName);
+                    //if(remove) removedTrailers.Add(t.AssetName);
                 }
                 return remove;
             });
