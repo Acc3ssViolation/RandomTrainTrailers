@@ -9,6 +9,8 @@ namespace RandomTrainTrailers
 {
     public static class Util
     {
+        public static System.Random Random = new System.Random();
+
         public static SavedBool enableLogs = new SavedBool("EnableLogs", Mod.settingsFile, false, true);
 
         private static string cachedModDir;

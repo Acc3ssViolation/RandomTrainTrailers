@@ -19,6 +19,7 @@ namespace RandomTrainTrailers.UI
         private UIIntField fieldInvert;
         private UIIntField fieldWeight;
         private UIButton buttonEditMulti;
+        private UIButton buttonCargoType;
 
         private UIPanel upDownPanel;
 
@@ -111,6 +112,31 @@ namespace RandomTrainTrailers.UI
             };
             buttonRemove.tooltip = "Removes the trailer.";
 
+            // Button for changing cargo type
+            buttonCargoType = UIUtils.CreateButton(settingsPanel);
+            buttonCargoType.size = new Vector2(44, 30);
+            buttonCargoType.atlas = UIUtils.GetAtlas("Thumbnails");
+            buttonCargoType.normalBgSprite = "ZoningIndustrial";
+            buttonCargoType.hoveredBgSprite = "ZoningIndustrialHovered";
+            buttonCargoType.pressedBgSprite = "ZoningIndustrialPressed";
+            buttonCargoType.relativePosition = new Vector3(135, 25);
+            buttonCargoType.eventClicked += (c, p) => {
+                if(!checkEvents) { return; }
+
+                if(m_currentDataItem != null)
+                {
+                    UIFlagsPanel.Main.Show("Cargo type", m_currentDataItem.CargoType, (flags) =>
+                    {
+                        if(m_currentDataItem != null)
+                        {
+                            m_currentDataItem.CargoType = flags;
+                            Util.Log("Changed cargo type for " + m_currentDataItem.AssetName + " to " + flags.ToString());
+                        }
+                    });
+                }
+            };
+            buttonCargoType.tooltip = "Change the wagon's cargo type.";
+
             // Button to move prefab up
             buttonUp = UIUtils.CreateButton(upDownPanel);
             buttonUp.size = new Vector2(30, 30);
@@ -144,20 +170,6 @@ namespace RandomTrainTrailers.UI
             };
             buttonDown.tooltip = "Moves the trailer down.";
         }
-
-        /*private void PopulateAssetDropdown(TrainConsist.VehicleAIType aiType)
-        {
-            if(assetDropdown == null || aiType == TrainConsist.VehicleAIType.None)
-            {
-                return;
-            }
-
-            assetDropdown.selectedIndex = -1;
-
-            assetDropdown.items = VehiclePrefabs.GetPrefabLocales(aiType);
-
-            assetDropdown.selectedIndex = 0;
-        }*/
 
         public void Display(object data, bool isRowOdd)
         {
@@ -196,10 +208,12 @@ namespace RandomTrainTrailers.UI
             // Settings
             fieldWeight.SetValue(itemData.Weight);
             fieldInvert.SetValue(itemData.InvertProbability);
+            buttonCargoType.tooltip = itemData.CargoType.ToString();
 
             // Disable/enable components based on type
             fieldInvert.panel.isVisible = !multiTrailer && !collection;
             buttonEditMulti.isVisible = multiTrailer;
+            buttonCargoType.isVisible = !collection && Mod.enableUseCargo;
 
             if(isRowOdd)
             {

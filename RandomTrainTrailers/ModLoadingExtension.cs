@@ -7,15 +7,17 @@ using ICities;
 using RandomTrainTrailers.Detour;
 using ColossalFramework.UI;
 using RandomTrainTrailers.UI;
+using ColossalFramework;
 
 namespace RandomTrainTrailers
 {
     public class ModLoadingExtension : LoadingExtensionBase
     {
+        public static SavedBool enableUI = new SavedBool("EnableUI", Mod.settingsFile, true, true);
         private HarmonyDetourAIs m_detours;
         private GameObject m_gameObject;
 
-        public GameObject UIObject { get; private set; }
+        public static GameObject UIObject { get; private set; }
 
         public override void OnCreated(ILoading loading)
         {
@@ -34,10 +36,13 @@ namespace RandomTrainTrailers
                 m_gameObject.AddComponent<DebugBehaviour>();
 
                 // Create UI
-                UIView view = UIView.GetAView();
-                UIObject = new GameObject("RandomTrainTrailers");
-                UIObject.transform.SetParent(view.transform);
-                UIObject.AddComponent<UIMainPanel>();
+                if(enableUI == true)
+                {
+                    UIView view = UIView.GetAView();
+                    UIObject = new GameObject("RandomTrainTrailers");
+                    UIObject.transform.SetParent(view.transform);
+                    UIObject.AddComponent<UIMainPanel>();
+                }
             }
         }
 
@@ -55,6 +60,7 @@ namespace RandomTrainTrailers
 
             if(UIObject != null)
             {
+                UIMainPanel.main.OnLevelUnloading();
                 GameObject.Destroy(UIObject);
             }
         }

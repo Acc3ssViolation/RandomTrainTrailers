@@ -21,15 +21,11 @@ namespace RandomTrainTrailers
 
         private const int DEFAULT_RANDOM_CHANCE = 94;
 
-        static TrailerDefinition defaultDefinition = new TrailerDefinition()
+        private static TrailerDefinition cachedDefinition;
+
+        /*static TrailerDefinition defaultDefinition = new TrailerDefinition()
         {
             #region Default definition
-            //Version = 2,
-            //Blacklist = new List<TrailerDefinition.BlacklistItem>
-            //{
-            //    new TrailerDefinition.BlacklistItem() { AssetName = "Train Passenger" },
-            //    new TrailerDefinition.BlacklistItem() { AssetName = "Train Cargo" },
-            //},
             Vehicles = new List<TrailerDefinition.Vehicle>
             {
                 // Acc3ssViolation
@@ -243,43 +239,47 @@ namespace RandomTrainTrailers
                 new TrailerDefinition.Vehicle() {AssetName = "497362717.Union Pacific Cargo Train_Data", AllowDefaultTrailers = true, RandomTrailerChance = DEFAULT_RANDOM_CHANCE },
             }
             #endregion
-        };
+        };*/
 
         public static TrailerDefinition DefaultDefinition
         {
             get
             {
-                string path = Path.Combine(Util.ModDirectory, SAVENAME);
-                try
+                if(cachedDefinition == null)
                 {
-                    if(File.Exists(path))
+                    string path = Path.Combine(Util.ModDirectory, SAVENAME);
+                    try
                     {
-                        TrailerDefinition definition;
-
-                        using(StreamReader sr = new StreamReader(path))
+                        if(File.Exists(path))
                         {
-                            XmlSerializer serializer = new XmlSerializer(typeof(TrailerDefinition));
-                            definition = (TrailerDefinition)serializer.Deserialize(sr);
-                        }
+                            TrailerDefinition definition;
 
-                        Util.Log("Finished loading default definition from " + path);
-                        return definition;
+                            using(StreamReader sr = new StreamReader(path))
+                            {
+                                XmlSerializer serializer = new XmlSerializer(typeof(TrailerDefinition));
+                                definition = (TrailerDefinition)serializer.Deserialize(sr);
+                            }
+
+                            Util.Log("Finished loading default definition from " + path);
+                            cachedDefinition = definition;
+                        }
+                        else
+                        {
+                            Util.LogError("No default definition found at " + path);
+                            //SaveDefaultConfig();
+                        }
                     }
-                    else
+                    catch(Exception e)
                     {
-                        Util.Log("No default definition found at " + path);
-                        SaveDefaultConfig();
+                        Util.LogError("Exception trying to load definition\r\n" + path + "\r\nException:\r\n" + e.Message + "\r\n" + e.StackTrace);
                     }
                 }
-                catch(Exception e)
-                {
-                    Util.LogError("Exception trying to load definition\r\n" + path + "\r\nException:\r\n" + e.Message + "\r\n" + e.StackTrace);
-                }
-                return defaultDefinition.Copy();
+               
+                return cachedDefinition;// defaultDefinition.Copy();
             }
         }
 
-        private static bool SaveDefaultConfig()
+        /*private static bool SaveDefaultConfig()
         {
             string path = Path.Combine(Util.ModDirectory, SAVENAME);
             try
@@ -305,6 +305,6 @@ namespace RandomTrainTrailers
                 Util.LogError("Exception trying to load definition\r\n" + path + "\r\nException:\r\n" + e.Message + "\r\n" + e.StackTrace);
             }
             return false;
-        }
+        }*/
     }
 }

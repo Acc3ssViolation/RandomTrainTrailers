@@ -9,6 +9,7 @@ namespace RandomTrainTrailers.UI
 {
     /*
      * Code by SamsamTS, taken from the Advanced Vehicle Options mod
+     * Changes made to default sizes
      */
     public class UIUtils
     {

@@ -62,6 +62,7 @@ namespace RandomTrainTrailers.UI
 
             m_currentDataItem = itemData;
             m_assetName.text = itemData.AssetName;
+            m_assetName.tooltip = m_assetName.text;
 
             if(isRowOdd)
             {
