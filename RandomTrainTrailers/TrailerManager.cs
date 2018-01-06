@@ -1,4 +1,5 @@
 ﻿using ColossalFramework;
+using ColossalFramework.Packaging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,8 +31,48 @@ namespace RandomTrainTrailers
             collectionDict.Clear();
             //blacklist.Clear();
 
+            // Load default
             var def = DefaultTrailerConfig.DefaultDefinition;
             ApplyDefinition(ref def);
+
+            // Load mods and assets
+            var loader = new SharedTrailerConfigLoader();
+            var checkedPaths = new HashSet<string>();
+            // Load definitions from mod folders
+            foreach(var current in ColossalFramework.Plugins.PluginManager.instance.GetPluginsInfo())
+            {
+                if(current.isEnabled)
+                {
+                    var path = Path.Combine(current.modPath, loader.FileName);
+                    // skip files which were already parsed
+                    if(checkedPaths.Contains(path)) continue;
+                    checkedPaths.Add(path);
+                    if(!File.Exists(path)) continue;
+                    loader.OnFileFound(path, current.name, true);
+                }
+            }
+
+            // Load definitions from prefabs
+            for(uint i = 0; i < PrefabCollection<VehicleInfo>.LoadedCount(); i++)
+            {
+                var prefab = PrefabCollection<VehicleInfo>.GetLoaded(i);
+
+                // Check if asset is valid
+                if(prefab == null) continue;
+
+                var asset = PackageManager.FindAssetByName(prefab.name);
+
+                var crpPath = asset?.package?.packagePath;
+                if(crpPath == null) continue;
+
+                var path = Path.Combine(Path.GetDirectoryName(crpPath) ?? "", loader.FileName);
+                // skip files which were already parsed
+                if(checkedPaths.Contains(path)) continue;
+                checkedPaths.Add(path);
+                if(!File.Exists(path)) continue;
+                loader.OnFileFound(path, asset.package.packageName, false);
+            }
+
             LoadUserDefinition();           // Load User Def LAST to allow for overrides
 
             LogRemovedAssets();
@@ -134,7 +175,7 @@ namespace RandomTrainTrailers
         /// Updates vehicle dictionary and blacklist
         /// </summary>
         /// <param name="definition">Definition to add. May be modified in the process!</param>
-        private static void ApplyDefinition(ref TrailerDefinition definition)
+        public static void ApplyDefinition(ref TrailerDefinition definition)
         {
             if(definition == null)
                 return;

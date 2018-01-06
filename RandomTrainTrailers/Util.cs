@@ -4,6 +4,7 @@ using ColossalFramework.IO;
 using ColossalFramework.UI;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace RandomTrainTrailers
 {
@@ -63,6 +64,12 @@ namespace RandomTrainTrailers
                          PrefabCollection<VehicleInfo>.FindLoaded(packageName + "." + PathEscaper.Escape(prefabName) + "_Data");
 
             return prefab;
+        }
+
+        public static void LogException(Exception e)
+        {
+            LogError("The following exception was thrown:");
+            Debug.LogException(e);
         }
 
         public static string GetVehicleDisplayName(string assetname)
