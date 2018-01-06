@@ -14,7 +14,7 @@ namespace RandomTrainTrailers.Detour
         {
             VehicleInfo info = __instance.Info;
 
-            Util.Log("Spawning vehicle " + info.name);
+            //Util.Log("Spawning vehicle " + info.name);
 
             if((__instance.m_flags & Vehicle.Flags.Spawned) == (Vehicle.Flags)0)
             {
@@ -150,7 +150,7 @@ namespace RandomTrainTrailers.Detour
                             }
                             catch(IndexOutOfRangeException e)
                             {
-                                Util.LogError("FUCK\r\nDetails: i:" + i + ", trailerCount:" + trailerCount + ", length:" + info.m_trailers.Length);
+                                Util.LogError("Note to self: You are bad at math\r\nDetails: i:" + i + ", trailerCount:" + trailerCount + ", length:" + info.m_trailers.Length);
                                 throw e;
                             }
                         }
