@@ -7,82 +7,14 @@ using System;
 using Harmony;
 
 namespace RandomTrainTrailers.Detour
-{
-    ///// <summary>
-    ///// Handles detouring of Vehicle methods
-    ///// </summary>
-    //public class VehicleDetour
-    //{
-    //    public void Deploy()
-    //    {
-    //        var harmony = HarmonyInstance.Create(Mod.harmonyPackage);
-    //        Version currentVersion;
-    //        if(harmony.VersionInfo(out currentVersion).ContainsKey(Mod.harmonyPackage))
-    //        {
-    //            Util.LogWarning("Harmony patches already present");
-    //            return;
-    //        }
-    //        Util.Log("Harmony v" + currentVersion);
-
-            
-    //        var fuckmeonce = typeof(Vehicle).GetMethod("Spawn");
-    //        var fuckmetwice = typeof(VehicleDetour).GetMethod("Spawn", BindingFlags.Static | BindingFlags.Public);
-    //        var vehicleSpawnSource = typeof(Vehicle).GetMethod("Spawn");
-    //        var vehicleSpawnPrefix = typeof(VehiclePatch_Spawn).GetMethod("Prefix", BindingFlags.Static | BindingFlags.Public);
-
-    //        Util.Log("Patching Vehicle.Spawn...");
-    //        //harmony.Patch(vehicleSpawnSource, new HarmonyMethod(vehicleSpawnPrefix), null);
-    //        harmony.Patch(fuckmeonce, new HarmonyMethod(fuckmetwice), null);
-    //        //harmony.PatchAll(Assembly.GetExecutingAssembly());
-    //        Util.Log("Harmony patches applied");
-    //    }
-
-    //    public void Revert()
-    //    {
-    //        //Dunno?
-    //    }
-
-    //    public static bool Spawn(ushort vehicleID)
-    //    {
-    //        Util.Log("FUCK ME HARD NR " + vehicleID);
-    //        return true;
-    //    }
-
-    //    public static bool CalculateTotalLength(ushort vehicleID)
-    //    {
-    //        Util.Log("DETOOURRRA: " + vehicleID);
-    //        return true;
-    //    }
-
-    //    public static bool CanLeave(ushort vehicleID, ref Vehicle vehicleData)
-    //    {
-    //        Util.Log("DETOUUUUR: " + vehicleID + " ?? " + vehicleData.Info.name);
-    //        return true;
-    //    }
-
-    //    /// <summary>
-    //    /// Redirect for Vehicle.Spawn
-    //    /// </summary>
-    //    /// <param name="vehicleID"></param>
-    //    /*public static void SpawnRedirect(ref Vehicle vehicle, ushort vehicleID)
-    //    {
-    //        Vehicle vehicle = Singleton<VehicleManager>.instance.m_vehicles.m_buffer[vehicleID];
-    //        Spawn(ref vehicle, vehicleID);
-    //        ushort trailingVehicle = Singleton<VehicleManager>.instance.m_vehicles.m_buffer[vehicleID].m_trailingVehicle;
-    //        vehicle.m_trailingVehicle = trailingVehicle;
-    //        Singleton<VehicleManager>.instance.m_vehicles.m_buffer[vehicleID] = vehicle;
-    //    }*/
-
-    //}
-
-    //[HarmonyPatch(typeof(Vehicle), "Spawn")]
+{ 
     public static class VehiclePatch_Spawn
     {
         public static void Spawn_Imp(ref Vehicle __instance, ushort vehicleID)
         {
             VehicleInfo info = __instance.Info;
 
-            //Util.Log("Spawning vehicle " + info.name);
+            Util.Log("Spawning vehicle " + info.name);
 
             if((__instance.m_flags & Vehicle.Flags.Spawned) == (Vehicle.Flags)0)
             {
@@ -205,6 +137,21 @@ namespace RandomTrainTrailers.Detour
                                 // Just select the trailer
                                 trailerInfo = trailerCollection.Trailers[randomTrailerIndex].GetInfo();
                                 isInverted = randomizer.Int32(100u) < trailerCollection.Trailers[randomTrailerIndex].InvertProbability;
+                            }
+                        }
+                        else if(vehicleDef != null && i >= vehicleDef.StartOffset)
+                        {
+                            // Correct for overridden trailer counts when dealing with back offsets
+                            var lengthened = trailerCount - info.m_trailers.Length;
+                            try
+                            {
+                                trailerInfo = info.m_trailers[i - lengthened].m_info;
+                                isInverted = randomizer.Int32(100u) < info.m_trailers[i - lengthened].m_invertProbability;
+                            }
+                            catch(IndexOutOfRangeException e)
+                            {
+                                Util.LogError("FUCK\r\nDetails: i:" + i + ", trailerCount:" + trailerCount + ", length:" + info.m_trailers.Length);
+                                throw e;
                             }
                         }
                         else

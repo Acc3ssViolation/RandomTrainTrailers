@@ -307,6 +307,8 @@ namespace RandomTrainTrailers.UI
                         }
                     }
                 }
+
+                // TODO: Add configs from mods and assets to the list and indicate them as such
             }
 
 

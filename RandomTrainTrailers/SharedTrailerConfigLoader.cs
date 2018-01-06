@@ -23,6 +23,7 @@ namespace RandomTrainTrailers
                 Util.LogError("Unable to load RTT config for " + (isMod ? "mod ": "asset ") + name);
                 return;
             }
+            Util.Log("Loading RTT config from " + (isMod ? "mod " : "asset ") + name);
             TrailerManager.ApplyDefinition(ref config);
         }
 
