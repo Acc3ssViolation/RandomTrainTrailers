@@ -10,7 +10,7 @@ namespace RandomTrainTrailers
         public static SavedBool enableUseCargo = new SavedBool("UseCargoData", settingsFile, false, true);
 
         public const string name = "Random Train Trailers";
-        public const string versionString = "1.6.0";
+        public const string versionString = "1.6.1";
         public const string settingsFile = "RandomTrainTrailers";
         public const string harmonyPackage = "com.github.accessviolation.rtt";
 
@@ -18,7 +18,7 @@ namespace RandomTrainTrailers
         {
             get
             {
-                return "Now with UI! Gives the option to have random trailers spawn for trains and other vehicles.";
+                return "Better than ever before! Gives the option to have random trailers spawn for trains and other vehicles.";
             }
         }
 

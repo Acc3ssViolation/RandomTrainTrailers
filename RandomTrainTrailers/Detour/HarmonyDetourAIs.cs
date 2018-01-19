@@ -278,8 +278,8 @@ Goods");*/
                             var vehicle = VehicleManager.instance.m_vehicles.m_buffer[vehicleID];
                             int trailerIndex = 0;
 
-                            // The amount of randomizable trailers (end offset is not included for now)
-                            var trailerCount = vehicle.GetTrailerCount(vehicleID) - def.StartOffset;
+                            // The amount of randomizable trailers
+                            var trailerCount = vehicle.GetTrailerCount(vehicleID) - def.StartOffset - def.EndOffset;
 
                             //Util.Log("Trailer count: " + trailerCount);
 
@@ -319,7 +319,7 @@ Goods");*/
                             // Change the trailers
                             while(vehicle.m_trailingVehicle != 0)
                             {
-                                if(trailerIndex >= def.StartOffset/* && trailerIndex < trailerCount - def.EndOffset*/)
+                                if(trailerIndex >= def.StartOffset && trailerIndex <= trailerCount - def.EndOffset)
                                 {
                                     while(trailerCounts[cargoIndex] <= 0)
                                     {
