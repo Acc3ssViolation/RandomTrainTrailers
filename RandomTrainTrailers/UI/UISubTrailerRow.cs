@@ -77,8 +77,6 @@ namespace RandomTrainTrailers.UI
             buttonEditMulti.height -= 5;
             buttonEditMulti.eventClicked += (c, e) => {
                 if(!checkEvents) { return; }
-
-                // TODO: Edit multi trailer!
             };
 
             // Button to move prefab up

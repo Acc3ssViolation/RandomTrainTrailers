@@ -137,48 +137,6 @@
         <BlacklistItem name="516681588.Trailer1" />
       </LocalBlacklist>
     </Vehicle>
-    <Vehicle name="684699512.AFT 2 Short Container_Data" chance="94">
-      <Trailers />
-      <LocalBlacklist />
-    </Vehicle>
-    <Vehicle name="684700650.AFT 2 Short Empty Container_Data" chance="94">
-      <Trailers />
-      <LocalBlacklist />
-    </Vehicle>
-    <Vehicle name="684701453.AFT 2 Short Mixed 2_Data" chance="94">
-      <Trailers />
-      <LocalBlacklist />
-    </Vehicle>
-    <Vehicle name="518591623.AFT 2 Long Mixed_Data" chance="94" start="1">
-      <Trailers />
-      <LocalBlacklist>
-        <BlacklistItem name="518591623.Trailer0" />
-      </LocalBlacklist>
-    </Vehicle>
-    <Vehicle name="684698602.AFT 2 Long Mixed 2_Data" chance="94" start="2">
-      <Trailers />
-      <LocalBlacklist>
-        <BlacklistItem name="684698602.Trailer0" />
-      </LocalBlacklist>
-    </Vehicle>
-    <Vehicle name="518858167.AFT 2 Long Container_Data" chance="94" start="1">
-      <Trailers />
-      <LocalBlacklist>
-        <BlacklistItem name="518858167.Trailer0" />
-      </LocalBlacklist>
-    </Vehicle>
-    <Vehicle name="518853978.AFT 2 Short Mixed_Data" chance="94" start="1">
-      <Trailers />
-      <LocalBlacklist>
-        <BlacklistItem name="518853978.Trailer0" />
-      </LocalBlacklist>
-    </Vehicle>
-    <Vehicle name="684697924.AFT 2 Long Hopper_Data" chance="94" start="1">
-      <Trailers />
-      <LocalBlacklist>
-        <BlacklistItem name="684697924.Trailer0" />
-      </LocalBlacklist>
-    </Vehicle>
     <Vehicle name="811844671.FCC Train 3_Data" chance="94" start="1">
       <Trailers />
       <LocalBlacklist>
@@ -269,6 +227,66 @@
       <Trailers />
       <LocalBlacklist>
         <BlacklistItem name="812543021.TrailerFCC Autorack 10" />
+      </LocalBlacklist>
+    </Vehicle>
+    <Vehicle name="1287950138.AFT Short Lumber_Data">
+      <Trailers />
+      <LocalBlacklist />
+    </Vehicle>
+    <Vehicle name="1287950798.AFT Long Tank_Data" start="1">
+      <Trailers />
+      <LocalBlacklist>
+        <BlacklistItem name="1287950798.TrailerAFT Long Tank0" />
+      </LocalBlacklist>
+    </Vehicle>
+    <Vehicle name="518591623.AFT Long Mixed_Data" start="1">
+      <Trailers />
+      <LocalBlacklist>
+        <BlacklistItem name="518591623.TrailerAFT Long Mixed0" />
+      </LocalBlacklist>
+    </Vehicle>
+    <Vehicle name="518853978.AFT Short Mixed_Data">
+      <Trailers />
+      <LocalBlacklist />
+    </Vehicle>
+    <Vehicle name="518856581.AFT Short Tank_Data">
+      <Trailers />
+      <LocalBlacklist />
+    </Vehicle>
+    <Vehicle name="684699512.AFT Short Container_Data">
+      <Trailers />
+      <LocalBlacklist />
+    </Vehicle>
+    <Vehicle name="684700650.AFT Short Empty Container_Data">
+      <Trailers />
+      <LocalBlacklist />
+    </Vehicle>
+    <Vehicle name="684701453.AFT Short Mixed 2_Data">
+      <Trailers />
+      <LocalBlacklist />
+    </Vehicle>
+    <Vehicle name="518858167.AFT Long Container_Data" start="1">
+      <Trailers />
+      <LocalBlacklist>
+        <BlacklistItem name="518858167.TrailerAFT Long Container0" />
+      </LocalBlacklist>
+    </Vehicle>
+    <Vehicle name="518859715.AFT Long Coal_Data" start="2">
+      <Trailers />
+      <LocalBlacklist>
+        <BlacklistItem name="518859715.TrailerAFT Long Coal0" />
+      </LocalBlacklist>
+    </Vehicle>
+    <Vehicle name="684697924.AFT Long Hopper_Data" start="1">
+      <Trailers />
+      <LocalBlacklist>
+        <BlacklistItem name="684697924.TrailerAFT Long Hopper0" />
+      </LocalBlacklist>
+    </Vehicle>
+    <Vehicle name="684698602.AFT Long Mixed 2_Data" start="1">
+      <Trailers />
+      <LocalBlacklist>
+        <BlacklistItem name="684698602.TrailerAFT Long Mixed 20" />
       </LocalBlacklist>
     </Vehicle>
   </Vehicles>
@@ -1411,132 +1429,6 @@
     </TrailerCollection>
     <TrailerCollection name="Generic Containers US">
       <Trailers>
-        <Trailer name="518858167.Trailer1">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="518858167.Trailer2">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="518858167.Trailer3">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="518858167.Trailer4">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="518858167.Trailer5">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="518858167.Trailer6">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="518858167.Trailer7">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="518858167.Trailer8">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="518858167.Trailer9">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="518858167.Trailer10">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="518858167.Trailer11">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="518858167.Trailer12">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="518858167.Trailer13">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="518858167.Trailer14">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="518858167.Trailer15">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="518858167.Trailer16">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="518858167.Trailer17">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="684699512.Trailer0">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="684699512.Trailer1">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="684699512.Trailer2">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="684699512.Trailer3">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="684699512.Trailer4">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="684699512.Trailer5">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="684700650.Trailer0">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="684700650.Trailer1">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="684700650.Trailer2">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="684700650.Trailer3">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="811844671.Trailer1">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="811844671.Trailer2">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="811844671.Trailer3">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="811844671.Trailer4">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="811844671.Trailer5">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="811844671.Trailer6">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="811844671.Trailer7">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="811844671.Trailer8">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="811844671.Trailer9">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="811844671.Trailer10">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="811844671.Trailer11">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="811844671.Trailer12">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="811844671.Trailer13">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="811844671.Trailer14">
-          <SubTrailers />
-        </Trailer>
-        <Trailer name="811844671.Trailer15">
-          <SubTrailers />
-        </Trailer>
         <Trailer name="813150923.TrailerFCC Intermodal 21">
           <SubTrailers />
         </Trailer>
@@ -1676,1011 +1568,1496 @@
           <SubTrailers />
         </Trailer>
         <Trailer name="820198891.TrailerFCCAutoInter18">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container22">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container21">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container24">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container23">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container18">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container17">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container20">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container19">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container30">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container29">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container32">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container31">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container26">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container25">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container28">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container27">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container16">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container5">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container4">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container7">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container6">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container1">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container3">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container2">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container13">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container12">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container15">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container14">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container9">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container8">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container11">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container10">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="684699512.TrailerAFT Short Container3">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="684699512.TrailerAFT Short Container4">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="684699512.TrailerAFT Short Container5">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="684699512.TrailerAFT Short Container0">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="684699512.TrailerAFT Short Container1">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="684699512.TrailerAFT Short Container2">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="684700650.TrailerAFT Short Empty Container1">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="684700650.TrailerAFT Short Empty Container0">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="684700650.TrailerAFT Short Empty Container2">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="684700650.TrailerAFT Short Empty Container4">
+          <SubTrailers />
+        </Trailer>
+        <Trailer name="684700650.TrailerAFT Short Empty Container3">
           <SubTrailers />
         </Trailer>
       </Trailers>
     </TrailerCollection>
     <TrailerCollection name="Mixed Cargo US Boxcars">
       <Trailers>
-        <Trailer name="518591623.Trailer1">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer2">
+        <Trailer name="1287950138.TrailerAFT Short Lumber3">
           <SubTrailers />
           <CargoType>Logs Lumber</CargoType>
         </Trailer>
-        <Trailer name="518591623.Trailer3" weight="50">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer4" weight="50">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer5">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer6">
-          <SubTrailers />
-          <CargoType>Logs Lumber Goods</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer7" weight="50">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer8">
-          <SubTrailers />
-          <CargoType>Goods</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer9">
-          <SubTrailers />
-          <CargoType>Goods</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer10">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer11">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer12">
+        <Trailer name="1287950138.TrailerAFT Short Lumber4">
           <SubTrailers />
           <CargoType>Logs Lumber</CargoType>
         </Trailer>
-        <Trailer name="518591623.Trailer13">
+        <Trailer name="1287950138.TrailerAFT Short Lumber2">
           <SubTrailers />
           <CargoType>Logs Lumber</CargoType>
         </Trailer>
-        <Trailer name="518591623.Trailer14">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer15">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer16">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer17">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer18">
-          <SubTrailers />
-          <CargoType>Ore Goods</CargoType>
-        </Trailer>
-        <Trailer name="518853978.Trailer1">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="518853978.Trailer2">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="518853978.Trailer3">
-          <SubTrailers />
-          <CargoType>Goods</CargoType>
-        </Trailer>
-        <Trailer name="518853978.Trailer4">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="518853978.Trailer5">
-          <SubTrailers />
-          <CargoType>Logs Lumber Goods</CargoType>
-        </Trailer>
-        <Trailer name="518853978.Trailer6">
-          <SubTrailers />
-          <CargoType>Logs Lumber Goods</CargoType>
-        </Trailer>
-        <Trailer name="518853978.Trailer7">
-          <SubTrailers />
-          <CargoType>Goods</CargoType>
-        </Trailer>
-        <Trailer name="518856581.Trailer0">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="518856581.Trailer1">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="518856581.Trailer2">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="518856581.Trailer3">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="518859715.Trailer2">
-          <SubTrailers />
-          <CargoType>Coal</CargoType>
-        </Trailer>
-        <Trailer name="684697924.Trailer1">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684697924.Trailer2">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684697924.Trailer3">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684697924.Trailer4">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684697924.Trailer5">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684697924.Trailer6">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684697924.Trailer7">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684697924.Trailer8">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer1">
-          <SubTrailers />
-          <CargoType>Logs Lumber Goods</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer2">
-          <SubTrailers />
-          <CargoType>Coal</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer3">
-          <SubTrailers />
-          <CargoType>Logs Lumber Goods</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer4">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer5" weight="50">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer6">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer7">
-          <SubTrailers />
-          <CargoType>Ore Goods</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer8">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer9" weight="50">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer10">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer11">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer12">
-          <SubTrailers />
-          <CargoType>Goods</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer13" weight="50">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer14" weight="50">
+        <Trailer name="1287950138.TrailerAFT Short Lumber0">
           <SubTrailers />
           <CargoType>Logs Lumber</CargoType>
         </Trailer>
-        <Trailer name="684701453.Trailer0">
-          <SubTrailers />
-          <CargoType>Logs Lumber Goods</CargoType>
-        </Trailer>
-        <Trailer name="684701453.Trailer1">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="684701453.Trailer2" weight="50">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="684701453.Trailer3" weight="50">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="684701453.Trailer4">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684701453.Trailer5">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684701453.Trailer6">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="684701453.Trailer7">
-          <SubTrailers />
-          <CargoType>Ore Goods</CargoType>
-        </Trailer>
-        <Trailer name="812543021.TrailerFCC Autorack 11">
-          <SubTrailers />
-          <CargoType>Goods</CargoType>
-        </Trailer>
-        <Trailer name="812543021.TrailerFCC Autorack 12">
-          <SubTrailers />
-          <CargoType>Goods</CargoType>
-        </Trailer>
-        <Trailer name="812543021.TrailerFCC Autorack 13">
-          <SubTrailers />
-          <CargoType>Goods</CargoType>
-        </Trailer>
-        <Trailer name="812543021.TrailerFCC Autorack 14">
-          <SubTrailers />
-          <CargoType>Goods</CargoType>
-        </Trailer>
-        <Trailer name="813095833.TrailerFCC Tanker 11">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="813095833.TrailerFCC Tanker 12">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="813095833.TrailerFCC Tanker 13">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="815239421.TrailerFCC Coal 11">
-          <SubTrailers />
-          <CargoType>Coal</CargoType>
-        </Trailer>
-        <Trailer name="817336489.TrailerFCC Mixed 11">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="817336489.TrailerFCC Mixed 12">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="817336489.TrailerFCC Mixed 13">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="817336489.TrailerFCC Mixed 14">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="817336489.TrailerFCC Mixed 15">
-          <SubTrailers />
-          <CargoType>Ore Goods</CargoType>
-        </Trailer>
-        <Trailer name="817336489.TrailerFCC Mixed 16">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="817336489.TrailerFCC Mixed 17" weight="50">
+        <Trailer name="1287950138.TrailerAFT Short Lumber1">
           <SubTrailers />
           <CargoType>Logs Lumber</CargoType>
         </Trailer>
-        <Trailer name="817336489.TrailerFCC Mixed 18">
+        <Trailer name="1287950798.TrailerAFT Long Tank3">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="1287950798.TrailerAFT Long Tank4">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="1287950798.TrailerAFT Long Tank2">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="1287950798.TrailerAFT Long Tank1">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed1">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed2">
+          <SubTrailers />
+          <CargoType>Food</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed3">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed4">
           <SubTrailers />
           <CargoType>Goods</CargoType>
         </Trailer>
-        <Trailer name="817336489.TrailerFCC Mixed 19">
+        <Trailer name="518591623.TrailerAFT Long Mixed5">
           <SubTrailers />
-          <CargoType>Logs Lumber Goods</CargoType>
+          <CargoType>Logs Lumber</CargoType>
         </Trailer>
-        <Trailer name="817336489.TrailerFCC Mixed 110">
+        <Trailer name="518591623.TrailerAFT Long Mixed6">
           <SubTrailers />
-          <CargoType>Logs Lumber Goods</CargoType>
+          <CargoType>Grain</CargoType>
         </Trailer>
-        <Trailer name="819295786.TrailerFCCAuto21">
+        <Trailer name="518591623.TrailerAFT Long Mixed7">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed8">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed9">
+          <SubTrailers />
+          <CargoType>Logs Lumber</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed10">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed11">
           <SubTrailers />
           <CargoType>Goods</CargoType>
         </Trailer>
-        <Trailer name="819295786.TrailerFCCAuto22">
+        <Trailer name="518591623.TrailerAFT Long Mixed12">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed13">
           <SubTrailers />
           <CargoType>Goods</CargoType>
         </Trailer>
-        <Trailer name="819295786.TrailerFCCAuto23">
+        <Trailer name="518591623.TrailerAFT Long Mixed14">
           <SubTrailers />
           <CargoType>Goods</CargoType>
         </Trailer>
-        <Trailer name="819295786.TrailerFCCAuto24">
+        <Trailer name="518591623.TrailerAFT Long Mixed15">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 21">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 22">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 23">
           <SubTrailers />
           <CargoType>Goods</CargoType>
         </Trailer>
-        <Trailer name="819295786.TrailerFCCAuto25">
+        <Trailer name="TrailerAFT Long Mixed 24">
+          <SubTrailers />
+          <CargoType>Logs Lumber</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 25">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 26">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 27">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 28">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 29">
+          <SubTrailers />
+          <CargoType>Logs Lumber</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 210">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 211">
           <SubTrailers />
           <CargoType>Goods</CargoType>
         </Trailer>
-        <Trailer name="820198891.TrailerFCCAutoInter1">
+        <Trailer name="TrailerAFT Long Mixed 212">
           <SubTrailers />
           <CargoType>Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 213">
+          <SubTrailers />
+          <CargoType>Food</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 214">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 215">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 216">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 217">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 218">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 219">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 220">
+          <SubTrailers />
+          <CargoType>Food</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 221">
+          <SubTrailers />
+          <CargoType>Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 222">
+          <SubTrailers />
+          <CargoType>Logs Lumber</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed0">
+          <SubTrailers />
+          <CargoType>Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed1">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed2">
+          <SubTrailers />
+          <CargoType>Food</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed3">
+          <SubTrailers />
+          <CargoType>Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed4">
+          <SubTrailers />
+          <CargoType>Logs Lumber</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed5">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed6">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed7">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed 20">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed 21">
+          <SubTrailers />
+          <CargoType>Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed 22">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed 23">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed 24">
+          <SubTrailers />
+          <CargoType>Food</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed 25">
+          <SubTrailers />
+          <CargoType>Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed 26">
+          <SubTrailers />
+          <CargoType>Ore Coal</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed 27">
+          <SubTrailers />
+          <CargoType>Ore Coal</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Tank0">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Tank1">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Tank2">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Tank3">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Coal1">
+          <SubTrailers />
+          <CargoType>Ore Coal</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Coal2">
+          <SubTrailers />
+          <CargoType>Ore Coal</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Coal3">
+          <SubTrailers />
+          <CargoType>Ore Coal</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Coal4">
+          <SubTrailers />
+          <CargoType>Ore Coal</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Coal5">
+          <SubTrailers />
+          <CargoType>Ore Coal</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Coal6">
+          <SubTrailers />
+          <CargoType>Ore Coal</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper1">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper2">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper3">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper4">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper5">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper6">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper7">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper8">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper9">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper10">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper11">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper12">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper13">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper14">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper15">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper16">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
         </Trailer>
       </Trailers>
     </TrailerCollection>
     <TrailerCollection name="Mixed Cargo US Containers">
       <Trailers>
-	  <Trailer name="518858167.Trailer1">
+        <Trailer name="518858167.TrailerAFT Long Container22">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="518858167.Trailer2">
+        <Trailer name="518858167.TrailerAFT Long Container21">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="518858167.Trailer3">
+        <Trailer name="518858167.TrailerAFT Long Container24">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="518858167.Trailer4">
+        <Trailer name="518858167.TrailerAFT Long Container23">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="518858167.Trailer5">
+        <Trailer name="518858167.TrailerAFT Long Container18">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="518858167.Trailer6">
+        <Trailer name="518858167.TrailerAFT Long Container17">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="518858167.Trailer7">
+        <Trailer name="518858167.TrailerAFT Long Container20">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="518858167.Trailer8">
+        <Trailer name="518858167.TrailerAFT Long Container19">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="518858167.Trailer9">
+        <Trailer name="518858167.TrailerAFT Long Container30">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="518858167.Trailer10">
+        <Trailer name="518858167.TrailerAFT Long Container29">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="518858167.Trailer11">
+        <Trailer name="518858167.TrailerAFT Long Container32">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="518858167.Trailer12">
+        <Trailer name="518858167.TrailerAFT Long Container31">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="518858167.Trailer13">
+        <Trailer name="518858167.TrailerAFT Long Container26">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="518858167.Trailer14">
+        <Trailer name="518858167.TrailerAFT Long Container25">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="518858167.Trailer15">
+        <Trailer name="518858167.TrailerAFT Long Container28">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="518858167.Trailer16">
+        <Trailer name="518858167.TrailerAFT Long Container27">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="518858167.Trailer17">
+        <Trailer name="518858167.TrailerAFT Long Container16">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="684699512.Trailer0">
+        <Trailer name="518858167.TrailerAFT Long Container5">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="684699512.Trailer1">
+        <Trailer name="518858167.TrailerAFT Long Container4">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="684699512.Trailer2">
+        <Trailer name="518858167.TrailerAFT Long Container7">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="684699512.Trailer3">
+        <Trailer name="518858167.TrailerAFT Long Container6">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="684699512.Trailer4">
+        <Trailer name="518858167.TrailerAFT Long Container1">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="684699512.Trailer5">
+        <Trailer name="518858167.TrailerAFT Long Container3">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="684700650.Trailer0">
+        <Trailer name="518858167.TrailerAFT Long Container2">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="684700650.Trailer1">
+        <Trailer name="518858167.TrailerAFT Long Container13">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="684700650.Trailer2">
+        <Trailer name="518858167.TrailerAFT Long Container12">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="684700650.Trailer3">
+        <Trailer name="518858167.TrailerAFT Long Container15">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="811844671.Trailer1">
+        <Trailer name="518858167.TrailerAFT Long Container14">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="811844671.Trailer2">
+        <Trailer name="518858167.TrailerAFT Long Container9">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="811844671.Trailer3">
+        <Trailer name="518858167.TrailerAFT Long Container8">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="811844671.Trailer4">
+        <Trailer name="518858167.TrailerAFT Long Container11">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="811844671.Trailer5">
+        <Trailer name="518858167.TrailerAFT Long Container10">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="811844671.Trailer6">
+        <Trailer name="684699512.TrailerAFT Short Container3">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="811844671.Trailer7">
+        <Trailer name="684699512.TrailerAFT Short Container4">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="811844671.Trailer8">
+        <Trailer name="684699512.TrailerAFT Short Container5">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="811844671.Trailer9">
+        <Trailer name="684699512.TrailerAFT Short Container0">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="811844671.Trailer10">
+        <Trailer name="684699512.TrailerAFT Short Container1">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="811844671.Trailer11">
+        <Trailer name="684699512.TrailerAFT Short Container2">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="811844671.Trailer12">
+        <Trailer name="684700650.TrailerAFT Short Empty Container1">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="811844671.Trailer13">
+        <Trailer name="684700650.TrailerAFT Short Empty Container0">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="811844671.Trailer14">
+        <Trailer name="684700650.TrailerAFT Short Empty Container2">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="811844671.Trailer15">
+        <Trailer name="684700650.TrailerAFT Short Empty Container4">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="813150923.TrailerFCC Intermodal 21">
+        <Trailer name="684700650.TrailerAFT Short Empty Container3">
           <SubTrailers />
           <CargoType>Food Goods</CargoType>
         </Trailer>
-        <Trailer name="813150923.TrailerFCC Intermodal 22">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="813150923.TrailerFCC Intermodal 23">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="813150923.TrailerFCC Intermodal 24">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="813150923.TrailerFCC Intermodal 25">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="813150923.TrailerFCC Intermodal 26">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="813150923.TrailerFCC Intermodal 27">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="813150923.TrailerFCC Intermodal 28">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="813150923.TrailerFCC Intermodal 29">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="813150923.TrailerFCC Intermodal 210">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="813150923.TrailerFCC Intermodal 211">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="813150923.TrailerFCC Intermodal 212">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="813150923.TrailerFCC Intermodal 213">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="813150923.TrailerFCC Intermodal 214">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="813150923.TrailerFCC Intermodal 215">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="814160957.TrailerFCC Intermodal 31">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="814160957.TrailerFCC Intermodal 32">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="814160957.TrailerFCC Intermodal 33">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="814160957.TrailerFCC Intermodal 34">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="814160957.TrailerFCC Intermodal 35">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="814160957.TrailerFCC Intermodal 36">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="814160957.TrailerFCC Intermodal 37">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="814160957.TrailerFCC Intermodal 38">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="814160957.TrailerFCC Intermodal 39">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="814160957.TrailerFCC Intermodal 310">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="814160957.TrailerFCC Intermodal 311">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="814160957.TrailerFCC Intermodal 312">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="814160957.TrailerFCC Intermodal 313">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="814160957.TrailerFCC Intermodal 314">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="814160957.TrailerFCC Intermodal 315">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="820198891.TrailerFCCAutoInter2">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="820198891.TrailerFCCAutoInter3">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="820198891.TrailerFCCAutoInter4">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="820198891.TrailerFCCAutoInter5">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="820198891.TrailerFCCAutoInter6">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="820198891.TrailerFCCAutoInter7">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="820198891.TrailerFCCAutoInter8">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="820198891.TrailerFCCAutoInter9">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="820198891.TrailerFCCAutoInter10">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="820198891.TrailerFCCAutoInter11">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="820198891.TrailerFCCAutoInter12">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="820198891.TrailerFCCAutoInter13">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="820198891.TrailerFCCAutoInter14">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="820198891.TrailerFCCAutoInter15">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="820198891.TrailerFCCAutoInter16">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="820198891.TrailerFCCAutoInter17">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="820198891.TrailerFCCAutoInter18">
-          <SubTrailers />
-          <CargoType>Food Goods</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer1">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer2">
+        <Trailer name="1287950138.TrailerAFT Short Lumber3">
           <SubTrailers />
           <CargoType>Logs Lumber</CargoType>
         </Trailer>
-        <Trailer name="518591623.Trailer5">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer6">
-          <SubTrailers />
-          <CargoType>Logs Lumber Goods</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer8">
-          <SubTrailers />
-          <CargoType>Goods</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer9">
-          <SubTrailers />
-          <CargoType>Goods</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer10">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer11">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer12">
+        <Trailer name="1287950138.TrailerAFT Short Lumber4">
           <SubTrailers />
           <CargoType>Logs Lumber</CargoType>
         </Trailer>
-        <Trailer name="518591623.Trailer13">
+        <Trailer name="1287950138.TrailerAFT Short Lumber2">
           <SubTrailers />
           <CargoType>Logs Lumber</CargoType>
         </Trailer>
-        <Trailer name="518591623.Trailer14">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer15">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer16">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer17">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="518591623.Trailer18">
-          <SubTrailers />
-          <CargoType>Ore Goods</CargoType>
-        </Trailer>
-        <Trailer name="518853978.Trailer1">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="518853978.Trailer2">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="518853978.Trailer3">
-          <SubTrailers />
-          <CargoType>Goods</CargoType>
-        </Trailer>
-        <Trailer name="518853978.Trailer4">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="518853978.Trailer5">
-          <SubTrailers />
-          <CargoType>Logs Lumber Goods</CargoType>
-        </Trailer>
-        <Trailer name="518853978.Trailer6">
-          <SubTrailers />
-          <CargoType>Logs Lumber Goods</CargoType>
-        </Trailer>
-        <Trailer name="518853978.Trailer7">
-          <SubTrailers />
-          <CargoType>Goods</CargoType>
-        </Trailer>
-        <Trailer name="518856581.Trailer0">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="518856581.Trailer1">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="518856581.Trailer2">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="518856581.Trailer3">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="518859715.Trailer2">
-          <SubTrailers />
-          <CargoType>Coal</CargoType>
-        </Trailer>
-        <Trailer name="684697924.Trailer1">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684697924.Trailer2">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684697924.Trailer3">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684697924.Trailer4">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684697924.Trailer5">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684697924.Trailer6">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684697924.Trailer7">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684697924.Trailer8">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer1">
-          <SubTrailers />
-          <CargoType>Logs Lumber Goods</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer2">
-          <SubTrailers />
-          <CargoType>Coal</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer3">
-          <SubTrailers />
-          <CargoType>Logs Lumber Goods</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer4">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer6">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer7">
-          <SubTrailers />
-          <CargoType>Ore Goods</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer8">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer10">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer11">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer12">
-          <SubTrailers />
-          <CargoType>Goods</CargoType>
-        </Trailer>
-        <Trailer name="684698602.Trailer14" weight="50">
+        <Trailer name="1287950138.TrailerAFT Short Lumber0">
           <SubTrailers />
           <CargoType>Logs Lumber</CargoType>
         </Trailer>
-        <Trailer name="684701453.Trailer0">
-          <SubTrailers />
-          <CargoType>Logs Lumber Goods</CargoType>
-        </Trailer>
-        <Trailer name="684701453.Trailer1">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="684701453.Trailer4">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684701453.Trailer5">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="684701453.Trailer6">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="684701453.Trailer7">
-          <SubTrailers />
-          <CargoType>Ore Goods</CargoType>
-        </Trailer>
-        <Trailer name="812543021.TrailerFCC Autorack 11">
-          <SubTrailers />
-          <CargoType>Goods</CargoType>
-        </Trailer>
-        <Trailer name="812543021.TrailerFCC Autorack 12">
-          <SubTrailers />
-          <CargoType>Goods</CargoType>
-        </Trailer>
-        <Trailer name="812543021.TrailerFCC Autorack 13">
-          <SubTrailers />
-          <CargoType>Goods</CargoType>
-        </Trailer>
-        <Trailer name="812543021.TrailerFCC Autorack 14">
-          <SubTrailers />
-          <CargoType>Goods</CargoType>
-        </Trailer>
-        <Trailer name="813095833.TrailerFCC Tanker 11">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="813095833.TrailerFCC Tanker 12">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="813095833.TrailerFCC Tanker 13">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="815239421.TrailerFCC Coal 11">
-          <SubTrailers />
-          <CargoType>Coal</CargoType>
-        </Trailer>
-        <Trailer name="817336489.TrailerFCC Mixed 11">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="817336489.TrailerFCC Mixed 12">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="817336489.TrailerFCC Mixed 13">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="817336489.TrailerFCC Mixed 14">
-          <SubTrailers />
-          <CargoType>Oil Petrol</CargoType>
-        </Trailer>
-        <Trailer name="817336489.TrailerFCC Mixed 15">
-          <SubTrailers />
-          <CargoType>Ore Goods</CargoType>
-        </Trailer>
-        <Trailer name="817336489.TrailerFCC Mixed 16">
-          <SubTrailers />
-          <CargoType>Grain Food</CargoType>
-        </Trailer>
-        <Trailer name="817336489.TrailerFCC Mixed 17" weight="50">
+        <Trailer name="1287950138.TrailerAFT Short Lumber1">
           <SubTrailers />
           <CargoType>Logs Lumber</CargoType>
         </Trailer>
-        <Trailer name="817336489.TrailerFCC Mixed 18">
+        <Trailer name="1287950798.TrailerAFT Long Tank3">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="1287950798.TrailerAFT Long Tank4">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="1287950798.TrailerAFT Long Tank2">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="1287950798.TrailerAFT Long Tank1">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed3">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed4">
           <SubTrailers />
           <CargoType>Goods</CargoType>
         </Trailer>
-        <Trailer name="817336489.TrailerFCC Mixed 19">
+        <Trailer name="518591623.TrailerAFT Long Mixed5">
           <SubTrailers />
-          <CargoType>Logs Lumber Goods</CargoType>
+          <CargoType>Logs Lumber</CargoType>
         </Trailer>
-        <Trailer name="817336489.TrailerFCC Mixed 110">
+        <Trailer name="518591623.TrailerAFT Long Mixed6">
           <SubTrailers />
-          <CargoType>Logs Lumber Goods</CargoType>
+          <CargoType>Grain</CargoType>
         </Trailer>
-        <Trailer name="819295786.TrailerFCCAuto21">
+        <Trailer name="518591623.TrailerAFT Long Mixed7">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed8">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed9">
+          <SubTrailers />
+          <CargoType>Logs Lumber</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed11">
           <SubTrailers />
           <CargoType>Goods</CargoType>
         </Trailer>
-        <Trailer name="819295786.TrailerFCCAuto22">
+        <Trailer name="518591623.TrailerAFT Long Mixed13">
           <SubTrailers />
           <CargoType>Goods</CargoType>
         </Trailer>
-        <Trailer name="819295786.TrailerFCCAuto23">
+        <Trailer name="518591623.TrailerAFT Long Mixed14">
           <SubTrailers />
           <CargoType>Goods</CargoType>
         </Trailer>
-        <Trailer name="819295786.TrailerFCCAuto24">
+        <Trailer name="518591623.TrailerAFT Long Mixed15">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 21">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 22">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 23">
           <SubTrailers />
           <CargoType>Goods</CargoType>
         </Trailer>
-        <Trailer name="819295786.TrailerFCCAuto25">
+        <Trailer name="TrailerAFT Long Mixed 24">
+          <SubTrailers />
+          <CargoType>Logs Lumber</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 25">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 26">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 28">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 29">
+          <SubTrailers />
+          <CargoType>Logs Lumber</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 211">
           <SubTrailers />
           <CargoType>Goods</CargoType>
         </Trailer>
-        <Trailer name="820198891.TrailerFCCAutoInter1">
+        <Trailer name="TrailerAFT Long Mixed 212">
           <SubTrailers />
           <CargoType>Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 215">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 216">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 217">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 218">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 219">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 221">
+          <SubTrailers />
+          <CargoType>Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 222">
+          <SubTrailers />
+          <CargoType>Logs Lumber</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed0">
+          <SubTrailers />
+          <CargoType>Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed3">
+          <SubTrailers />
+          <CargoType>Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed4">
+          <SubTrailers />
+          <CargoType>Logs Lumber</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed5">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed6">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed7">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed 21">
+          <SubTrailers />
+          <CargoType>Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed 22">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed 23">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed 25">
+          <SubTrailers />
+          <CargoType>Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed 26">
+          <SubTrailers />
+          <CargoType>Ore Coal</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed 27">
+          <SubTrailers />
+          <CargoType>Ore Coal</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Tank0">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Tank1">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Tank2">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Tank3">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Coal1">
+          <SubTrailers />
+          <CargoType>Ore Coal</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Coal2">
+          <SubTrailers />
+          <CargoType>Ore Coal</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Coal3">
+          <SubTrailers />
+          <CargoType>Ore Coal</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Coal4">
+          <SubTrailers />
+          <CargoType>Ore Coal</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Coal5">
+          <SubTrailers />
+          <CargoType>Ore Coal</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Coal6">
+          <SubTrailers />
+          <CargoType>Ore Coal</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper1">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper2">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper3">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper4">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper5">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper6">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper7">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper8">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper9">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper10">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper11">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper12">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper13">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper14">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper15">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper16">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+      </Trailers>
+    </TrailerCollection>
+    <TrailerCollection name="Mixed Cargo US All">
+      <Trailers>
+        <Trailer name="518858167.TrailerAFT Long Container22">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container21">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container24">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container23">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container18">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container17">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container20">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container19">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container30">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container29">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container32">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container31">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container26">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container25">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container28">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container27">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container16">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container5">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container4">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container7">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container6">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container1">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container3">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container2">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container13">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container12">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container15">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container14">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container9">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container8">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container11">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518858167.TrailerAFT Long Container10">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="684699512.TrailerAFT Short Container3">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="684699512.TrailerAFT Short Container4">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="684699512.TrailerAFT Short Container5">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="684699512.TrailerAFT Short Container0">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="684699512.TrailerAFT Short Container1">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="684699512.TrailerAFT Short Container2">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="684700650.TrailerAFT Short Empty Container1">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="684700650.TrailerAFT Short Empty Container0">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="684700650.TrailerAFT Short Empty Container2">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="684700650.TrailerAFT Short Empty Container4">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="684700650.TrailerAFT Short Empty Container3">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="1287950138.TrailerAFT Short Lumber3">
+          <SubTrailers />
+          <CargoType>Logs Lumber</CargoType>
+        </Trailer>
+        <Trailer name="1287950138.TrailerAFT Short Lumber4">
+          <SubTrailers />
+          <CargoType>Logs Lumber</CargoType>
+        </Trailer>
+        <Trailer name="1287950138.TrailerAFT Short Lumber2">
+          <SubTrailers />
+          <CargoType>Logs Lumber</CargoType>
+        </Trailer>
+        <Trailer name="1287950138.TrailerAFT Short Lumber0">
+          <SubTrailers />
+          <CargoType>Logs Lumber</CargoType>
+        </Trailer>
+        <Trailer name="1287950138.TrailerAFT Short Lumber1">
+          <SubTrailers />
+          <CargoType>Logs Lumber</CargoType>
+        </Trailer>
+        <Trailer name="1287950798.TrailerAFT Long Tank3">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="1287950798.TrailerAFT Long Tank4">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="1287950798.TrailerAFT Long Tank2">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="1287950798.TrailerAFT Long Tank1">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed1">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed2">
+          <SubTrailers />
+          <CargoType>Food</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed3">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed4">
+          <SubTrailers />
+          <CargoType>Goods</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed5">
+          <SubTrailers />
+          <CargoType>Logs Lumber</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed6">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed7">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed8">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed9">
+          <SubTrailers />
+          <CargoType>Logs Lumber</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed10">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed11">
+          <SubTrailers />
+          <CargoType>Goods</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed12">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed13">
+          <SubTrailers />
+          <CargoType>Goods</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed14">
+          <SubTrailers />
+          <CargoType>Goods</CargoType>
+        </Trailer>
+        <Trailer name="518591623.TrailerAFT Long Mixed15">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 21">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 22">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 23">
+          <SubTrailers />
+          <CargoType>Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 24">
+          <SubTrailers />
+          <CargoType>Logs Lumber</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 25">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 26">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 27">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 28">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 29">
+          <SubTrailers />
+          <CargoType>Logs Lumber</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 210">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 211">
+          <SubTrailers />
+          <CargoType>Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 212">
+          <SubTrailers />
+          <CargoType>Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 213">
+          <SubTrailers />
+          <CargoType>Food</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 214">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 215">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 216">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 217">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 218">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 219">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 220">
+          <SubTrailers />
+          <CargoType>Food</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 221">
+          <SubTrailers />
+          <CargoType>Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Mixed 222">
+          <SubTrailers />
+          <CargoType>Logs Lumber</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed0">
+          <SubTrailers />
+          <CargoType>Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed1">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed2">
+          <SubTrailers />
+          <CargoType>Food</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed3">
+          <SubTrailers />
+          <CargoType>Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed4">
+          <SubTrailers />
+          <CargoType>Logs Lumber</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed5">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed6">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed7">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed 20">
+          <SubTrailers />
+          <CargoType>Food Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed 21">
+          <SubTrailers />
+          <CargoType>Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed 22">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed 23">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed 24">
+          <SubTrailers />
+          <CargoType>Food</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed 25">
+          <SubTrailers />
+          <CargoType>Goods</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed 26">
+          <SubTrailers />
+          <CargoType>Ore Coal</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Mixed 27">
+          <SubTrailers />
+          <CargoType>Ore Coal</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Tank0">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Tank1">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Tank2">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Short Tank3">
+          <SubTrailers />
+          <CargoType>Oil Petrol</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Coal1">
+          <SubTrailers />
+          <CargoType>Ore Coal</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Coal2">
+          <SubTrailers />
+          <CargoType>Ore Coal</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Coal3">
+          <SubTrailers />
+          <CargoType>Ore Coal</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Coal4">
+          <SubTrailers />
+          <CargoType>Ore Coal</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Coal5">
+          <SubTrailers />
+          <CargoType>Ore Coal</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Coal6">
+          <SubTrailers />
+          <CargoType>Ore Coal</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper1">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper2">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper3">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper4">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper5">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper6">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper7">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper8">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper9">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper10">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper11">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper12">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper13">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper14">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper15">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
+        </Trailer>
+        <Trailer name="TrailerAFT Long Hopper16">
+          <SubTrailers />
+          <CargoType>Grain</CargoType>
         </Trailer>
       </Trailers>
     </TrailerCollection>

@@ -88,7 +88,6 @@ namespace RandomTrainTrailers.UI
             buttonEditMulti.eventClicked += (c, e) => {
                 if(!checkEvents) { return; }
 
-                // TODO: Edit multi trailer!
                 UIMultiTrailerPanel.main.Show(m_currentDataItem);
             };
 

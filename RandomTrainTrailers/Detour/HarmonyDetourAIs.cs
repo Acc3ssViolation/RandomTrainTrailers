@@ -280,6 +280,10 @@ Goods");*/
 
                             // The amount of randomizable trailers
                             var trailerCount = vehicle.GetTrailerCount(vehicleID) - def.StartOffset - def.EndOffset;
+                            if(trailerCount <= 0)
+                            {
+                                return;
+                            }
 
                             //Util.Log("Trailer count: " + trailerCount);
 
