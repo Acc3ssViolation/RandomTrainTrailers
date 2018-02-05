@@ -274,13 +274,12 @@ Goods");*/
                             if(Math.Abs(total) < 1f) total = 1f;
                             var normalizedResults = result.Select(v => v / total).ToArray();
 
-                           // Util.Log("Changing trailer composition to reflect cargo contents...");
+                            // Util.Log("Changing trailer composition to reflect cargo contents...");
                             var vehicle = VehicleManager.instance.m_vehicles.m_buffer[vehicleID];
-                            int trailerIndex = 0;
 
                             // The amount of randomizable trailers
-                            var trailerCount = vehicle.GetTrailerCount(vehicleID) - def.StartOffset - def.EndOffset;
-                            if(trailerCount <= 0)
+                            var randomizedTrailerCount = vehicle.GetTrailerCount(vehicleID) - def.StartOffset - def.EndOffset;
+                            if(randomizedTrailerCount <= 0)
                             {
                                 return;
                             }
@@ -290,11 +289,11 @@ Goods");*/
                             var trailerCounts = new int[normalizedResults.Length];
                             for(int i = 0; i < trailerCounts.Length; i++)
                             {
-                                trailerCounts[i] = (int)Math.Floor(normalizedResults[i] * trailerCount);
+                                trailerCounts[i] = (int)Math.Floor(normalizedResults[i] * randomizedTrailerCount);
                             }
 
                             // Ensure we have the original amount of trailers in total
-                            while(trailerCounts.Sum() < trailerCount)
+                            while(trailerCounts.Sum() < randomizedTrailerCount)
                             {
                                 for(int i = 0; i < trailerCounts.Length; i++)
                                 {
@@ -321,9 +320,10 @@ Goods");*/
                             cargoIndex = cargoOrder[orderIndex];
 
                             // Change the trailers
+                            int trailerIndex = 0;
                             while(vehicle.m_trailingVehicle != 0)
                             {
-                                if(trailerIndex >= def.StartOffset && trailerIndex <= trailerCount - def.EndOffset)
+                                if(trailerIndex >= def.StartOffset && trailerIndex < def.StartOffset + randomizedTrailerCount)
                                 {
                                     while(trailerCounts[cargoIndex] <= 0)
                                     {
