@@ -323,6 +323,7 @@ Goods");*/
                             int trailerIndex = 0;
                             while(vehicle.m_trailingVehicle != 0)
                             {
+                                ushort nextVehicleId = vehicle.m_trailingVehicle;
                                 if(trailerIndex >= def.StartOffset && trailerIndex < def.StartOffset + randomizedTrailerCount)
                                 {
                                     while(trailerCounts[cargoIndex] <= 0)
@@ -365,7 +366,7 @@ Goods");*/
 
                                     if(trailerDef.IsMultiTrailer())
                                     {
-                                        vehicle.m_trailingVehicle = ForceMultiTrailer(vehicle.m_trailingVehicle, trailerDef);
+                                        nextVehicleId = ForceMultiTrailer(vehicle.m_trailingVehicle, trailerDef);
                                         trailerCounts[cargoIndex] -= trailerDef.SubTrailers.Count;
                                         trailerIndex += trailerDef.SubTrailers.Count - 1;   // 1 is always added at the bottom of the loop
                                     }
@@ -375,7 +376,7 @@ Goods");*/
                                         trailerCounts[cargoIndex]--;
                                     }
                                 }
-                                vehicle = VehicleManager.instance.m_vehicles.m_buffer[vehicle.m_trailingVehicle];
+                                vehicle = VehicleManager.instance.m_vehicles.m_buffer[nextVehicleId];
                                 trailerIndex++;
                             }
 
@@ -396,9 +397,13 @@ Goods");*/
             {
                 Util.Log("Spawning " + amount + " new trailers after [" + leadingVehicleID + "]");
 
+                List<ushort> spawnedIds = new List<ushort>();
+
                 var instance = VehicleManager.instance;
                 var _this = instance.m_vehicles.m_buffer[leadingVehicleID];
                 var info = _this.Info;
+
+                ushort lastSpawnHookupId = _this.m_trailingVehicle;
 
                 bool hasVerticalTrailers = info.m_vehicleAI.VerticalTrailers();
                 ushort prevId = leadingVehicleID;
@@ -437,10 +442,30 @@ Goods");*/
                         trailerInfo.m_vehicleAI.FrameDataUpdated(trailerId, ref instance.m_vehicles.m_buffer[trailerId], ref instance.m_vehicles.m_buffer[trailerId].m_frame0);
                         instance.m_vehicles.m_buffer[trailerId].Spawn(trailerId);
                         prevId = trailerId;
+                        spawnedIds.Add(trailerId);
+                    }
+                    else
+                    {
+                        Util.LogError("Not able to spawn trailer!");
                     }
                     zPos += ((!hasVerticalTrailers) ? (trailerInfo.m_generatedInfo.m_size.z * 0.5f) : 0f);
                     zPos -= ((!isInverted) ? trailerInfo.m_attachOffsetBack : trailerInfo.m_attachOffsetFront);
                 }
+
+                // Hook up entire train again if we are inserting trailers in the middle of one
+                if(lastSpawnHookupId != 0)
+                {
+                    instance.m_vehicles.m_buffer[prevId].m_trailingVehicle = lastSpawnHookupId;
+                    instance.m_vehicles.m_buffer[lastSpawnHookupId].m_leadingVehicle = prevId;
+                }
+
+                var sb = new StringBuilder();
+                sb.Append("Spawned trailer IDs: ");
+                foreach(var id in spawnedIds)
+                {
+                    sb.Append(id + " ");
+                }
+                Util.Log(sb.ToString());
             }
 
             /// <summary>
@@ -458,9 +483,8 @@ Goods");*/
                 }
 
                 ushort lastVehicleID = 0;
-                int subTrailerIndex = 0;
 
-                while(subTrailerIndex < multiTrailer.SubTrailers.Count)
+                for(int subTrailerIndex = 0; subTrailerIndex < multiTrailer.SubTrailers.Count; subTrailerIndex++)
                 {
                     ChangeTrailer(firstTrailerID, multiTrailer.SubTrailers[subTrailerIndex]);
                     
@@ -468,10 +492,9 @@ Goods");*/
                     firstTrailerID = VehicleManager.instance.m_vehicles.m_buffer[firstTrailerID].m_trailingVehicle;
                     if(firstTrailerID == 0 && subTrailerIndex < multiTrailer.SubTrailers.Count - 1)
                     {
-                        Util.LogError("Unexpectend end of train when spawning multi-trailer, last vehicle was [" + lastVehicleID + "]");
+                        Util.LogError("Unexpected end of train when spawning multi-trailer, last vehicle was [" + lastVehicleID + "] at subIndex [" + subTrailerIndex + "] out of total amount " + multiTrailer.SubTrailers.Count);
                         subTrailerIndex = 9999;
                     }
-                    subTrailerIndex++;
                 }
 
                 return lastVehicleID;
@@ -582,9 +605,9 @@ Goods");*/
             int num = 0;
             while(trailingVehicle != 0)
             {
-                vehicleID = trailingVehicle;
-                trailingVehicle = instance.m_vehicles.m_buffer[vehicleID].m_trailingVehicle;
-                if(++num > 16384)
+                trailingVehicle = instance.m_vehicles.m_buffer[trailingVehicle].m_trailingVehicle;
+                num++;
+                if(num > 16384)
                 {
                     CODebugBase<LogChannel>.Error(LogChannel.Core, "Invalid list detected!\n" + Environment.StackTrace);
                     break;
