@@ -21,18 +21,33 @@ namespace RandomTrainTrailers.Detour
                 __instance.m_flags |= Vehicle.Flags.Spawned;
                 Singleton<VehicleManager>.instance.AddToGrid(vehicleID, ref __instance, info.m_isLargeVehicle);
             }
+            if(__instance.m_leadingVehicle == 0 && __instance.m_trailingVehicle != 0)
+            {
+                ushort trailingVehicle = __instance.m_trailingVehicle;
+                int num = 0;
+                while(trailingVehicle != 0)
+                {
+                    Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)trailingVehicle].Spawn(trailingVehicle);
+                    trailingVehicle = Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)trailingVehicle].m_trailingVehicle;
+                    if(++num > 16384)
+                    {
+                        CODebugBase<LogChannel>.Error(LogChannel.Core, "Invalid list detected!\n" + Environment.StackTrace);
+                        break;
+                    }
+                }
+            }
             if(__instance.m_leadingVehicle == 0 && __instance.m_trailingVehicle == 0 && info.m_trailers != null)
             {
                 bool hasVerticalTrailers = info.m_vehicleAI.VerticalTrailers();
                 ushort prevId = vehicleID;
                 bool isReversed = (Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)prevId].m_flags & Vehicle.Flags.Reversed) != (Vehicle.Flags)0;
                 Vehicle.Frame lastFrameData = __instance.GetLastFrameData();
-                float zPos = (!hasVerticalTrailers) ? (info.m_generatedInfo.m_size.z * 0.5f) : 0f;
-                zPos -= (((__instance.m_flags & Vehicle.Flags.Inverted) == (Vehicle.Flags)0) ? info.m_attachOffsetBack : info.m_attachOffsetFront);
+                float spawnOffset = (!hasVerticalTrailers) ? (info.m_generatedInfo.m_size.z * 0.5f) : 0f;
+                spawnOffset -= (((__instance.m_flags & Vehicle.Flags.Inverted) == (Vehicle.Flags)0) ? info.m_attachOffsetBack : info.m_attachOffsetFront);
                 Randomizer randomizer = new Randomizer((int)vehicleID);
 
                 // Mod begin
-                int trailerCount = info.m_trailers.Length;
+                int trailerCount = Math.Min(info.m_trailers.Length, info.m_maxTrailerCount);
                 TrailerDefinition.TrailerCollection trailerCollection = null;
                 var vehicleDef = TrailerManager.GetVehicleConfig(info.name);
                 var random = new System.Random();
@@ -92,14 +107,15 @@ namespace RandomTrainTrailers.Detour
                                     isInverted = randomizer.Int32(100u) < trailerCollection.Trailers[randomTrailerIndex].SubTrailers[subTrailerIndex].InvertProbability;
 
                                     // Copy of default spawn code section below
-                                    zPos += ((!hasVerticalTrailers) ? (trailerInfo.m_generatedInfo.m_size.z * 0.5f) : trailerInfo.m_generatedInfo.m_size.y);
-                                    zPos -= ((!isInverted) ? trailerInfo.m_attachOffsetFront : trailerInfo.m_attachOffsetBack);
-                                    Vector3 position2 = lastFrameData.m_position - lastFrameData.m_rotation * new Vector3(0f, (!hasVerticalTrailers) ? 0f : zPos, (!hasVerticalTrailers) ? zPos : 0f);
+                                    spawnOffset += ((!hasVerticalTrailers) ? (trailerInfo.m_generatedInfo.m_size.z * 0.5f) : trailerInfo.m_generatedInfo.m_size.y);
+                                    spawnOffset -= ((!isInverted) ? trailerInfo.m_attachOffsetFront : trailerInfo.m_attachOffsetBack);
+                                    Vector3 position2 = lastFrameData.m_position - lastFrameData.m_rotation * new Vector3(0f, (!hasVerticalTrailers) ? 0f : spawnOffset, (!hasVerticalTrailers) ? spawnOffset : 0f);
                                     ushort trailerId2;
                                     if(Singleton<VehicleManager>.instance.CreateVehicle(out trailerId2, ref Singleton<SimulationManager>.instance.m_randomizer, trailerInfo, position2, (TransferManager.TransferReason)__instance.m_transferType, false, false))
                                     {
                                         Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)prevId].m_trailingVehicle = trailerId2;
                                         Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)trailerId2].m_leadingVehicle = prevId;
+                                        Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)trailerId2].m_gateIndex = __instance.m_gateIndex;
                                         if(isInverted)
                                         {
                                             Vehicle[] expr_24A_cp_0 = Singleton<VehicleManager>.instance.m_vehicles.m_buffer;
@@ -120,17 +136,19 @@ namespace RandomTrainTrailers.Detour
                                         Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)trailerId2].Spawn(trailerId2);
                                         prevId = trailerId2;
                                     }
-                                    zPos += ((!hasVerticalTrailers) ? (trailerInfo.m_generatedInfo.m_size.z * 0.5f) : 0f);
-                                    zPos -= ((!isInverted) ? trailerInfo.m_attachOffsetBack : trailerInfo.m_attachOffsetFront);
+                                    spawnOffset += ((!hasVerticalTrailers) ? (trailerInfo.m_generatedInfo.m_size.z * 0.5f) : 0f);
+                                    spawnOffset -= ((!isInverted) ? trailerInfo.m_attachOffsetBack : trailerInfo.m_attachOffsetFront);
 
                                     // The first sub trailer is accounted for by the normal loop,
                                     // but for others we must increment the loop counter to prevent each multi trailer counting as 1 vehicle
                                     // (which would lead to trains that are too long)
                                     if(subTrailerIndex > 0)
+                                    {
                                         i++;
+                                    }
                                 }
 
-                                continue;   //for(int i = 0; i < info.m_trailers.Length; i++)
+                                continue;   //for(int i = 0; i < trailerCount; i++), e.g. Go to next trailer
                             }
                             else
                             {
@@ -163,14 +181,15 @@ namespace RandomTrainTrailers.Detour
                         // Mod end
 
                         // Default spawn code
-                        zPos += ((!hasVerticalTrailers) ? (trailerInfo.m_generatedInfo.m_size.z * 0.5f) : trailerInfo.m_generatedInfo.m_size.y);
-                        zPos -= ((!isInverted) ? trailerInfo.m_attachOffsetFront : trailerInfo.m_attachOffsetBack);
-                        Vector3 position = lastFrameData.m_position - lastFrameData.m_rotation * new Vector3(0f, (!hasVerticalTrailers) ? 0f : zPos, (!hasVerticalTrailers) ? zPos : 0f);
+                        spawnOffset += ((!hasVerticalTrailers) ? (trailerInfo.m_generatedInfo.m_size.z * 0.5f) : trailerInfo.m_generatedInfo.m_size.y);
+                        spawnOffset -= ((!isInverted) ? trailerInfo.m_attachOffsetFront : trailerInfo.m_attachOffsetBack);
+                        Vector3 position = lastFrameData.m_position - lastFrameData.m_rotation * new Vector3(0f, (!hasVerticalTrailers) ? 0f : spawnOffset, (!hasVerticalTrailers) ? spawnOffset : 0f);
                         ushort trailerId;
                         if(Singleton<VehicleManager>.instance.CreateVehicle(out trailerId, ref Singleton<SimulationManager>.instance.m_randomizer, trailerInfo, position, (TransferManager.TransferReason)__instance.m_transferType, false, false))
                         {
                             Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)prevId].m_trailingVehicle = trailerId;
                             Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)trailerId].m_leadingVehicle = prevId;
+                            Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)trailerId].m_gateIndex = __instance.m_gateIndex;
                             if(isInverted)
                             {
                                 Vehicle[] expr_24A_cp_0 = Singleton<VehicleManager>.instance.m_vehicles.m_buffer;
@@ -191,8 +210,8 @@ namespace RandomTrainTrailers.Detour
                             Singleton<VehicleManager>.instance.m_vehicles.m_buffer[(int)trailerId].Spawn(trailerId);
                             prevId = trailerId;
                         }
-                        zPos += ((!hasVerticalTrailers) ? (trailerInfo.m_generatedInfo.m_size.z * 0.5f) : 0f);
-                        zPos -= ((!isInverted) ? trailerInfo.m_attachOffsetBack : trailerInfo.m_attachOffsetFront);
+                        spawnOffset += ((!hasVerticalTrailers) ? (trailerInfo.m_generatedInfo.m_size.z * 0.5f) : 0f);
+                        spawnOffset -= ((!isInverted) ? trailerInfo.m_attachOffsetBack : trailerInfo.m_attachOffsetFront);
                     }
                 }
             }

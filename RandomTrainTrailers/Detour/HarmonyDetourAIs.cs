@@ -143,7 +143,7 @@ namespace RandomTrainTrailers.Detour
                 vehicleData.m_flags &= ~Vehicle.Flags.WaitingSpace;
                 //TrainAI.InitializePath(vehicleID, ref vehicleData);
                 PublicInitializePath(vehicleID, ref vehicleData);
-                __result = false;
+                __result = true;
                 return false;
             }
         }
@@ -190,7 +190,7 @@ namespace RandomTrainTrailers.Detour
                 vehicleData.m_flags &= ~Vehicle.Flags.WaitingSpace;
                 //TramBaseAI.InitializePath(vehicleID, ref vehicleData);
                 PublicInitializePath(vehicleID, ref vehicleData);
-                __result = false;
+                __result = true;
                 return false;
             }
         }
@@ -425,6 +425,7 @@ Goods");*/
                     {
                         instance.m_vehicles.m_buffer[prevId].m_trailingVehicle = trailerId;
                         instance.m_vehicles.m_buffer[trailerId].m_leadingVehicle = prevId;
+                        instance.m_vehicles.m_buffer[trailerId].m_gateIndex = instance.m_vehicles.m_buffer[prevId].m_gateIndex;
                         if(isInverted)
                         {
                             Vehicle[] vehicleBuffer = instance.m_vehicles.m_buffer;
