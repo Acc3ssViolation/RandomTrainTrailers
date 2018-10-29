@@ -6,8 +6,11 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace RandomTrainTrailers.Detour
+namespace RandomTrainTrailers
 {
+    /// <summary>
+    /// Contains logic for randomizing a Vehicle's trailers
+    /// </summary>
     static class TrailerRandomizer
     {
         /// <summary>
@@ -79,11 +82,7 @@ namespace RandomTrainTrailers.Detour
                 {
                     // Randomize
                     var spawnedTrailerCount = SpawnRandomTrailer(out newTrailerId, prevVehicleId, trailerCollection, randomizer, gateIndexes[Mathf.Clamp(i, 0, gateIndexes.Count - 1)]);
-                    if(spawnedTrailerCount == 0)
-                    {
-                        Util.LogError("Unable to spawn random trailer!");
-                    }
-                    else
+                    if(spawnedTrailerCount > 0)
                     {
                         i += spawnedTrailerCount - 1;
                         prevVehicleId = newTrailerId;
@@ -186,59 +185,5 @@ namespace RandomTrainTrailers.Detour
             Singleton<VehicleManager>.instance.m_vehicles.m_buffer[trailerId].Spawn(trailerId);
             return true;
         }
-
-        /*
-        /// <summary>
-        /// Spawns a new trailer ready for usage
-        /// </summary>
-        /// <param name="leadVehicle">The leading vehicle of this line of vehicles</param>
-        /// <param name="prevVehicleId">Id of preceding vehicle this trailer is spawned behind</param>
-        /// <param name="trailerInfo">VehicleInfo of this new trailer</param>
-        /// <param name="inverted">If it should be inverted</param>
-        /// <returns></returns>
-        private static ushort SpawnNewTrailer(ref Vehicle leadVehicle, ushort prevVehicleId, VehicleInfo trailerInfo, bool inverted)
-        {
-            var manager = Singleton<VehicleManager>.instance;
-            var prevVehicle = manager.m_vehicles.m_buffer[prevVehicleId];
-            var prevFrameData = prevVehicle.GetLastFrameData();
-            var prevInfo = prevVehicle.Info;
-
-            // Half length - offset value (front if inverted, back if not)
-            var offsetLength = prevInfo.m_generatedInfo.m_size.z * 0.5f - (prevVehicle.m_flags.IsFlagSet(Vehicle.Flags.Inverted) ? prevInfo.m_attachOffsetFront : prevInfo.m_attachOffsetBack);
-            // Half length - offset value (back if inverted, front if not)
-            offsetLength += trailerInfo.m_generatedInfo.m_size.z * 0.5f - (inverted ? trailerInfo.m_attachOffsetBack : trailerInfo.m_attachOffsetFront);
-            var spawnPosition = prevFrameData.m_position + prevFrameData.m_rotation * new Vector3(0, 0, offsetLength);
-            ushort newId;
-            if(!manager.CreateVehicle(out newId, ref Singleton<SimulationManager>.instance.m_randomizer, trailerInfo, spawnPosition, (TransferManager.TransferReason)leadVehicle.m_transferType, false, false))
-            {
-                Util.LogWarning("Unable to spawn trailer");
-                return 0;
-            }
-
-            // Hook them up
-            manager.m_vehicles.m_buffer[prevVehicleId].m_trailingVehicle = newId;
-            manager.m_vehicles.m_buffer[newId].m_leadingVehicle = prevVehicleId;
-            // Set rotation data
-            manager.m_vehicles.m_buffer[newId].m_frame0.m_rotation = prevFrameData.m_rotation;
-            manager.m_vehicles.m_buffer[newId].m_frame1.m_rotation = prevFrameData.m_rotation;
-            manager.m_vehicles.m_buffer[newId].m_frame2.m_rotation = prevFrameData.m_rotation;
-            manager.m_vehicles.m_buffer[newId].m_frame3.m_rotation = prevFrameData.m_rotation;
-            // Set flags and cargo (gate index)
-            // Check if lead vehicle is reversed, if so, this one must be flagged as well
-            if(leadVehicle.m_flags.IsFlagSet(Vehicle.Flags.Reversed))
-            {
-                manager.m_vehicles.m_buffer[newId].m_flags = (manager.m_vehicles.m_buffer[newId].m_flags | Vehicle.Flags.Reversed);
-            }
-            if(inverted)
-            {
-                manager.m_vehicles.m_buffer[newId].m_flags = (manager.m_vehicles.m_buffer[newId].m_flags | Vehicle.Flags.Inverted);
-            }
-            manager.m_vehicles.m_buffer[newId].m_gateIndex = leadVehicle.m_gateIndex;
-            // Update AI and do spawn call
-            trailerInfo.m_vehicleAI.FrameDataUpdated(newId, ref manager.m_vehicles.m_buffer[newId], ref manager.m_vehicles.m_buffer[newId].m_frame0);
-            manager.m_vehicles.m_buffer[newId].Spawn(newId);
-            return newId;
-        }
-        */
     }
 }
