@@ -28,10 +28,14 @@ namespace RandomTrainTrailers.Detour
             var info = vehicle.Info;
 
             // Get trailer count we want
-            var desiredTrailerCount = Math.Min(info.m_trailers.Length, info.m_maxTrailerCount);
+            var desiredTrailerCount = info.m_trailers.Length;
             if(config.TrailerCountOverride != null && config.TrailerCountOverride.IsValid)
             {
                 desiredTrailerCount = randomizer.Int32(config.TrailerCountOverride.Min, config.TrailerCountOverride.Max + 1);
+            }
+            else if(info.m_maxTrailerCount > 0 && desiredTrailerCount > info.m_maxTrailerCount)
+            {
+                desiredTrailerCount = info.m_maxTrailerCount;
             }
             if(TrailerManager.globalTrailerLimit > 0 && desiredTrailerCount > TrailerManager.globalTrailerLimit)
             {
@@ -41,8 +45,28 @@ namespace RandomTrainTrailers.Detour
             // Select which collection to use
             var trailerCollection = config.GetRandomCollection();
 
-            // Remove existing trailers TODO: Reuse existing trailers maybe?
-            PurgeTrailers(vehicle.m_trailingVehicle);
+            // Store the gate indexes (cargo type/variation per wagon)
+            var gateIndexes = new List<byte>();
+            var manager = Singleton<VehicleManager>.instance;
+            {
+                ushort trailerId = vehicle.m_trailingVehicle;
+                while(trailerId != 0)
+                {
+                    gateIndexes.Add(manager.m_vehicles.m_buffer[trailerId].m_gateIndex);
+                    trailerId = manager.m_vehicles.m_buffer[trailerId].m_trailingVehicle;
+                }
+
+                // Unhook first trailer from lead and remove it. This will remove all trailers.
+                trailerId = vehicle.m_trailingVehicle;
+                manager.m_vehicles.m_buffer[trailerId].m_leadingVehicle = 0;
+                manager.m_vehicles.m_buffer[id].m_trailingVehicle = 0;
+                manager.ReleaseVehicle(trailerId);
+            }
+            // Ensure we have a value in case this vehicle doesn't have trailers
+            if(gateIndexes.Count == 0)
+            {
+                gateIndexes.Add(vehicle.m_gateIndex);
+            }
 
             // Spawn new trailers
             ushort prevVehicleId = id;
@@ -54,7 +78,7 @@ namespace RandomTrainTrailers.Detour
                 if(i >= config.StartOffset && i < desiredTrailerCount - config.EndOffset)
                 {
                     // Randomize
-                    var spawnedTrailerCount = SpawnRandomTrailer(out newTrailerId, prevVehicleId, trailerCollection, randomizer);
+                    var spawnedTrailerCount = SpawnRandomTrailer(out newTrailerId, prevVehicleId, trailerCollection, randomizer, gateIndexes[Mathf.Clamp(i, 0, gateIndexes.Count - 1)]);
                     if(spawnedTrailerCount == 0)
                     {
                         Util.LogError("Unable to spawn random trailer!");
@@ -75,7 +99,8 @@ namespace RandomTrainTrailers.Detour
                         ref Singleton<VehicleManager>.instance.m_vehicles.m_buffer[prevVehicleId], 
                         prevVehicleId,
                         info.m_trailers[trailersIdx].m_info, 
-                        randomizer.Int32(100u) < info.m_trailers[trailersIdx].m_invertProbability))
+                        randomizer.Int32(100u) < info.m_trailers[trailersIdx].m_invertProbability,
+                        gateIndexes[Mathf.Clamp(i, 0, gateIndexes.Count - 1)]))
                     {
                         prevVehicleId = trailerId;
                     }
@@ -90,7 +115,8 @@ namespace RandomTrainTrailers.Detour
                         ref Singleton<VehicleManager>.instance.m_vehicles.m_buffer[prevVehicleId],
                         prevVehicleId,
                         info.m_trailers[trailersIdx].m_info,
-                        randomizer.Int32(100u) < info.m_trailers[trailersIdx].m_invertProbability))
+                        randomizer.Int32(100u) < info.m_trailers[trailersIdx].m_invertProbability,
+                        gateIndexes[Mathf.Clamp(i, 0, gateIndexes.Count - 1)]))
                     {
                         prevVehicleId = trailerId;
                     }
@@ -101,28 +127,13 @@ namespace RandomTrainTrailers.Detour
         }
 
         /// <summary>
-        /// Releases a vehicle and all its trailing vehicles
-        /// </summary>
-        /// <param name="firstTrailerId">The first vehicle to remove</param>
-        private static void PurgeTrailers(ushort firstTrailerId)
-        {
-            var manager = Singleton<VehicleManager>.instance;
-            while(firstTrailerId != 0)
-            {
-                var nextTrailerId = manager.m_vehicles.m_buffer[firstTrailerId].m_trailingVehicle;
-                manager.ReleaseVehicle(firstTrailerId);
-                firstTrailerId = nextTrailerId;
-            }
-        }
-
-        /// <summary>
         /// Spawns a random trailer from the collection after the given previous vehicle
         /// </summary>
         /// <param name="lastTrailerId">The id of the last trailer that this method spawned on invocation</param>
         /// <param name="prevVehicleId">The id of the vehicle to put the new trailers behind</param>
         /// <param name="trailerCollection">The collection of trailers</param>
         /// <returns></returns>
-        private static int SpawnRandomTrailer(out ushort lastTrailerId, ushort prevVehicleId, TrailerDefinition.TrailerCollection trailerCollection, Randomizer randomizer)
+        private static int SpawnRandomTrailer(out ushort lastTrailerId, ushort prevVehicleId, TrailerDefinition.TrailerCollection trailerCollection, Randomizer randomizer, byte gateIndex)
         {
             lastTrailerId = 0;
 
@@ -134,7 +145,7 @@ namespace RandomTrainTrailers.Detour
                 for(int i = 0; i < infos.Count; i++)
                 {
                     ushort trailerId;
-                    if(SpawnTrailer(out trailerId, ref Singleton<VehicleManager>.instance.m_vehicles.m_buffer[prevVehicleId], prevVehicleId, infos[i], randomizer.Int32(100u) < trailer.InvertProbability))
+                    if(SpawnTrailer(out trailerId, ref Singleton<VehicleManager>.instance.m_vehicles.m_buffer[prevVehicleId], prevVehicleId, infos[i], randomizer.Int32(100u) < trailer.InvertProbability, gateIndex))
                     {
                         prevVehicleId = trailerId;
                         lastTrailerId = trailerId;
@@ -151,7 +162,7 @@ namespace RandomTrainTrailers.Detour
 
             // Spawn single trailer
             var info = trailer.GetInfo();
-            if(SpawnTrailer(out lastTrailerId, ref Singleton<VehicleManager>.instance.m_vehicles.m_buffer[prevVehicleId], prevVehicleId, info, randomizer.Int32(100u) < trailer.InvertProbability))
+            if(SpawnTrailer(out lastTrailerId, ref Singleton<VehicleManager>.instance.m_vehicles.m_buffer[prevVehicleId], prevVehicleId, info, randomizer.Int32(100u) < trailer.InvertProbability, gateIndex))
             {
                 return 1;
             }
@@ -166,12 +177,12 @@ namespace RandomTrainTrailers.Detour
         /// <param name="trailerInfo">The info of the new trailer</param>
         /// <param name="inverted">If the new trailer should be inverted</param>
         /// <returns>Id of new trailer, 0 on fail</returns>
-        private static bool SpawnTrailer(out ushort trailerId, ref Vehicle prevVehicle, ushort prevVehicleId, VehicleInfo trailerInfo, bool inverted)
+        private static bool SpawnTrailer(out ushort trailerId, ref Vehicle prevVehicle, ushort prevVehicleId, VehicleInfo trailerInfo, bool inverted, byte gateIndex)
         {
             trailerId = prevVehicle.CreateTrailer(prevVehicleId, trailerInfo, inverted);
             if(trailerId == 0) { return false; }
 
-            Singleton<VehicleManager>.instance.m_vehicles.m_buffer[trailerId].m_gateIndex = prevVehicle.m_gateIndex;
+            Singleton<VehicleManager>.instance.m_vehicles.m_buffer[trailerId].m_gateIndex = gateIndex;
             Singleton<VehicleManager>.instance.m_vehicles.m_buffer[trailerId].Spawn(trailerId);
             return true;
         }
