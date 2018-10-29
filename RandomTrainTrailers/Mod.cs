@@ -10,7 +10,7 @@ namespace RandomTrainTrailers
         public static SavedBool enableUseCargo = new SavedBool("UseCargoData", settingsFile, false, true);
 
         public const string name = "Random Train Trailers";
-        public const string versionString = "1.6.5";
+        public const string versionString = "2.0.0";
         public const string settingsFile = "RandomTrainTrailers";
         public const string harmonyPackage = "com.github.accessviolation.rtt";
 
@@ -18,7 +18,7 @@ namespace RandomTrainTrailers
         {
             get
             {
-                return "Better than ever before! Gives the option to have random trailers spawn for trains and other vehicles.";
+                return "Configurable train consist randomization";
             }
         }
 
@@ -85,15 +85,6 @@ namespace RandomTrainTrailers
             });
             checkBox.tooltip = "Toggles the in-game UI to change configs.";
 
-            /*
-            // TODO: Make sure this works on mac
-            group.AddButton("Open user config directory", () => {
-                System.Diagnostics.Process.Start(ColossalFramework.IO.DataLocation.localApplicationData);
-            });
-            group.AddButton("Open default config directory", () => {
-                System.Diagnostics.Process.Start(Util.ModDirectory);
-            });
-            */
         }
 
         public static bool IsValidLoadMode(LoadMode mode)

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RandomTrainTrailers
 {
-    class SharedTrailerConfigLoader : ConfigLoader
+    class SharedTrailerConfigLoader : AbstractConfigLoader
     {
         public override string FileName
         {
