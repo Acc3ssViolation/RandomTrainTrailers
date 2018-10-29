@@ -25,6 +25,7 @@ namespace RandomTrainTrailers
         public ushort building;
         public ushort transferSize;
         public CargoFlags flags;
+
         public int ResourceType => LowestFlagToIndex(flags);
 
         public static int LowestFlagToIndex(CargoFlags flags)
@@ -79,84 +80,103 @@ namespace RandomTrainTrailers
         {
             this.transferSize = transferSize;
             this.building = buildingID;
-            this.flags = CargoFlags.None;
+            this.flags = TransferToFlags((TransferType)transferType);
+        }
 
-            switch((TransferType)transferType)
+        public static CargoFlags TransferToFlags(TransferType transfer)
+        {
+            switch(transfer)
             {
                 case TransferType.Oil:
-                    this.flags |= CargoFlags.Oil;
-                    break;
+                    return CargoFlags.Oil;
                 case TransferType.Ore:
-                    this.flags |= CargoFlags.Ore;
-                    break;
+                    return CargoFlags.Ore;
                 case TransferType.Logs:
-                    this.flags |= CargoFlags.Logs;
-                    break;
+                    return CargoFlags.Logs;
                 case TransferType.Grain:
-                    this.flags |= CargoFlags.Grain;
-                    break;
+                    return CargoFlags.Grain;
                 case TransferType.Petrol:
-                    this.flags |= CargoFlags.Petrol;
-                    break;
+                    return CargoFlags.Petrol;
                 case TransferType.Coal:
-                    this.flags |= CargoFlags.Coal;
-                    break;
+                    return CargoFlags.Coal;
                 case TransferType.Lumber:
-                    this.flags |= CargoFlags.Lumber;
-                    break;
+                    return CargoFlags.Lumber;
                 case TransferType.Food:
-                    this.flags |= CargoFlags.Food;
-                    break;
+                    return CargoFlags.Food;
                 case TransferType.Goods:
-                    this.flags |= CargoFlags.Goods;
-                    break;
+                    return CargoFlags.Goods;
                 case TransferType.Mail:
-                    this.flags |= CargoFlags.Mail;
-                    break;
+                    return CargoFlags.Mail;
                 case TransferType.UnsortedMail:
-                    this.flags |= CargoFlags.Mail;
-                    break;
+                    return CargoFlags.Mail;
                 case TransferType.SortedMail:
-                    this.flags |= CargoFlags.Mail;
-                    break;
+                    return CargoFlags.Mail;
                 case TransferType.IncomingMail:
-                    this.flags |= CargoFlags.Mail;
-                    break;
+                    return CargoFlags.Mail;
                 case TransferType.OutgoingMail:
-                    this.flags |= CargoFlags.Mail;
-                    break;
+                    return CargoFlags.Mail;
                 case TransferType.AnimalProducts:
-                    this.flags |= CargoFlags.Food;
-                    break;
+                    return CargoFlags.Food;
                 case TransferType.Flours:
-                    this.flags |= CargoFlags.Grain;
-                    break;
+                    return CargoFlags.Grain;
                 case TransferType.Paper:
-                    this.flags |= CargoFlags.Goods;
-                    break;
+                    return CargoFlags.Goods;
                 case TransferType.PlanedTimber:
-                    this.flags |= CargoFlags.Lumber;
-                    break;
+                    return CargoFlags.Lumber;
                 case TransferType.Petroleum:
-                    this.flags |= CargoFlags.Petrol;
-                    break;
+                    return CargoFlags.Petrol;
                 case TransferType.Plastics:
-                    this.flags |= CargoFlags.Goods;
-                    break;
+                    return CargoFlags.Goods;
                 case TransferType.Glass:
-                    this.flags |= CargoFlags.Goods;
-                    break;
+                    return CargoFlags.Goods;
                 case TransferType.Metals:
-                    this.flags |= CargoFlags.Metals;
-                    break;
+                    return CargoFlags.Metals;
                 case TransferType.LuxuryProducts:
-                    this.flags |= CargoFlags.Goods;
-                    break;
+                    return CargoFlags.Goods;
                 default:
                     // Changed to use RTT error logging
-                    Util.LogError("Unexpected transfer type: " + Enum.GetName(typeof(TransferType), transferType));
-                    break;
+                    Util.LogError("Unexpected transfer type: " + Enum.GetName(typeof(TransferType), transfer));
+                    return CargoFlags.Goods;
             }
+        }
+
+        public static byte FlagIndexToGateIndex(int flagIndex)
+        {
+            if(flagIndex == 0 || flagIndex == 1)        // Oil, Petrol
+            {
+                return 6;
+            }
+            else if(flagIndex == 2 || flagIndex == 3)   // Ore, Coal
+            {
+                return 7;
+            }
+            else if(flagIndex == 4) // Logs
+            {
+                return 4;
+            }
+            else if(flagIndex == 6) // Grain
+            {
+                return 3;
+            }
+            return 0;   // Generic goods and all other
+        }
+
+        public static string FlagIndexToName(int flagIndex)
+        {
+            return ResourceTypes[flagIndex].ToString();
+        }
+
+        public static string TransferToName(byte transfer)
+        {
+            return ((TransferType)transfer).ToString();
+        }
+
+        public static byte GetEmptyGateIndex(byte gateIndex)
+        {
+            if(gateIndex == 0) { return 1; }
+            if(gateIndex == 4) { return 5; }
+            if(gateIndex == 7) { return 8; }
+            return gateIndex;
         }
     }
 }

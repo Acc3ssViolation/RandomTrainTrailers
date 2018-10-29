@@ -41,20 +41,20 @@ Glass = 103,					Goods
 Metals = 104,					Metals
 LuxuryProducts = 105,			Goods
 
-Mod Pre-Patch
+Mod Pre-Patch					To GateIndex
 
-None    = 0,
-Oil     = 1,
-Petrol  = 2,
-Ore     = 4,
-Coal    = 8,
-Logs    = 16,
-Lumber  = 32,
-Grain   = 64,
-Food    = 128,
-Goods   = 256,
+None    = 0,					1
+Oil     = 1,					6
+Petrol  = 2,					6
+Ore     = 4,					7
+Coal    = 8,					7
+Logs    = 16,					4
+Lumber  = 32,					0
+Grain   = 64,					3
+Food    = 128,					0
+Goods   = 256,					0
 
 Mod Newly Added
 
-Mail	= 512,
-Metals	= 1024,
+Mail	= 512,					0
+Metals	= 1024,					0
