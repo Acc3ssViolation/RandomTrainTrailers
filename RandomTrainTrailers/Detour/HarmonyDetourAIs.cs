@@ -29,6 +29,14 @@ namespace RandomTrainTrailers.Detour
             }
             Util.Log("Harmony v" + currentVersion, true);
 
+            // Mod to game
+            Util.Log("Redirecting mod to game");
+
+            RedirectionHelper.RedirectCalls(
+                typeof(TrainAI_Detour).GetMethod("InitializePath", BindingFlags.Static | BindingFlags.Public), 
+                typeof(TrainAI).GetMethod("InitializePath", BindingFlags.Static | BindingFlags.NonPublic));
+
+            Util.Log("Finished redirecting mod to game");
 
             // Harmony
 
@@ -53,6 +61,15 @@ namespace RandomTrainTrailers.Detour
             Util.Log("(Not) Reverting redirects...", true);
         }
 
+        class TrainAI_Detour
+        {
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            public static void InitializePath(ushort vehicleID, ref Vehicle vehicleData)
+            {
+                Util.Log("InitializePath was called even though it is supposed to be redirected to game!");
+            }
+        }
+
         class CargoTrainAI_Detour
         {
             [MethodImpl(MethodImplOptions.NoInlining)]
@@ -68,6 +85,7 @@ namespace RandomTrainTrailers.Detour
                         if(randomizer.Int32(100) < config.RandomTrailerChance)
                         {
                             TrailerRandomizer.RandomizeTrailers(ref vehicleData, vehicleID, config, randomizer);
+                            TrainAI_Detour.InitializePath(vehicleID, ref vehicleData);
                         }
                     }
                 }
