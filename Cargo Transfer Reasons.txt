@@ -1,16 +1,16 @@
 Describes the status of TransferReasons for goods as of the Industries update
 
-Game GateIndex (related to submesh variation masks, the associated mask is (2 ^ gateIndex))
+Game GateIndex		-->		Submesh Variation
 
-Else = 0,
-Else Empty = 1,
-AnimalProducts = 2,
-Grain = 3,
-Logs = 4,
-Empty Logs = 5,
-Oil, Petrol = 6,
-Ore = 7,
-Empty Ore = 8,
+Else = 0,					1
+Else Empty = 1,				2
+AnimalProducts = 2,			4
+Grain = 3,					8
+Logs = 4,					16
+Empty Logs = 5,				32
+Oil, Petrol = 6,			64
+Ore = 7,					128
+Empty Ore = 8,				256
 
 Game Pre-Patch Cargo related TransferReason 
 
