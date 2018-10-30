@@ -1,0 +1,60 @@
+Describes the status of TransferReasons for goods as of the Industries update
+
+Game GateIndex
+
+Else = 0,
+Else Empty = 1,
+AnimalProducts = 2,
+Grain = 3,
+Logs = 4,
+Empty Logs = 5,
+Oil, Petrol = 6,
+Ore = 7,
+Empty Ore = 8,
+
+Game Pre-Patch
+
+Oil = 13,
+Ore = 14,
+Logs = 15,
+Grain = 16,
+Goods = 17,
+Coal = 19,
+Petrol = 31,
+Food = 32,
+Lumber = 37,
+
+Game Newly Added				Put in Category for Mod
+
+Mail = 92,						Mail
+UnsortedMail = 93,				Mail
+SortedMail = 94,				Mail
+OutgoingMail = 95,				Mail
+IncomingMail = 96,				Mail
+AnimalProducts = 97,			Food
+Flours = 98,					Grain
+Paper = 99,						Goods
+PlanedTimber = 100,				Lumber
+Petroleum = 101,				Petrol
+Plastics = 102,					Goods
+Glass = 103,					Goods
+Metals = 104,					Metals
+LuxuryProducts = 105,			Goods
+
+Mod Pre-Patch					To GateIndex
+
+None    = 0,					1
+Oil     = 1,					6
+Petrol  = 2,					6
+Ore     = 4,					7
+Coal    = 8,					7
+Logs    = 16,					4
+Lumber  = 32,					0
+Grain   = 64,					3
+Food    = 128,					0
+Goods   = 256,					0
+
+Mod Newly Added
+
+Mail	= 512,					0
+Metals	= 1024,					0

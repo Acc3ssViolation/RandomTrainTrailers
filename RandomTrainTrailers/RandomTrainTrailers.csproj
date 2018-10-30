@@ -67,14 +67,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CargoParcel.cs" />
-    <Compile Include="ConfigLoader.cs" />
+    <Compile Include="AbstractConfigLoader.cs" />
     <Compile Include="DebugBehaviour.cs" />
     <Compile Include="DefaultTrailerConfig.cs" />
     <Compile Include="Detour\HarmonyDetourAIs.cs" />
     <Compile Include="Detour\RedirectionHelper.cs" />
+    <Compile Include="TrailerRandomizer.cs" />
     <Compile Include="Mod.cs" />
     <Compile Include="ModLoadingExtension.cs" />
-    <Compile Include="Detour\VehicleDetour.cs" />
     <Compile Include="PreviewRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SharedTrailerConfigLoader.cs" />
@@ -94,6 +94,7 @@
     <Compile Include="UI\UITrainAssetItem.cs" />
     <Compile Include="UI\UIUtils.cs" />
     <Compile Include="Util.cs" />
+    <Compile Include="VehicleExtensions.cs" />
     <Compile Include="VehiclePrefabs.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

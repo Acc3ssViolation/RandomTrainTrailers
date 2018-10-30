@@ -339,58 +339,54 @@ namespace RandomTrainTrailers
                 }
 
                 // Cargo
-                if(Mod.enableUseCargo)
+                foreach(var collection in vehicle.m_trailerCollections)
                 {
-                    foreach(var collection in vehicle.m_trailerCollections)
+                    if(collection.m_trailerCollection.m_cargoData != null)
                     {
-                        if(collection.m_trailerCollection.m_cargoData != null)
+                        continue;
+                    }
+
+                    collection.m_trailerCollection.m_cargoData = new TrailerDefinition.TrailerCollection.CargoData();
+
+                    // Use lists in the adding process
+                    var lists = new List<TrailerDefinition.Trailer>[CargoParcel.ResourceTypes.Length];
+                    for(int i = 0; i < lists.Length; i++)
+                    {
+                        lists[i] = new List<TrailerDefinition.Trailer>();
+                    }
+
+                    foreach(var trailer in collection.m_trailerCollection.Trailers)
+                    {
+                        if(trailer.IsCollection) continue;
+
+                        if(trailer.CargoType == CargoFlags.None)
                         {
-                            continue;
-                        }
-
-                        collection.m_trailerCollection.m_cargoData = new TrailerDefinition.TrailerCollection.CargoData();
-
-                        // Use lists in the adding process
-                        var lists = new List<TrailerDefinition.Trailer>[CargoParcel.ResourceTypes.Length];
-                        for(int i = 0; i < lists.Length; i++)
-                        {
-                            lists[i] = new List<TrailerDefinition.Trailer>();
-                        }
-
-                        foreach(var trailer in collection.m_trailerCollection.Trailers)
-                        {
-                            if(trailer.IsCollection) continue;
-
-                            if(trailer.CargoType == CargoFlags.None)
+                            // add to all
+                            for(int i = 0; i < lists.Length; i++)
                             {
-                                // add to all
-                                for(int i = 0; i < lists.Length; i++)
+                                lists[i].Add(trailer);
+                            }
+                        }
+                        else
+                        {
+                            // Add to flagged types
+                            for(int i = 0; i < CargoParcel.ResourceTypes.Length; i++)
+                            {
+                                if((trailer.CargoType & CargoParcel.ResourceTypes[i]) > 0)
                                 {
                                     lists[i].Add(trailer);
                                 }
                             }
-                            else
-                            {
-                                // Add to flagged types
-                                for(int i = 0; i < CargoParcel.ResourceTypes.Length; i++)
-                                {
-                                    if((trailer.CargoType & CargoParcel.ResourceTypes[i]) > 0)
-                                    {
-                                        lists[i].Add(trailer);
-                                    }
-                                }
-                            }
                         }
+                    }
 
-                        // Convert lists to arrays and store them
+                    // Convert lists to arrays and store them
 
-                        for(int i = 0; i < lists.Length; i++)
-                        {
-                            collection.m_trailerCollection.m_cargoData.m_trailers[i] = lists[i].ToArray();
-                        }
-                    }                  
+                    for(int i = 0; i < lists.Length; i++)
+                    {
+                        collection.m_trailerCollection.m_cargoData.m_trailers[i] = lists[i].ToArray();
+                    }
                 }
-
             }
 
             GC.Collect();
@@ -413,10 +409,7 @@ namespace RandomTrainTrailers
                 {
                     sb.AppendLine("\t\t\tTrailer: " + trailer.AssetName);
                     sb.AppendLine("\t\t\tWeight: " + trailer.Weight);
-                    if(Mod.enableUseCargo)
-                    {
-                        sb.AppendLine("\t\t\tCargo: " + trailer.CargoType);
-                    }
+                    sb.AppendLine("\t\t\tCargo: " + trailer.CargoType);
 
                     if(trailer.IsMultiTrailer())
                     {
@@ -450,10 +443,7 @@ namespace RandomTrainTrailers
                         sb.AppendLine("\tINVALID TRAILER COUNT OVERRIDE SETTINGS");
                     }
                 }
-                if(Mod.enableUseCargo)
-                {
-                    sb.AppendLine("\tUseCargo: " + vehicle.UseCargoContents.ToString());
-                }
+                sb.AppendLine("\tUseCargo: " + vehicle.UseCargoContents.ToString());
                 sb.AppendLine("\tCollections:");
                 foreach(var collection in vehicle.m_trailerCollections)
                 {
@@ -465,10 +455,7 @@ namespace RandomTrainTrailers
                         {
                             sb.AppendLine("\t\t\tTrailer: " + trailer.AssetName);
                             sb.AppendLine("\t\t\tWeight: " + trailer.Weight);
-                            if(Mod.enableUseCargo)
-                            {
-                                sb.AppendLine("\t\t\tCargo: " + trailer.CargoType);
-                            }
+                            sb.AppendLine("\t\t\tCargo: " + trailer.CargoType);
 
                             if(trailer.IsMultiTrailer())
                             {

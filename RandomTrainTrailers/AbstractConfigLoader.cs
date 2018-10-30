@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 
 namespace RandomTrainTrailers
 {
-    abstract class ConfigLoader
+    abstract class AbstractConfigLoader
     {
         /// <summary>
         /// The filename of this type of config file.

@@ -735,12 +735,9 @@ namespace RandomTrainTrailers.UI
                 m_trailerMin.SetValue(m_selectedVehicleData._TrailerCountOverrideMin);
                 m_trailerMax.SetValue(m_selectedVehicleData._TrailerCountOverrideMax);
                 m_useDefault.isChecked = m_selectedVehicleData.AllowDefaultTrailers;
-                m_useCargo.isVisible = Mod.enableUseCargo;
-                if(Mod.enableUseCargo)
-                {
-                    m_useCargo.isChecked = m_selectedVehicleData.UseCargoContents;
-                }
-                
+                m_useCargo.isVisible = true;
+                m_useCargo.isChecked = m_selectedVehicleData.UseCargoContents;
+
             }
             else
             {

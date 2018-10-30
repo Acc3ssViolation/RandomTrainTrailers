@@ -212,7 +212,7 @@ namespace RandomTrainTrailers.UI
             // Disable/enable components based on type
             fieldInvert.panel.isVisible = !multiTrailer && !collection;
             buttonEditMulti.isVisible = multiTrailer;
-            buttonCargoType.isVisible = !collection && Mod.enableUseCargo;
+            buttonCargoType.isVisible = !collection;
 
             if(isRowOdd)
             {
