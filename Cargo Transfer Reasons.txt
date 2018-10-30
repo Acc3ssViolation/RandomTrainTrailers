@@ -1,6 +1,6 @@
 Describes the status of TransferReasons for goods as of the Industries update
 
-Game GateIndex
+Game GateIndex (related to submesh variation masks, the associated mask is (2 ^ gateIndex))
 
 Else = 0,
 Else Empty = 1,
@@ -12,7 +12,7 @@ Oil, Petrol = 6,
 Ore = 7,
 Empty Ore = 8,
 
-Game Pre-Patch
+Game Pre-Patch Cargo related TransferReason 
 
 Oil = 13,
 Ore = 14,
@@ -24,7 +24,7 @@ Petrol = 31,
 Food = 32,
 Lumber = 37,
 
-Game Newly Added				Put in Category for Mod
+Game Newly Added				Converted to Mod Category:
 
 Mail = 92,						Mail
 UnsortedMail = 93,				Mail
@@ -41,20 +41,20 @@ Glass = 103,					Goods
 Metals = 104,					Metals
 LuxuryProducts = 105,			Goods
 
-Mod Pre-Patch					To GateIndex
+Mod Pre-Patch Cargo Types		Converted to GateIndex (related to variation masks):
 
 None    = 0,					1
 Oil     = 1,					6
 Petrol  = 2,					6
-Ore     = 4,					7
-Coal    = 8,					7
-Logs    = 16,					4
-Lumber  = 32,					0
+Ore     = 4,					7	(8 for empty wagon)
+Coal    = 8,					7	(8 for empty wagon)
+Logs    = 16,					4	(5 for empty wagon)
+Lumber  = 32,					0	(1 for empty wagon)
 Grain   = 64,					3
-Food    = 128,					0
-Goods   = 256,					0
+Food    = 128,					0	(1 for empty wagon)
+Goods   = 256,					0	(1 for empty wagon)
 
 Mod Newly Added
 
-Mail	= 512,					0
-Metals	= 1024,					0
+Mail	= 512,					0	(1 for empty wagon)
+Metals	= 1024,					0	(1 for empty wagon)
