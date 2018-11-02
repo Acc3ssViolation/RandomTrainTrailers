@@ -31,7 +31,7 @@ UnsortedMail = 93,				Mail
 SortedMail = 94,				Mail
 OutgoingMail = 95,				Mail
 IncomingMail = 96,				Mail
-AnimalProducts = 97,			Food
+AnimalProducts = 97,			AnimalProducts
 Flours = 98,					Grain
 Paper = 99,						Goods
 PlanedTimber = 100,				Lumber
@@ -58,3 +58,4 @@ Mod Newly Added
 
 Mail	= 512,					0	(1 for empty wagon)
 Metals	= 1024,					0	(1 for empty wagon)
+AnimalProducts = 2048,			2

@@ -132,6 +132,12 @@ namespace RandomTrainTrailers
             public string Name { get; set; }
 
             /// <summary>
+            /// The collection that this collection extends.
+            /// </summary>
+            [XmlAttribute("base"), DefaultValue(null)]
+            public string BaseCollection { get; set; }
+
+            /// <summary>
             /// The trailers of this collection.
             /// </summary>
             public List<Trailer> Trailers { get; set; }
@@ -149,6 +155,7 @@ namespace RandomTrainTrailers
             public TrailerCollection(string name)
             {
                 Name = name;
+                BaseCollection = null;
                 Trailers = new List<Trailer>();
             }
 

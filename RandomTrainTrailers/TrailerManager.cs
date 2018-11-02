@@ -196,25 +196,49 @@ namespace RandomTrainTrailers
             // Add trailer collections
             foreach(var collection in definition.Collections)
             {
-                var ct = collection.Trailers;
-                CleanTrailerList(ref ct, new HashSet<string>());
-                
-                if(collection.Trailers.Count > 0)
+                if(!collectionDict.ContainsKey(collection.Name))
                 {
-                    if(!collectionDict.ContainsKey(collection.Name))
-                    {
-                        collectionDict.Add(collection.Name, collection);
-                    }
-                    else
-                    {
-                        Util.LogWarning("Duplicate collection name, overriding previous collection! " + collection.Name);
-                        collectionDict[collection.Name] = collection;
-                    }                   
+                    collectionDict.Add(collection.Name, collection);
                 }
                 else
                 {
+                    Util.LogWarning("Duplicate collection name, overriding previous collection! " + collection.Name);
+                    collectionDict[collection.Name] = collection;
+                }
+            }
+            // Extend and clean collections
+            foreach(var collection in definition.Collections)
+            {
+                if(collection.BaseCollection != null)
+                {
+                    TrailerDefinition.TrailerCollection baseCollection;
+                    if(collectionDict.TryGetValue(collection.BaseCollection, out baseCollection))
+                    {
+                        foreach(var trailer in baseCollection.Trailers)
+                        {
+                            // Do it manually to prevent duplicates if a collection gets loaded multiple times
+                            if(collection.Trailers.Contains(trailer)) { continue; }
+                            collection.Trailers.Add(trailer);
+                        }
+                        
+                    }
+                    else
+                    {
+                        Util.LogWarning(string.Format("Base collection {0} used by {1} was not loaded", collection.BaseCollection, collection.Name));
+                    }
+                }
+
+                var ct = collection.Trailers;
+                CleanTrailerList(ref ct, new HashSet<string>());
+                if(collection.Trailers.Count == 0)
+                {
                     removedCollections.Add(collection.Name);
                 }
+            }
+            // Clean up the dict
+            foreach(var entry in removedCollections)
+            {
+                collectionDict.Remove(entry);
             }
 
             Util.Log("Adding vehicle entries...", true);
@@ -404,7 +428,7 @@ namespace RandomTrainTrailers
             foreach(var collection in collectionDict.Values)
             {
                 sb.AppendLine("\tName: " + collection.Name);
-
+                sb.AppendLine("\tBase: " + Convert.ToString(collection.BaseCollection));
                 foreach(var trailer in collection.Trailers)
                 {
                     sb.AppendLine("\t\t\tTrailer: " + trailer.AssetName);

@@ -18,6 +18,7 @@ namespace RandomTrainTrailers
         Goods   = 256,
         Mail    = 512,
         Metals  = 1024,
+        AnimalProducts = 2048,
     }
 
     public struct CargoParcel
@@ -57,23 +58,25 @@ namespace RandomTrainTrailers
             CargoFlags.Goods,
             CargoFlags.Mail,
             CargoFlags.Metals,
+            CargoFlags.AnimalProducts,
         };
 
         /// <summary>
         /// Fallback table in case we can't assign the correct goods type
         /// </summary>
         public static readonly CargoFlags[][] ResourceFallback = {
-            new[] {CargoFlags.Oil, CargoFlags.Petrol, CargoFlags.Goods, CargoFlags.Food, CargoFlags.Ore, CargoFlags.Coal, CargoFlags.Grain, CargoFlags.Lumber, CargoFlags.Logs, CargoFlags.Metals, CargoFlags.Mail},
-            new[] {CargoFlags.Petrol, CargoFlags.Oil, CargoFlags.Goods, CargoFlags.Food, CargoFlags.Ore, CargoFlags.Coal, CargoFlags.Grain, CargoFlags.Lumber, CargoFlags.Logs, CargoFlags.Metals, CargoFlags.Mail},
-            new[] {CargoFlags.Ore, CargoFlags.Coal, CargoFlags.Goods, CargoFlags.Food, CargoFlags.Oil, CargoFlags.Petrol, CargoFlags.Grain, CargoFlags.Lumber, CargoFlags.Logs, CargoFlags.Metals, CargoFlags.Mail},
-            new[] {CargoFlags.Coal, CargoFlags.Ore, CargoFlags.Goods, CargoFlags.Food, CargoFlags.Oil, CargoFlags.Petrol, CargoFlags.Grain, CargoFlags.Lumber, CargoFlags.Logs, CargoFlags.Metals, CargoFlags.Mail},
-            new[] {CargoFlags.Logs, CargoFlags.Lumber, CargoFlags.Goods, CargoFlags.Food, CargoFlags.Ore, CargoFlags.Coal, CargoFlags.Grain, CargoFlags.Petrol, CargoFlags.Oil, CargoFlags.Metals, CargoFlags.Mail},
-            new[] {CargoFlags.Lumber, CargoFlags.Logs, CargoFlags.Goods, CargoFlags.Food, CargoFlags.Ore, CargoFlags.Coal, CargoFlags.Grain, CargoFlags.Petrol, CargoFlags.Oil, CargoFlags.Metals, CargoFlags.Mail},
-            new[] {CargoFlags.Grain, CargoFlags.Food, CargoFlags.Goods, CargoFlags.Mail, CargoFlags.Lumber, CargoFlags.Coal, CargoFlags.Logs, CargoFlags.Petrol, CargoFlags.Oil, CargoFlags.Metals, CargoFlags.Ore},
-            new[] {CargoFlags.Food, CargoFlags.Goods, CargoFlags.Grain, CargoFlags.Mail, CargoFlags.Lumber, CargoFlags.Coal, CargoFlags.Logs, CargoFlags.Petrol, CargoFlags.Oil, CargoFlags.Metals, CargoFlags.Ore},
-            new[] {CargoFlags.Goods, CargoFlags.Food, CargoFlags.Grain, CargoFlags.Ore, CargoFlags.Lumber, CargoFlags.Coal, CargoFlags.Logs, CargoFlags.Petrol, CargoFlags.Oil, CargoFlags.Metals, CargoFlags.Mail},
-            new[] {CargoFlags.Mail, CargoFlags.Goods, CargoFlags.Food, CargoFlags.Ore, CargoFlags.Lumber, CargoFlags.Coal, CargoFlags.Logs, CargoFlags.Petrol, CargoFlags.Oil, CargoFlags.Grain, CargoFlags.Metals},
-            new[] {CargoFlags.Metals, CargoFlags.Goods, CargoFlags.Ore, CargoFlags.Food, CargoFlags.Lumber, CargoFlags.Coal, CargoFlags.Logs, CargoFlags.Petrol, CargoFlags.Oil, CargoFlags.Grain, CargoFlags.Mail},
+            new[] {CargoFlags.Oil, CargoFlags.Petrol, CargoFlags.Goods, CargoFlags.Food, CargoFlags.Ore, CargoFlags.Coal, CargoFlags.Grain, CargoFlags.Lumber, CargoFlags.Logs, CargoFlags.Metals, CargoFlags.Mail, CargoFlags.AnimalProducts},
+            new[] {CargoFlags.Petrol, CargoFlags.Oil, CargoFlags.Goods, CargoFlags.Food, CargoFlags.Ore, CargoFlags.Coal, CargoFlags.Grain, CargoFlags.Lumber, CargoFlags.Logs, CargoFlags.Metals, CargoFlags.Mail, CargoFlags.AnimalProducts},
+            new[] {CargoFlags.Ore, CargoFlags.Coal, CargoFlags.Goods, CargoFlags.Food, CargoFlags.Oil, CargoFlags.Petrol, CargoFlags.Grain, CargoFlags.Lumber, CargoFlags.Logs, CargoFlags.Metals, CargoFlags.Mail, CargoFlags.AnimalProducts},
+            new[] {CargoFlags.Coal, CargoFlags.Ore, CargoFlags.Goods, CargoFlags.Food, CargoFlags.Oil, CargoFlags.Petrol, CargoFlags.Grain, CargoFlags.Lumber, CargoFlags.Logs, CargoFlags.Metals, CargoFlags.Mail, CargoFlags.AnimalProducts},
+            new[] {CargoFlags.Logs, CargoFlags.Lumber, CargoFlags.Goods, CargoFlags.Food, CargoFlags.Ore, CargoFlags.Coal, CargoFlags.Grain, CargoFlags.Petrol, CargoFlags.Oil, CargoFlags.Metals, CargoFlags.Mail, CargoFlags.AnimalProducts},
+            new[] {CargoFlags.Lumber, CargoFlags.Logs, CargoFlags.Goods, CargoFlags.Food, CargoFlags.AnimalProducts, CargoFlags.Ore, CargoFlags.Coal, CargoFlags.Grain, CargoFlags.Petrol, CargoFlags.Oil, CargoFlags.Metals, CargoFlags.Mail},
+            new[] {CargoFlags.Grain, CargoFlags.Food, CargoFlags.Goods, CargoFlags.AnimalProducts, CargoFlags.Mail, CargoFlags.Lumber, CargoFlags.Coal, CargoFlags.Logs, CargoFlags.Petrol, CargoFlags.Oil, CargoFlags.Metals, CargoFlags.Ore},
+            new[] {CargoFlags.Food, CargoFlags.Goods, CargoFlags.AnimalProducts, CargoFlags.Grain, CargoFlags.Mail, CargoFlags.Lumber, CargoFlags.Coal, CargoFlags.Logs, CargoFlags.Petrol, CargoFlags.Oil, CargoFlags.Metals, CargoFlags.Ore},
+            new[] {CargoFlags.Goods, CargoFlags.Food, CargoFlags.Grain, CargoFlags.AnimalProducts, CargoFlags.Ore, CargoFlags.Lumber, CargoFlags.Coal, CargoFlags.Logs, CargoFlags.Petrol, CargoFlags.Oil, CargoFlags.Metals, CargoFlags.Mail},
+            new[] {CargoFlags.Mail, CargoFlags.Goods, CargoFlags.Food, CargoFlags.AnimalProducts, CargoFlags.Ore, CargoFlags.Lumber, CargoFlags.Coal, CargoFlags.Logs, CargoFlags.Petrol, CargoFlags.Oil, CargoFlags.Grain, CargoFlags.Metals},
+            new[] {CargoFlags.Metals, CargoFlags.Goods, CargoFlags.Ore, CargoFlags.Food, CargoFlags.AnimalProducts, CargoFlags.Lumber, CargoFlags.Coal, CargoFlags.Logs, CargoFlags.Petrol, CargoFlags.Oil, CargoFlags.Grain, CargoFlags.Mail},
+            new[] {CargoFlags.AnimalProducts, CargoFlags.Food, CargoFlags.Goods, CargoFlags.Grain, CargoFlags.Mail, CargoFlags.Lumber, CargoFlags.Coal, CargoFlags.Logs, CargoFlags.Petrol, CargoFlags.Oil, CargoFlags.Metals, CargoFlags.Ore},
         };
 
         public CargoParcel(ushort buildingID, bool incoming, byte transferType, ushort transferSize, Vehicle.Flags flags)
@@ -116,7 +119,7 @@ namespace RandomTrainTrailers
                 case TransferType.OutgoingMail:
                     return CargoFlags.Mail;
                 case TransferType.AnimalProducts:
-                    return CargoFlags.Food;
+                    return CargoFlags.AnimalProducts;
                 case TransferType.Flours:
                     return CargoFlags.Grain;
                 case TransferType.Paper:
@@ -157,6 +160,10 @@ namespace RandomTrainTrailers
             else if(flagIndex == 6) // Grain
             {
                 return 3;
+            }
+            else if(flagIndex == 11) // AnimalProducts
+            {
+                return 2;
             }
             return 0;   // Generic goods and all other
         }
