@@ -355,7 +355,7 @@ namespace RandomTrainTrailers
                 for(int i = 0; i < infos.Count; i++)
                 {
                     ushort trailerId;
-                    if(SpawnTrailer(out trailerId, ref Singleton<VehicleManager>.instance.m_vehicles.m_buffer[prevVehicleId], prevVehicleId, infos[i], randomizer.Int32(100u) < trailer.InvertProbability, gateIndex))
+                    if(SpawnTrailer(out trailerId, ref Singleton<VehicleManager>.instance.m_vehicles.m_buffer[prevVehicleId], prevVehicleId, infos[i], randomizer.Int32(100u) < trailer.SubTrailers[i].InvertProbability, gateIndex))
                     {
                         prevVehicleId = trailerId;
                         lastTrailerId = trailerId;
