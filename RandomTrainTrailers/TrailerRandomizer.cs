@@ -51,7 +51,6 @@ namespace RandomTrainTrailers
             // Store the gate indexes (cargo type/variation per wagon)
             var gateIndexes = new List<byte>();
             var manager = Singleton<VehicleManager>.instance;
-            //var emptiesGateIndexCounts = new int[9];  // TODO: Update if the game ever starts using more than this for cargo trains
 
             {
                 ushort trailerId = vehicle.m_trailingVehicle;
@@ -165,7 +164,8 @@ namespace RandomTrainTrailers
                                 trailerCollection,
                                 randomizer,
                                 false,   
-                                cargoTypeIndex);
+                                cargoTypeIndex,
+                                out int assignedCargoIndex);
                             if(spawnedTrailerCount > 0)
                             {
                                 i += spawnedTrailerCount - 1;
@@ -174,7 +174,9 @@ namespace RandomTrainTrailers
                                 prevVehicleId = newTrailerId;
                                 emptiesCount[cargoTypeIndex] -= spawnedTrailerCount - 1;        // Remove additionally spawned multi-trailers from our empties reserve
 
-                                debug_spawnedTrailers.Add(string.Format("Spawned Filled Cargo Type: {0}", CargoParcel.FlagIndexToName(cargoTypeIndex)));
+                                debug_spawnedTrailers.Add(string.Format("Spawned Filled Cargo Type: {0}, was supposed to be {1}",
+                                    CargoParcel.FlagIndexToName(assignedCargoIndex),
+                                    CargoParcel.FlagIndexToName(cargoTypeIndex)));
                             }
                         }
                         else if(emptiesCount[cargoTypeIndex] > 0)
@@ -184,7 +186,8 @@ namespace RandomTrainTrailers
                                 trailerCollection,
                                 randomizer,
                                 true,
-                                cargoTypeIndex);
+                                cargoTypeIndex,
+                                out int assignedCargoIndex);
                             if(spawnedTrailerCount > 0)
                             {
                                 i += spawnedTrailerCount - 1;
@@ -192,7 +195,9 @@ namespace RandomTrainTrailers
 
                                 emptiesCount[cargoTypeIndex] -= spawnedTrailerCount;
 
-                                debug_spawnedTrailers.Add(string.Format("Spawned Empty Cargo Type: {0}", CargoParcel.FlagIndexToName(cargoTypeIndex)));
+                                debug_spawnedTrailers.Add(string.Format("Spawned Empty Cargo Type: {0}, was supposed to be {1}",
+                                    CargoParcel.FlagIndexToName(assignedCargoIndex),
+                                    CargoParcel.FlagIndexToName(cargoTypeIndex)));
                             }
                         }
                     }
@@ -255,6 +260,8 @@ namespace RandomTrainTrailers
             }
             if(debug_spawnedTrailers.Count > 0)
             {
+                Util.Log(string.Format("Collection {2} was used for {0} [{1}]\r\n", info.name, id, trailerCollection.Name));
+
                 Util.Log(string.Format("Spawned trailers for {0} [{1}]\r\n", info.name, id) +
                     debug_spawnedTrailers.Aggregate((sequence, next) => sequence + "\r\n" + next) + 
                     string.Format("\r\n{0} filled trailers were assigned out of {1} available", assignedCargoWagons, availableCargoWagons));
@@ -271,29 +278,19 @@ namespace RandomTrainTrailers
         /// <param name="gateIndex">Gate index to assign to the spawned trailer(s)</param>
         /// <param name="cargoFlagIndex">Cargo index to use</param>
         /// <returns>The amount of spawned trailers</returns>
-        private static int SpawnCargoTrailer(out ushort lastTrailerId, ushort prevVehicleId, TrailerDefinition.TrailerCollection trailerCollection, Randomizer randomizer, bool empty, int cargoFlagIndex)
+        private static int SpawnCargoTrailer(out ushort lastTrailerId, ushort prevVehicleId, TrailerDefinition.TrailerCollection trailerCollection, Randomizer randomizer, bool empty, int cargoFlagIndex, out int assignedCargoIndex)
         {
             if(trailerCollection.m_cargoData == null)
             {
                 Util.LogError("Supposed to spawn cargo trailer but collection " + trailerCollection.Name + " does not have cargo data set!");
                 lastTrailerId = 0;
+                assignedCargoIndex = 0;
                 return 0;
             }
 
-            TrailerDefinition.Trailer trailer = null;
-            byte gateIndex = 0;
-            // Loop trough fallback until we find something we can spawn, note that the cargo type itself is the first entry in its own fallback table
-            for(int i = 0; i < CargoParcel.ResourceFallback[cargoFlagIndex].Length; i++)
-            {
-                int attemptedCargoType = CargoParcel.LowestFlagToIndex(CargoParcel.ResourceFallback[cargoFlagIndex][i]);
-                int trailerIndex = trailerCollection.m_cargoData.GetRandomTrailerIndex(attemptedCargoType);
-                if(trailerIndex >= 0)
-                {
-                    trailer = trailerCollection.m_cargoData.m_trailers[attemptedCargoType][trailerIndex];
-                    gateIndex = CargoParcel.FlagIndexToGateIndex(attemptedCargoType);
-                    break;
-                }
-            }
+
+            TrailerDefinition.Trailer trailer = GetTrailerForCargo(out assignedCargoIndex, trailerCollection, cargoFlagIndex);
+
             if(trailer == null)
             {
                 Util.LogError("Unable to find trailer for cargo type " + cargoFlagIndex + " or its fallbacks in collection " + trailerCollection.Name);
@@ -301,7 +298,26 @@ namespace RandomTrainTrailers
                 return 0;
             }
 
+            byte gateIndex = CargoParcel.FlagIndexToGateIndex(assignedCargoIndex);
+
             return SpawnTrailerDefinition(out lastTrailerId, prevVehicleId, trailer, randomizer, empty ? CargoParcel.GetEmptyGateIndex(gateIndex) : gateIndex);
+        }
+
+        private static TrailerDefinition.Trailer GetTrailerForCargo(out int assignedCargoIndex, TrailerDefinition.TrailerCollection collection, int cargoIndex)
+        {
+            for(int i = 0; i < CargoParcel.ResourceFallback[cargoIndex].Length; i++)
+            {
+                int attemptedCargoType = CargoParcel.LowestFlagToIndex(CargoParcel.ResourceFallback[cargoIndex][i]);
+                int trailerIndex = collection.m_cargoData.GetRandomTrailerIndex(attemptedCargoType);
+                if(trailerIndex >= 0)
+                {
+                    assignedCargoIndex = attemptedCargoType;
+                    return collection.m_cargoData.m_trailers[attemptedCargoType][trailerIndex];
+                }
+            }
+
+            assignedCargoIndex = 0;
+            return null;
         }
 
         /// <summary>
