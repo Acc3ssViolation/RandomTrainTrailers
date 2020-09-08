@@ -482,6 +482,7 @@
     
 	<TrailerCollection name="Mixed Cargo EU Base">
 		<Trailers>
+			<!-- TODO: Go trough tank cars, put them in the right category (crude oil or processed like petrol) -->
 			<!-- Local test wagons, not workshop relevant -->
 			<Trailer name="WagonEDS_Unmarked">
 				<CargoType>Coal</CargoType>
@@ -682,6 +683,7 @@
 			<!--
 			TODO:
 			1377524690	1377524077			MOLTEN METAL SETS, COMPLICATED, NEEDS MULTITRAILERS		
+			1557982704	Oil Petrol?
 			-->
 			<Trailer name="1411728895.TrailerDR 119 Timber (8)0">
 			  <CargoType>Logs</CargoType>

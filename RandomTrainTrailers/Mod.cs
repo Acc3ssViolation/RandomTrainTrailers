@@ -2,6 +2,7 @@
 using ColossalFramework;
 using ColossalFramework.UI;
 using UnityEngine;
+using CitiesHarmony.API;
 
 namespace RandomTrainTrailers
 {
@@ -10,7 +11,7 @@ namespace RandomTrainTrailers
         //public static SavedBool enableUseCargo = new SavedBool("UseCargoData", settingsFile, false, true);
 
         public const string name = "Random Train Trailers";
-        public const string versionString = "2.1.2";
+        public const string versionString = "2.2.1";
         public const string settingsFile = "RandomTrainTrailers";
         public const string harmonyPackage = "com.github.accessviolation.rtt";
 
@@ -39,6 +40,11 @@ namespace RandomTrainTrailers
                     fileName = settingsFile,
                 });
             }
+        }
+
+        public void OnEnabled()
+        {
+            HarmonyHelper.EnsureHarmonyInstalled();
         }
 
         public void OnSettingsUI(UIHelperBase helper)
@@ -85,7 +91,7 @@ namespace RandomTrainTrailers
             });
             checkBox.tooltip = "Toggles the in-game UI to change configs.";
 
-        }
+        }        
 
         public static bool IsValidLoadMode(LoadMode mode)
         {

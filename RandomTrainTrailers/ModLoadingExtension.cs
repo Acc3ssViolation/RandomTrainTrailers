@@ -8,13 +8,13 @@ using RandomTrainTrailers.Detour;
 using ColossalFramework.UI;
 using RandomTrainTrailers.UI;
 using ColossalFramework;
+using CitiesHarmony.API;
 
 namespace RandomTrainTrailers
 {
     public class ModLoadingExtension : LoadingExtensionBase
     {
         public static SavedBool enableUI = new SavedBool("EnableUI", Mod.settingsFile, true, true);
-        private HarmonyDetourAIs m_detours;
         private GameObject m_gameObject;
 
         public static GameObject UIObject { get; private set; }
@@ -22,8 +22,15 @@ namespace RandomTrainTrailers
         public override void OnCreated(ILoading loading)
         {
             base.OnCreated(loading);
-            m_detours = new HarmonyDetourAIs();
-            m_detours.Deploy();
+
+            if (HarmonyHelper.IsHarmonyInstalled) HarmonyDetourAIs.Deploy();
+        }
+
+        public override void OnReleased()
+        {
+            base.OnReleased();
+
+            if (HarmonyHelper.IsHarmonyInstalled) HarmonyDetourAIs.Revert();
         }
 
         public override void OnLevelLoaded(LoadMode mode)
@@ -47,12 +54,7 @@ namespace RandomTrainTrailers
         }
 
         public override void OnLevelUnloading()
-        {
-            if(m_detours != null)
-            {
-                m_detours.Revert();
-            }
-                
+        {                
             if(m_gameObject != null)
             {
                 GameObject.Destroy(m_gameObject.gameObject);

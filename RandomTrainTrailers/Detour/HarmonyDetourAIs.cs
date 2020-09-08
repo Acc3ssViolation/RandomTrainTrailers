@@ -1,6 +1,6 @@
 ﻿using ColossalFramework;
 using ColossalFramework.Math;
-using Harmony;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,13 +16,20 @@ namespace RandomTrainTrailers.Detour
     /// So this class prefixes the train and tram AIs to call our version of Spawn instead
     /// The prefixes are slightly modified copies of the TrySpawn methods and will never let the original run
     /// </summary>
-    public class HarmonyDetourAIs
+    public static class HarmonyDetourAIs
     {
-        public void Deploy()
+        private static bool _isPatched = false;
+
+        public static void Deploy()
         {
-            var harmony = HarmonyInstance.Create(Mod.harmonyPackage);
+            if (_isPatched)
+                return;
+
+            _isPatched = true;
+
+            var harmony = new Harmony(Mod.harmonyPackage);
             Version currentVersion;
-            if(harmony.VersionInfo(out currentVersion).ContainsKey(Mod.harmonyPackage))
+            if(Harmony.VersionInfo(out currentVersion).ContainsKey(Mod.harmonyPackage))
             {
                 Util.LogWarning("Harmony patches already present");
                 return;
@@ -55,10 +62,22 @@ namespace RandomTrainTrailers.Detour
             Util.Log("Harmony patches applied", true);
         }
 
-        internal void Revert()
+        public static void Revert()
         {
+            if (!_isPatched)
+                return;
+
             // TODO: Actually revert when that becomes possible
             Util.Log("(Not) Reverting redirects...", true);
+
+            Util.Log("Unpatching Harmony patches...", true);
+
+            var harmony = new Harmony(Mod.harmonyPackage);
+            harmony.UnpatchAll(Mod.harmonyPackage);
+
+            Util.Log("Harmony patches reverted", true);
+
+            _isPatched = false;
         }
 
         class TrainAI_Detour
@@ -81,7 +100,7 @@ namespace RandomTrainTrailers.Detour
                     var config = TrailerManager.GetVehicleConfig(vehicleData.Info.name);
                     if(config != null)
                     {
-                        var randomizer = new Randomizer(vehicleID);
+                        var randomizer = new Randomizer(Time.frameCount * (long) vehicleID);
                         if(randomizer.Int32(100) < config.RandomTrailerChance)
                         {
                             TrailerRandomizer.RandomizeTrailers(ref vehicleData, vehicleID, config, randomizer);
