@@ -97,48 +97,38 @@ namespace RandomTrainTrailers
                 case TransferType.Logs:
                     return CargoFlags.Logs;
                 case TransferType.Grain:
+                case TransferType.Flours:
                     return CargoFlags.Grain;
                 case TransferType.Petrol:
+                case TransferType.Petroleum:
                     return CargoFlags.Petrol;
                 case TransferType.Coal:
                     return CargoFlags.Coal;
                 case TransferType.Lumber:
+                case TransferType.PlanedTimber:
                     return CargoFlags.Lumber;
                 case TransferType.Food:
                     return CargoFlags.Food;
-                case TransferType.Goods:
-                    return CargoFlags.Goods;
-                case TransferType.Mail:
-                    return CargoFlags.Mail;
-                case TransferType.UnsortedMail:
-                    return CargoFlags.Mail;
-                case TransferType.SortedMail:
-                    return CargoFlags.Mail;
-                case TransferType.IncomingMail:
-                    return CargoFlags.Mail;
-                case TransferType.OutgoingMail:
-                    return CargoFlags.Mail;
-                case TransferType.AnimalProducts:
-                    return CargoFlags.AnimalProducts;
-                case TransferType.Flours:
-                    return CargoFlags.Grain;
                 case TransferType.Paper:
-                    return CargoFlags.Goods;
-                case TransferType.PlanedTimber:
-                    return CargoFlags.Lumber;
-                case TransferType.Petroleum:
-                    return CargoFlags.Petrol;
+                case TransferType.Goods:
                 case TransferType.Plastics:
-                    return CargoFlags.Goods;
                 case TransferType.Glass:
-                    return CargoFlags.Goods;
-                case TransferType.Metals:
-                    return CargoFlags.Metals;
                 case TransferType.LuxuryProducts:
                     return CargoFlags.Goods;
+                case TransferType.Mail:
+                case TransferType.UnsortedMail:
+                case TransferType.SortedMail:
+                case TransferType.IncomingMail:
+                case TransferType.OutgoingMail:
+                    return CargoFlags.Mail;
+                case TransferType.Fish:
+                case TransferType.AnimalProducts:
+                    return CargoFlags.AnimalProducts;
+                case TransferType.Metals:
+                    return CargoFlags.Metals;
                 default:
                     // Changed to use RTT error logging
-                    Util.LogError("Unexpected transfer type: " + Enum.GetName(typeof(TransferType), transfer));
+                    Util.LogWarning("Unexpected transfer type: " + Enum.GetName(typeof(TransferType), transfer) + ", defaulting to Goods");
                     return CargoFlags.Goods;
             }
         }
