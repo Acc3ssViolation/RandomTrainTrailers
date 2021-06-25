@@ -109,7 +109,8 @@ namespace RandomTrainTrailers
             {
                 Util.LogError("Exception trying to load definition\r\n" + path + "\r\nException:\r\n" + e.Message + "\r\n" + e.StackTrace);
             }
-            return null;
+            
+            return new TrailerDefinition();
         }
 
         public static bool StoreUserDefinitionOnDisk(TrailerDefinition definition)
