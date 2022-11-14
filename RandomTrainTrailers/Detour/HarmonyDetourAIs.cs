@@ -43,21 +43,38 @@ namespace RandomTrainTrailers.Detour
                 typeof(TrainAI_Detour).GetMethod("InitializePath", BindingFlags.Static | BindingFlags.Public), 
                 typeof(TrainAI).GetMethod("InitializePath", BindingFlags.Static | BindingFlags.NonPublic));
 
+            RedirectionHelper.RedirectCalls(
+                typeof(TramAI_Detour).GetMethod("InitializePath", BindingFlags.Static | BindingFlags.Public),
+                typeof(TramBaseAI).GetMethod("InitializePath", BindingFlags.Static | BindingFlags.NonPublic));
+
             Util.Log("Finished redirecting mod to game");
 
             // Harmony
 
-            // TODO: Trams, trucks, passenger trains, that sort of stuff
-            // We will randomize the train whenever the variations get refreshed
-            var cargoTrainAIRefreshVariations = typeof(CargoTrainAI).GetMethod("RefreshVariations", BindingFlags.Instance | BindingFlags.NonPublic);
-            var cargoTrainAIPost = typeof(CargoTrainAI_Detour).GetMethod("RefreshVariations_Postfix", BindingFlags.Static | BindingFlags.Public);
+            void PatchPostfix(MethodInfo method, MethodInfo postfix)
+            {
+                Util.Log(method?.DeclaringType.Name + "." + method?.Name + " is " + (method == null ? "null" : "not null"));
+                Util.Log(postfix?.DeclaringType.Name + "." + postfix?.Name + " is " + (postfix == null ? "null" : "not null"));
 
-            Util.Log("CargoTrainAI is " + (cargoTrainAIRefreshVariations == null ? "null" : "not null"));
-            Util.Log("CargoTrainAI_Detour post is " + (cargoTrainAIPost == null ? "null" : "not null"));
+                harmony.Patch(method, null, new HarmonyMethod(postfix), null);
+            }
 
             Util.Log("Patching AI methods...", true);
 
-            harmony.Patch(cargoTrainAIRefreshVariations, null, new HarmonyMethod(cargoTrainAIPost), null);
+            // We will randomize cargo trains whenever the variations get refreshed
+            PatchPostfix(
+                typeof(CargoTrainAI).GetMethod("RefreshVariations", BindingFlags.Instance | BindingFlags.NonPublic),
+                typeof(CargoTrainAI_Detour).GetMethod("RefreshVariations_Postfix", BindingFlags.Static | BindingFlags.Public));
+
+            // We will randomize regular trains and metros on spawn only
+            PatchPostfix(
+                typeof(TrainAI).GetMethod("TrySpawn", BindingFlags.Instance | BindingFlags.Public),
+                typeof(TrainAI_Detour).GetMethod("TrySpawn_Postfix", BindingFlags.Static | BindingFlags.Public));
+
+            // And do the same for trams
+            PatchPostfix(
+                typeof(TramBaseAI).GetMethod("TrySpawn", BindingFlags.Instance | BindingFlags.Public),
+                typeof(TramAI_Detour).GetMethod("TrySpawn_Postfix", BindingFlags.Static | BindingFlags.Public));
 
             Util.Log("Harmony patches applied", true);
         }
@@ -67,7 +84,7 @@ namespace RandomTrainTrailers.Detour
             if (!_isPatched)
                 return;
 
-            // TODO: Actually revert when that becomes possible
+            // Reverting redirects isn't really necessary as we only patch the mod assembly, not the game itself
             Util.Log("(Not) Reverting redirects...", true);
 
             Util.Log("Unpatching Harmony patches...", true);
@@ -80,12 +97,77 @@ namespace RandomTrainTrailers.Detour
             _isPatched = false;
         }
 
+        class TramAI_Detour
+        {
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            public static void InitializePath(ushort vehicleID, ref Vehicle vehicleData)
+            {
+                Util.Log("InitializePath was called even though it is supposed to be redirected to game!");
+            }
+
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            public static void TrySpawn_Postfix(object __instance, bool __result, ushort vehicleID, ref Vehicle vehicleData)
+            {
+                if (!__result)
+                {
+                    // Vehicle wasn't spawned, can't randomize
+                    return;
+                }
+
+                // Only use valid leading vehicles
+                if (vehicleID != 0 && vehicleData.m_leadingVehicle == 0)
+                {
+                    var config = TrailerManager.GetVehicleConfig(vehicleData.Info.name);
+                    if (config != null)
+                    {
+                        var randomizer = new Randomizer(Time.frameCount * (long)vehicleID);
+                        if (randomizer.Int32(100) < config.RandomTrailerChance)
+                        {
+                            TrailerRandomizer.RandomizeTrailers(ref vehicleData, vehicleID, config, randomizer);
+                            InitializePath(vehicleID, ref vehicleData);
+                        }
+                    }
+                }
+            }
+        }
+
         class TrainAI_Detour
         {
             [MethodImpl(MethodImplOptions.NoInlining)]
             public static void InitializePath(ushort vehicleID, ref Vehicle vehicleData)
             {
                 Util.Log("InitializePath was called even though it is supposed to be redirected to game!");
+            }
+
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            public static void TrySpawn_Postfix(object __instance, bool __result, ushort vehicleID, ref Vehicle vehicleData)
+            {
+                if (!__result)
+                {
+                    // Vehicle wasn't spawned, can't randomize
+                    return;
+                }
+
+                if (__instance?.GetType() == typeof(CargoTrainAI))
+                {
+                    // We already patch CargoTrainAI in a different way
+                    return;
+                }
+
+                // Only use valid leading vehicles
+                if (vehicleID != 0 && vehicleData.m_leadingVehicle == 0)
+                {
+                    var config = TrailerManager.GetVehicleConfig(vehicleData.Info.name);
+                    if (config != null)
+                    {
+                        var randomizer = new Randomizer(Time.frameCount * (long)vehicleID);
+                        if (randomizer.Int32(100) < config.RandomTrailerChance)
+                        {
+                            TrailerRandomizer.RandomizeTrailers(ref vehicleData, vehicleID, config, randomizer);
+                            InitializePath(vehicleID, ref vehicleData);
+                        }
+                    }
+                }
             }
         }
 
