@@ -18,7 +18,6 @@ namespace RandomTrainTrailers.UI
     {
         public static UIMainPanel main { get; private set; }
 
-
         UIButton toolbarButton;
         UIDropDown vehicleDropdown;
         UIFastList trailerFastList;
@@ -46,6 +45,8 @@ namespace RandomTrainTrailers.UI
         UIIntField m_trailerMax;
         UICheckBox m_useDefault;
         UICheckBox m_useCargo;
+        UIButton m_copyButton;
+        UIButton m_pastButton;
 
         // Trailer add buttons
         UIButton m_addTrailer;
@@ -66,6 +67,8 @@ namespace RandomTrainTrailers.UI
 
         public TrailerDefinition m_userDefinition;
         public TrailerDefinition.Vehicle m_selectedVehicleData;
+
+        private TrailerDefinition.Vehicle m_copyData;
 
         void LoadUserDef()
         {
@@ -579,6 +582,27 @@ namespace RandomTrainTrailers.UI
             };
             y += padding + m_useCargo.height;
 
+            // Copy/paste
+            m_copyButton = UIUtils.CreateButton(vehiclePanel);
+            m_copyButton.text = "Copy";
+            m_copyButton.relativePosition = new Vector3(0, y);
+            m_copyButton.eventClicked += (c, m) =>
+            {
+                CopySettings();
+            };
+            m_copyButton.tooltip = "Copy the settings so you can paste them on another vehicle.";
+
+            m_pastButton = UIUtils.CreateButton(vehiclePanel);
+            m_pastButton.text = "Paste";
+            m_pastButton.relativePosition = new Vector3(m_copyButton.width + padding, y);
+            m_pastButton.eventClicked += (c, m) =>
+            {
+                PasteSettings();
+            };
+            m_pastButton.tooltip = "Paste the settings previously copied from another vehicle.";
+
+            y += padding + m_copyButton.height;
+
             // No vehicle text
             m_labelNoVehicles = AddUIComponent<UILabel>();
             m_labelNoVehicles.textScale = 1.5f;
@@ -625,6 +649,23 @@ namespace RandomTrainTrailers.UI
                 }
             }
             vehicleDropdown.tooltip = m_selectedVehicleData != null ? m_selectedVehicleData.AssetName : "???";
+            UpdatePanels();
+        }
+
+        private void CopySettings()
+        {
+            if (m_selectedVehicleData == null)
+                return;
+            m_copyData = m_selectedVehicleData.Copy();
+        }
+
+        private void PasteSettings()
+        {
+            if (m_copyData == null)
+                return;
+
+            m_copyData.AssetName = m_selectedVehicleData.AssetName;
+            m_selectedVehicleData.CopyFrom(m_copyData);
             UpdatePanels();
         }
 

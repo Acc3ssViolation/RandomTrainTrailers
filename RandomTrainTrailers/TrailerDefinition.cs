@@ -407,7 +407,7 @@ namespace RandomTrainTrailers
             [XmlIgnore]
             public List<Collection> m_trailerCollections;
             [XmlIgnore]
-            int[] m_collectionCDF;
+            public int[] m_collectionCDF;
 
             public Vehicle()
             {
@@ -456,6 +456,33 @@ namespace RandomTrainTrailers
                 copy.UseCargoContents = UseCargoContents;
 
                 return copy;
+            }
+
+            public void CopyFrom(Vehicle vehicle)
+            {
+                if (AssetName != vehicle.AssetName)
+                {
+                    AssetName = vehicle.AssetName;
+                    m_info = null;
+                }
+                
+                Trailers.Clear();
+                LocalBlacklist.Clear();
+                foreach (var trailer in vehicle.Trailers)
+                {
+                    Trailers.Add(trailer.Copy());
+                }
+                foreach (var blacklist in vehicle.LocalBlacklist)
+                {
+                    LocalBlacklist.Add(blacklist.Copy());
+                }
+                AllowAnyTrailer = vehicle.AllowAnyTrailer;
+                AllowDefaultTrailers = vehicle.AllowDefaultTrailers;
+                RandomTrailerChance = vehicle.RandomTrailerChance;
+                VehicleType = vehicle.VehicleType;
+                StartOffset = vehicle.StartOffset;
+                EndOffset = vehicle.EndOffset;
+                UseCargoContents = vehicle.UseCargoContents;
             }
 
             public TrailerCollection GetRandomCollection()
