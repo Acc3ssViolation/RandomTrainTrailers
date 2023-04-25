@@ -110,20 +110,8 @@ namespace RandomTrainTrailers.Detour
                     return;
                 }
 
-                // Only use valid leading vehicles
-                if (vehicleID != 0 && vehicleData.m_leadingVehicle == 0)
-                {
-                    var config = TrailerManager.GetVehicleConfig(vehicleData.Info.name);
-                    if (config != null)
-                    {
-                        var randomizer = new Randomizer(Time.frameCount * (long)vehicleID);
-                        if (randomizer.Int32(100) < config.RandomTrailerChance)
-                        {
-                            TrailerRandomizer.RandomizeTrailers(ref vehicleData, vehicleID, config, randomizer);
-                            InitializePath(vehicleID, ref vehicleData);
-                        }
-                    }
-                }
+                if (Randomize(vehicleID, ref vehicleData))
+                    InitializePath(vehicleID, ref vehicleData);
             }
         }
 
@@ -150,20 +138,8 @@ namespace RandomTrainTrailers.Detour
                     return;
                 }
 
-                // Only use valid leading vehicles
-                if (vehicleID != 0 && vehicleData.m_leadingVehicle == 0)
-                {
-                    var config = TrailerManager.GetVehicleConfig(vehicleData.Info.name);
-                    if (config != null)
-                    {
-                        var randomizer = new Randomizer(Time.frameCount * (long)vehicleID);
-                        if (randomizer.Int32(100) < config.RandomTrailerChance)
-                        {
-                            TrailerRandomizer.RandomizeTrailers(ref vehicleData, vehicleID, config, randomizer);
-                            InitializePath(vehicleID, ref vehicleData);
-                        }
-                    }
-                }
+                if (Randomize(vehicleID, ref vehicleData))
+                    InitializePath(vehicleID, ref vehicleData);
             }
         }
 
@@ -172,21 +148,40 @@ namespace RandomTrainTrailers.Detour
             [MethodImpl(MethodImplOptions.NoInlining)]
             public static void RefreshVariations_Postfix(ushort vehicleID, ref Vehicle vehicleData)
             {
-                // Only use valid leading vehicles
-                if(vehicleID != 0 && vehicleData.m_leadingVehicle == 0)
+                if (Randomize(vehicleID, ref vehicleData))
+                    TrainAI_Detour.InitializePath(vehicleID, ref vehicleData);
+            }
+        }
+
+        private static bool Randomize(ushort vehicleID, ref Vehicle vehicleData)
+        {
+            // Only use valid leading vehicles
+            if (vehicleID != 0 && vehicleData.m_leadingVehicle == 0)
+            {
+                var config = TrailerManager.GetVehicleConfig(vehicleData.Info.name);
+                if (config != null)
                 {
-                    var config = TrailerManager.GetVehicleConfig(vehicleData.Info.name);
-                    if(config != null)
+                    var randomizer = new Randomizer(Time.frameCount * (long)vehicleID);
+                    if (randomizer.Int32(100) < config.RandomTrailerChance)
                     {
-                        var randomizer = new Randomizer(Time.frameCount * (long) vehicleID);
-                        if(randomizer.Int32(100) < config.RandomTrailerChance)
-                        {
-                            TrailerRandomizer.RandomizeTrailers(ref vehicleData, vehicleID, config, randomizer);
-                            TrainAI_Detour.InitializePath(vehicleID, ref vehicleData);
-                        }
+                        TrailerRandomizer.RandomizeTrailers(ref vehicleData, vehicleID, config, randomizer);
+                        return true;
                     }
                 }
+                else
+                {
+                    var pools = TrailerManager.GetVehiclePools(vehicleData.Info.name);
+                    if (pools == null)
+                        return false;
+
+                    var randomizer = new Randomizer(Time.frameCount * (long)vehicleID);
+                    var poolIndex = randomizer.Int32((uint)pools.Count);
+                    var pool = pools[poolIndex];
+                    TrailerRandomizer.GenerateTrain(ref vehicleData, vehicleID, pool, randomizer);
+                    return true;
+                }
             }
+            return false;
         }
     }
 

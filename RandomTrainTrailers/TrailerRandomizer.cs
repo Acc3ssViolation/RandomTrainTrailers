@@ -268,6 +268,12 @@ namespace RandomTrainTrailers
             }
         }
 
+        public static void GenerateTrain(ref Vehicle vehicle, ushort id, TrainPool pool, Randomizer randomizer)
+        {
+            // TODO: Procedurally generate train
+        }
+
+
         /// <summary>
         /// Spawns a randomly selected (multi)trailer for a certain cargo type.
         /// </summary>

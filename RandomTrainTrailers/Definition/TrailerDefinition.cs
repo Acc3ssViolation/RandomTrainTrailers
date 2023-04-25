@@ -13,9 +13,9 @@ namespace RandomTrainTrailers.Definition
         public List<Vehicle> Vehicles { get; set; }
 
         /// <summary>
-        /// List of globally blacklisted trailers.
+        /// List of locomotive pools.
         /// </summary>
-        //public List<BlacklistItem> Blacklist { get; set; }
+        public List<TrainPool> TrainPools { get; set; }
 
         /// <summary>
         /// List of trailer collections. Can be shared among vehicles.
@@ -25,7 +25,7 @@ namespace RandomTrainTrailers.Definition
         public TrailerDefinition()
         {
             Vehicles = new List<Vehicle>();
-            //Blacklist = new List<BlacklistItem>();
+            TrainPools = new List<TrainPool>();
             Collections = new List<TrailerCollection>();
         }
 
@@ -36,10 +36,10 @@ namespace RandomTrainTrailers.Definition
         {
             var copy = new TrailerDefinition();
 
-            //foreach(var item in Blacklist)
-            //{
-            //    copy.Blacklist.Add(item.Copy());
-            //}
+            foreach (var pool in TrainPools)
+            {
+                copy.TrainPools.Add(pool.Copy());
+            }
 
             foreach(var item in Vehicles)
             {

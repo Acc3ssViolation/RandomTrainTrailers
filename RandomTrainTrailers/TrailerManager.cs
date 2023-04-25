@@ -13,14 +13,13 @@ namespace RandomTrainTrailers
     public static class TrailerManager
     {
         public static SavedInt globalTrailerLimit = new SavedInt("globalTrailerLimit", Mod.settingsFile, -1, true);
-        static Dictionary<string, Definition.Vehicle> vehicleDict = new Dictionary<string, Definition.Vehicle>();
-        static Dictionary<string, TrailerCollection> collectionDict = new Dictionary<string, TrailerCollection>();
+        private static Dictionary<string, Definition.Vehicle> vehicleDict = new Dictionary<string, Definition.Vehicle>();
+        private static Dictionary<string, TrailerCollection> collectionDict = new Dictionary<string, TrailerCollection>();
+        private static Dictionary<string, IList<TrainPool>> _leadVehicleToPool = new Dictionary<string, IList<TrainPool>>();
 
-        static HashSet<string> removedTrailers = new HashSet<string>();
-        static HashSet<string> removedCollections = new HashSet<string>();
-        static HashSet<string> removedVehicles = new HashSet<string>();
-
-        //static HashSet<string> blacklist = new HashSet<string>();
+        private static HashSet<string> removedTrailers = new HashSet<string>();
+        private static HashSet<string> removedCollections = new HashSet<string>();
+        private static HashSet<string> removedVehicles = new HashSet<string>();
 
         public static void Setup()
         {
@@ -29,7 +28,7 @@ namespace RandomTrainTrailers
             removedVehicles.Clear();
             vehicleDict.Clear();
             collectionDict.Clear();
-            //blacklist.Clear();
+            _leadVehicleToPool.Clear();
 
             // Load default
             var def = DefaultTrailerConfig.DefaultDefinition;
@@ -180,18 +179,6 @@ namespace RandomTrainTrailers
         {
             if(definition == null)
                 return;
-
-            /*foreach(var item in definition.Blacklist)
-            {
-                if(item.GetInfo() != null)
-                {
-                    blacklist.Add(item.AssetName);
-                }
-            }
-
-            Util.Log(blacklist.Aggregate("Trailer blacklist:\r\n", (list, item) => list + item + "\r\n"));
-            */
-
 
             Util.Log("Adding trailer collections...", true);
             // Add trailer collections
@@ -346,6 +333,31 @@ namespace RandomTrainTrailers
                     return false;
                 }
             });
+
+            // Create a mapping from potential lead vehicles to the pools they are in
+            foreach (var pool in definition.TrainPools)
+            {
+                pool.RemoveUnavailableAssets();
+                pool.RemoveUnavailableCollections(collectionDict);
+                if (!pool.IsValid())
+                {
+                    Util.LogError($"Pool '{pool.Name}' is invalid and will not be loaded");
+                    continue;
+                }
+
+                foreach (var locomotive in pool.Locomotives)
+                {
+                    if (!locomotive.CanBeLeadVehicle)
+                        continue;
+
+                    if (!_leadVehicleToPool.TryGetValue(locomotive.AssetName, out var poolsForLocomotive))
+                    {
+                        poolsForLocomotive = new List<TrainPool>();
+                        _leadVehicleToPool[locomotive.AssetName] = poolsForLocomotive;
+                    }
+                    poolsForLocomotive.Add(pool);
+                }
+            }
 
             // All vehicles should now be valid
             // Add definition's vehicles to the dictionary
@@ -538,6 +550,12 @@ namespace RandomTrainTrailers
         {
             vehicleDict.TryGetValue(assetName, out var vehicle);
             return vehicle;
+        }
+
+        public static IReadOnlyList<TrainPool> GetVehiclePools(string assetName)
+        {
+            _leadVehicleToPool.TryGetValue(assetName, out var vehiclePool);
+            return (IReadOnlyList<TrainPool>)vehiclePool;
         }
 
         public static Dictionary<string, Definition.Vehicle> GetVehicleDictionary()
