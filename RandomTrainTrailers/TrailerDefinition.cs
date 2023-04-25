@@ -293,6 +293,9 @@ namespace RandomTrainTrailers
             /// <summary>
             /// The type of train this is, only used for allowAny option.
             /// </summary>
+            /// <remarks>
+            /// This is always VehiclePrefabs.VehicleType.Unknown until that is somehow fixed
+            /// </remarks>
             [XmlAttribute("type"), DefaultValue(VehiclePrefabs.VehicleType.Unknown)]
             public VehiclePrefabs.VehicleType VehicleType { get; set; }
 

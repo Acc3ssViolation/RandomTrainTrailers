@@ -657,11 +657,16 @@ namespace RandomTrainTrailers.UI
             if (m_selectedVehicleData == null)
                 return;
             m_copyData = m_selectedVehicleData.Copy();
+            UpdatePanels();
         }
 
         private void PasteSettings()
         {
             if (m_copyData == null)
+                return;
+
+            // TODO: Vehicle type is always Unknown
+            if (m_copyData.VehicleType != m_selectedVehicleData.VehicleType)
                 return;
 
             m_copyData.AssetName = m_selectedVehicleData.AssetName;
@@ -780,6 +785,9 @@ namespace RandomTrainTrailers.UI
                 var isCargoTrain = info != null ? info.GetAI() is CargoTrainAI : true;
                 m_useCargo.isVisible = isCargoTrain;
                 m_useCargo.isChecked = m_selectedVehicleData.UseCargoContents && isCargoTrain;
+
+                var allowPaste = m_copyData != null && m_copyData.VehicleType == m_selectedVehicleData.VehicleType;
+                m_pastButton.enabled = allowPaste;
             }
             else
             {
