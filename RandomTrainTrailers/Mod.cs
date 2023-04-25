@@ -9,7 +9,7 @@ namespace RandomTrainTrailers
     public class Mod : IUserMod
     {
         public const string name = "Random Train Trailers";
-        public const string versionString = "2.4.1";
+        public const string versionString = "3.0.0";
         public const string settingsFile = "RandomTrainTrailers";
         public const string harmonyPackage = "com.github.accessviolation.rtt";
 

@@ -1,8 +1,5 @@
 ﻿using ColossalFramework.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using RandomTrainTrailers.Definition;
 using UnityEngine;
 
 namespace RandomTrainTrailers.UI
@@ -27,7 +24,7 @@ namespace RandomTrainTrailers.UI
 
         private bool checkEvents = false;
 
-        private TrailerDefinition.Trailer m_currentDataItem;
+        private Trailer m_currentDataItem;
 
         public override void Start()
         {
@@ -174,7 +171,7 @@ namespace RandomTrainTrailers.UI
         {
             CreateComponents();
 
-            var itemData = data as TrailerDefinition.Trailer;
+            var itemData = data as Trailer;
             if(itemData == null)
                 return;
 

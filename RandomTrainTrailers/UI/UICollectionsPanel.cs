@@ -1,8 +1,7 @@
 ﻿using ColossalFramework.UI;
-using System;
+using RandomTrainTrailers.Definition;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace RandomTrainTrailers.UI
@@ -11,17 +10,17 @@ namespace RandomTrainTrailers.UI
     {
         public static UICollectionsPanel main { get; private set; }
 
-        UIDropDown m_collectionDropdown;
-        UIFastList m_trailerFastList;
-        UIPanel m_collectionPanel;
-        UIPanel m_trailerPanel;
-        UILabel m_labelNoCol;
-        UIButton m_addTrailer;
-        UIButton m_addMultiTrailer;
+        private UIDropDown m_collectionDropdown;
+        private UIFastList m_trailerFastList;
+        private UIPanel m_collectionPanel;
+        private UIPanel m_trailerPanel;
+        private UILabel m_labelNoCol;
+        private UIButton m_addTrailer;
+        private UIButton m_addMultiTrailer;
 
-        UITextField m_nameField;
+        private UITextField m_nameField;
 
-        TrailerDefinition.TrailerCollection m_selectedCollection;
+        private TrailerCollection m_selectedCollection;
 
         public const int HEIGHT = 550;
         public const int WIDTH = 550;
@@ -114,7 +113,7 @@ namespace RandomTrainTrailers.UI
                         }
                         else
                         {
-                            UIMainPanel.main.UserDefinition.Collections.Add(new TrailerDefinition.TrailerCollection(name));
+                            UIMainPanel.main.UserDefinition.Collections.Add(new TrailerCollection(name));
                             added = true;
                         }
                     } while(!added);
@@ -174,7 +173,7 @@ namespace RandomTrainTrailers.UI
                 {
                     if(m_selectedCollection != null)
                     {
-                        m_selectedCollection.Trailers.Add(new TrailerDefinition.Trailer()
+                        m_selectedCollection.Trailers.Add(new Trailer()
                         {
                             AssetName = data.info.name,
                             IsCollection = false,
@@ -195,13 +194,13 @@ namespace RandomTrainTrailers.UI
                 {
                     if(m_selectedCollection != null)
                     {
-                        m_selectedCollection.Trailers.Add(new TrailerDefinition.Trailer()
+                        m_selectedCollection.Trailers.Add(new Trailer()
                         {
                             // Is multi trailer because it has a subtrailer
                             AssetName = "New Multi Trailer",
                             IsCollection = false,
-                            SubTrailers = new List<TrailerDefinition.Trailer>() {
-                                new TrailerDefinition.Trailer(data.info)
+                            SubTrailers = new List<Trailer>() {
+                                new Trailer(data.info)
                             }
                         });
                         UpdatePanels();
@@ -297,7 +296,7 @@ namespace RandomTrainTrailers.UI
         /// </summary>
         /// <param name="trailerDef"></param>
         /// <returns></returns>
-        public bool RemoveTrailer(TrailerDefinition.Trailer trailerDef)
+        public bool RemoveTrailer(Trailer trailerDef)
         {
             if(m_selectedCollection != null)
             {

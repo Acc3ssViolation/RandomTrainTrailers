@@ -1,20 +1,20 @@
 ﻿using ColossalFramework;
 using ColossalFramework.Packaging;
+using RandomTrainTrailers.Definition;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
-using UnityEngine;
 
 namespace RandomTrainTrailers
 {
     public static class TrailerManager
     {
         public static SavedInt globalTrailerLimit = new SavedInt("globalTrailerLimit", Mod.settingsFile, -1, true);
-        static Dictionary<string, TrailerDefinition.Vehicle> vehicleDict = new Dictionary<string, TrailerDefinition.Vehicle>();
-        static Dictionary<string, TrailerDefinition.TrailerCollection> collectionDict = new Dictionary<string, TrailerDefinition.TrailerCollection>();
+        static Dictionary<string, Definition.Vehicle> vehicleDict = new Dictionary<string, Definition.Vehicle>();
+        static Dictionary<string, TrailerCollection> collectionDict = new Dictionary<string, TrailerCollection>();
 
         static HashSet<string> removedTrailers = new HashSet<string>();
         static HashSet<string> removedCollections = new HashSet<string>();
@@ -212,8 +212,7 @@ namespace RandomTrainTrailers
             {
                 if(collection.BaseCollection != null)
                 {
-                    TrailerDefinition.TrailerCollection baseCollection;
-                    if(collectionDict.TryGetValue(collection.BaseCollection, out baseCollection))
+                    if(collectionDict.TryGetValue(collection.BaseCollection, out var baseCollection))
                     {
                         foreach(var trailer in baseCollection.Trailers)
                         {
@@ -268,10 +267,10 @@ namespace RandomTrainTrailers
 
 
                 // Convert trailer list to list of trailer collections
-                vehicle.m_trailerCollections = new List<TrailerDefinition.Vehicle.Collection>();
+                vehicle.m_trailerCollections = new List<Definition.Vehicle.Collection>();
                 // Make sure the vehicle's own trailer collection is added as the first collection
-                var vehicleInlineCollection = new TrailerDefinition.TrailerCollection(vehicle.AssetName + " Collection");
-                vehicle.m_trailerCollections.Add(new TrailerDefinition.Vehicle.Collection()
+                var vehicleInlineCollection = new TrailerCollection(vehicle.AssetName + " Collection");
+                vehicle.m_trailerCollections.Add(new Definition.Vehicle.Collection()
                 {
                     m_trailerCollection = vehicleInlineCollection,
                     m_weight = 10
@@ -281,10 +280,9 @@ namespace RandomTrainTrailers
                 {
                     if(trailerDef.IsCollection)
                     {
-                        TrailerDefinition.TrailerCollection collection;
-                        if(collectionDict.TryGetValue(trailerDef.AssetName, out collection))
+                        if(collectionDict.TryGetValue(trailerDef.AssetName, out var collection))
                         {
-                            vehicle.m_trailerCollections.Add(new TrailerDefinition.Vehicle.Collection()
+                            vehicle.m_trailerCollections.Add(new Definition.Vehicle.Collection()
                             {
                                 m_trailerCollection = collection,
                                 m_weight = trailerDef.Weight
@@ -313,7 +311,7 @@ namespace RandomTrainTrailers
                             // Make sure each trailer is only added once
                             if(!names.Contains(info.m_trailers[i].m_info.name))
                             {
-                                vehicleInlineCollection.Trailers.Add(new TrailerDefinition.Trailer(info.m_trailers[i].m_info)
+                                vehicleInlineCollection.Trailers.Add(new Trailer(info.m_trailers[i].m_info)
                                 {
                                     InvertProbability = info.m_trailers[i].m_invertProbability,
                                 });
@@ -371,13 +369,13 @@ namespace RandomTrainTrailers
                         continue;
                     }
 
-                    collection.m_trailerCollection.m_cargoData = new TrailerDefinition.TrailerCollection.CargoData();
+                    collection.m_trailerCollection.m_cargoData = new TrailerCollection.CargoData();
 
                     // Use lists in the adding process
-                    var lists = new List<TrailerDefinition.Trailer>[CargoParcel.ResourceTypes.Length];
+                    var lists = new List<Trailer>[CargoParcel.ResourceTypes.Length];
                     for(int i = 0; i < lists.Length; i++)
                     {
-                        lists[i] = new List<TrailerDefinition.Trailer>();
+                        lists[i] = new List<Trailer>();
                     }
 
                     foreach(var trailer in collection.m_trailerCollection.Trailers)
@@ -510,7 +508,7 @@ namespace RandomTrainTrailers
         /// </summary>
         /// <param name="trailers">The list of trailers to clean.</param>
         /// <param name="localBlacklist">HashSet containing the names of trailers to always remove.</param>
-        private static void CleanTrailerList(ref List<TrailerDefinition.Trailer> trailers, HashSet<string> localBlacklist)
+        private static void CleanTrailerList(ref List<Trailer> trailers, HashSet<string> localBlacklist)
         {
             // Remove broken trailers
             trailers.RemoveAll((t) =>
@@ -536,14 +534,13 @@ namespace RandomTrainTrailers
         /// Get config for asset, if any.
         /// </summary>
         /// <param name="assetName">The FULL name of the asset</param>
-        public static TrailerDefinition.Vehicle GetVehicleConfig(string assetName)
+        public static Definition.Vehicle GetVehicleConfig(string assetName)
         {
-            TrailerDefinition.Vehicle vehicle = null;
-            vehicleDict.TryGetValue(assetName, out vehicle);
+            vehicleDict.TryGetValue(assetName, out var vehicle);
             return vehicle;
         }
 
-        public static Dictionary<string, TrailerDefinition.Vehicle> GetVehicleDictionary()
+        public static Dictionary<string, Definition.Vehicle> GetVehicleDictionary()
         {
             return vehicleDict;
         }

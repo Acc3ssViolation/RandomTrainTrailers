@@ -1,8 +1,5 @@
 ﻿using ColossalFramework.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using RandomTrainTrailers.Definition;
 using UnityEngine;
 
 namespace RandomTrainTrailers.UI
@@ -11,15 +8,15 @@ namespace RandomTrainTrailers.UI
     {
         public static UIMultiTrailerPanel main { get; private set; }
 
-        UIFastList m_trailerFastList;
-        UIPanel m_propertiesPanel;
-        UIPanel m_trailerPanel;
-        UIButton m_addTrailer;
+        private UIFastList m_trailerFastList;
+        private UIPanel m_propertiesPanel;
+        private UIPanel m_trailerPanel;
+        private UIButton m_addTrailer;
 
-        UITextField m_nameField;
+        private UITextField m_nameField;
 
-        public TrailerDefinition.Trailer CurrentMultiTrailer { get { return m_selectedTrailer; } }
-        TrailerDefinition.Trailer m_selectedTrailer;
+        public Trailer CurrentMultiTrailer { get { return m_selectedTrailer; } }
+        private Trailer m_selectedTrailer;
 
         public const int HEIGHT = 550;
         public const int WIDTH = 550;
@@ -108,7 +105,7 @@ namespace RandomTrainTrailers.UI
                 {
                     if(m_selectedTrailer != null)
                     {
-                        m_selectedTrailer.SubTrailers.Add(new TrailerDefinition.Trailer()
+                        m_selectedTrailer.SubTrailers.Add(new Trailer()
                         {
                             AssetName = data.info.name,
                             IsCollection = false,
@@ -170,7 +167,7 @@ namespace RandomTrainTrailers.UI
         /// </summary>
         /// <param name="trailerDef"></param>
         /// <returns></returns>
-        public bool RemoveTrailer(TrailerDefinition.Trailer trailerDef)
+        public bool RemoveTrailer(Trailer trailerDef)
         {
             if(m_selectedTrailer != null)
             {
@@ -215,7 +212,7 @@ namespace RandomTrainTrailers.UI
             m_trailerFastList.rowsData = newRowsData;
         }
 
-        public void Show(TrailerDefinition.Trailer multiTrailer)
+        public void Show(Trailer multiTrailer)
         {
             m_selectedTrailer = multiTrailer;
             base.Show(true);

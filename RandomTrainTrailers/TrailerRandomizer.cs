@@ -1,9 +1,9 @@
 ﻿using ColossalFramework;
 using ColossalFramework.Math;
+using RandomTrainTrailers.Definition;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace RandomTrainTrailers
@@ -19,7 +19,7 @@ namespace RandomTrainTrailers
         /// <param name="vehicle">Reference to the vehicle's struct</param>
         /// <param name="id">ID of the vehicle</param>
         /// <param name="config">The randomization config to use</param>
-        public static void RandomizeTrailers(ref Vehicle vehicle, ushort id, TrailerDefinition.Vehicle config, Randomizer randomizer)
+        public static void RandomizeTrailers(ref Vehicle vehicle, ushort id, Definition.Vehicle config, Randomizer randomizer)
         {
             if(config == null || vehicle.Info.m_trailers == null || vehicle.Info.m_trailers.Length == 0) { return; }
 
@@ -278,7 +278,7 @@ namespace RandomTrainTrailers
         /// <param name="gateIndex">Gate index to assign to the spawned trailer(s)</param>
         /// <param name="cargoFlagIndex">Cargo index to use</param>
         /// <returns>The amount of spawned trailers</returns>
-        private static int SpawnCargoTrailer(out ushort lastTrailerId, ushort prevVehicleId, TrailerDefinition.TrailerCollection trailerCollection, Randomizer randomizer, bool empty, int cargoFlagIndex, out int assignedCargoIndex)
+        private static int SpawnCargoTrailer(out ushort lastTrailerId, ushort prevVehicleId, TrailerCollection trailerCollection, Randomizer randomizer, bool empty, int cargoFlagIndex, out int assignedCargoIndex)
         {
             if(trailerCollection.m_cargoData == null)
             {
@@ -289,7 +289,7 @@ namespace RandomTrainTrailers
             }
 
 
-            TrailerDefinition.Trailer trailer = GetTrailerForCargo(out assignedCargoIndex, trailerCollection, cargoFlagIndex);
+            var trailer = GetTrailerForCargo(out assignedCargoIndex, trailerCollection, cargoFlagIndex);
 
             if(trailer == null)
             {
@@ -303,7 +303,7 @@ namespace RandomTrainTrailers
             return SpawnTrailerDefinition(out lastTrailerId, prevVehicleId, trailer, randomizer, empty ? CargoParcel.GetEmptyGateIndex(gateIndex) : gateIndex);
         }
 
-        private static TrailerDefinition.Trailer GetTrailerForCargo(out int assignedCargoIndex, TrailerDefinition.TrailerCollection collection, int cargoIndex)
+        private static Trailer GetTrailerForCargo(out int assignedCargoIndex, TrailerCollection collection, int cargoIndex)
         {
             for(int i = 0; i < CargoParcel.ResourceFallback[cargoIndex].Length; i++)
             {
@@ -327,7 +327,7 @@ namespace RandomTrainTrailers
         /// <param name="prevVehicleId">The id of the vehicle to put the new trailers behind</param>
         /// <param name="trailerCollection">The collection of trailers</param>
         /// <returns></returns>
-        private static int SpawnRandomTrailer(out ushort lastTrailerId, ushort prevVehicleId, TrailerDefinition.TrailerCollection trailerCollection, Randomizer randomizer, byte gateIndex)
+        private static int SpawnRandomTrailer(out ushort lastTrailerId, ushort prevVehicleId, TrailerCollection trailerCollection, Randomizer randomizer, byte gateIndex)
         {
             var trailer = trailerCollection.GetRandomTrailer();
 
@@ -343,7 +343,7 @@ namespace RandomTrainTrailers
         /// <param name="randomizer"></param>
         /// <param name="gateIndex"></param>
         /// <returns></returns>
-        private static int SpawnTrailerDefinition(out ushort lastTrailerId, ushort prevVehicleId, TrailerDefinition.Trailer trailer, Randomizer randomizer, byte gateIndex)
+        private static int SpawnTrailerDefinition(out ushort lastTrailerId, ushort prevVehicleId, Trailer trailer, Randomizer randomizer, byte gateIndex)
         {
             lastTrailerId = 0;
 

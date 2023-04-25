@@ -1,8 +1,5 @@
 ﻿using ColossalFramework.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using RandomTrainTrailers.Definition;
 using UnityEngine;
 
 namespace RandomTrainTrailers.UI
@@ -13,7 +10,7 @@ namespace RandomTrainTrailers.UI
 
         private UILabel m_assetName;
         private UIButton m_buttonRemove;
-        private TrailerDefinition.BlacklistItem m_currentDataItem;
+        private BlacklistItem m_currentDataItem;
 
         public override void Start()
         {
@@ -56,7 +53,7 @@ namespace RandomTrainTrailers.UI
         {
             CreateComponents();
 
-            var itemData = data as TrailerDefinition.BlacklistItem;
+            var itemData = data as BlacklistItem;
             if(itemData == null)
                 return;
 

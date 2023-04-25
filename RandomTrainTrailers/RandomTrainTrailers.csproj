@@ -76,6 +76,10 @@
     <Compile Include="AbstractConfigLoader.cs" />
     <Compile Include="DebugBehaviour.cs" />
     <Compile Include="DefaultTrailerConfig.cs" />
+    <Compile Include="Definition\BlacklistItem.cs" />
+    <Compile Include="Definition\Trailer.cs" />
+    <Compile Include="Definition\TrailerCollection.cs" />
+    <Compile Include="Definition\Vehicle.cs" />
     <Compile Include="Detour\HarmonyDetourAIs.cs" />
     <Compile Include="Detour\RedirectionHelper.cs" />
     <Compile Include="TrailerRandomizer.cs" />
@@ -84,7 +88,7 @@
     <Compile Include="PreviewRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SharedTrailerConfigLoader.cs" />
-    <Compile Include="TrailerDefinition.cs" />
+    <Compile Include="Definition\TrailerDefinition.cs" />
     <Compile Include="TrailerManager.cs" />
     <Compile Include="UI\UIAssetRow.cs" />
     <Compile Include="UI\UIBlacklistRow.cs" />

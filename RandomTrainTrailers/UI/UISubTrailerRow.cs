@@ -1,8 +1,5 @@
 ﻿using ColossalFramework.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using RandomTrainTrailers.Definition;
 using UnityEngine;
 
 namespace RandomTrainTrailers.UI
@@ -12,7 +9,7 @@ namespace RandomTrainTrailers.UI
         public class SubTrailerData
         {
             public int index;
-            public TrailerDefinition.Trailer data;
+            public Trailer data;
         }
 
         private UILabel labelAssetName;

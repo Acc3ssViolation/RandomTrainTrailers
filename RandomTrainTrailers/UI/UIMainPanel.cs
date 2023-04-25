@@ -1,11 +1,9 @@
 ﻿using ColossalFramework.Globalization;
 using ColossalFramework.UI;
-using ICities;
-using System;
+using RandomTrainTrailers.Definition;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using UnityEngine;
 
 namespace RandomTrainTrailers.UI
@@ -18,41 +16,41 @@ namespace RandomTrainTrailers.UI
     {
         public static UIMainPanel main { get; private set; }
 
-        UIButton toolbarButton;
-        UIDropDown vehicleDropdown;
-        UIFastList trailerFastList;
-        UIFastList blacklistFastList;
-        UIPanel vehiclePanel;
-        UIPanel trailerPanel;
-        UIPanel blacklistPanel;
+        private UIButton toolbarButton;
+        private UIDropDown vehicleDropdown;
+        private UIFastList trailerFastList;
+        private UIFastList blacklistFastList;
+        private UIPanel vehiclePanel;
+        private UIPanel trailerPanel;
+        private UIPanel blacklistPanel;
 
-        UILabel m_labelNoVehicles;
+        private UILabel m_labelNoVehicles;
 
         // Widths
         public int TrailerRowWidth { get; private set; }
         public int BlacklistRowWidth { get; private set; }
 
         // buttons
-        UIButton m_saveButton;
-        UIButton m_loadButton;
+        private UIButton m_saveButton;
+        private UIButton m_loadButton;
 
         // vehicle options
-        UIIntField m_randomChance;
-        UIIntField m_startOffset;
-        UIIntField m_endOffset;
-        UICheckBox m_useTrailerOverride;
-        UIIntField m_trailerMin;
-        UIIntField m_trailerMax;
-        UICheckBox m_useDefault;
-        UICheckBox m_useCargo;
-        UIButton m_copyButton;
-        UIButton m_pastButton;
+        private UIIntField m_randomChance;
+        private UIIntField m_startOffset;
+        private UIIntField m_endOffset;
+        private UICheckBox m_useTrailerOverride;
+        private UIIntField m_trailerMin;
+        private UIIntField m_trailerMax;
+        private UICheckBox m_useDefault;
+        private UICheckBox m_useCargo;
+        private UIButton m_copyButton;
+        private UIButton m_pastButton;
 
         // Trailer add buttons
-        UIButton m_addTrailer;
-        UIButton m_addCollection;
-        UIButton m_addMultiTrailer;
-        UIButton m_addBlacklist;
+        private UIButton m_addTrailer;
+        private UIButton m_addCollection;
+        private UIButton m_addMultiTrailer;
+        private UIButton m_addBlacklist;
 
         public const int HEIGHT = 550;
         public const int WIDTH = 770;
@@ -66,9 +64,9 @@ namespace RandomTrainTrailers.UI
         }
 
         public TrailerDefinition m_userDefinition;
-        public TrailerDefinition.Vehicle m_selectedVehicleData;
+        public Definition.Vehicle m_selectedVehicleData;
 
-        private TrailerDefinition.Vehicle m_copyData;
+        private Definition.Vehicle m_copyData;
 
         void LoadUserDef()
         {
@@ -249,7 +247,7 @@ namespace RandomTrainTrailers.UI
                         else
                         {
                             // Add it
-                            m_userDefinition.Vehicles.Add(new TrailerDefinition.Vehicle()
+                            m_userDefinition.Vehicles.Add(new Definition.Vehicle()
                             {
                                 AssetName = data.info.name,
                             });
@@ -324,7 +322,7 @@ namespace RandomTrainTrailers.UI
                 {
                     if(m_selectedVehicleData != null)
                     {
-                        m_selectedVehicleData.Trailers.Add(new TrailerDefinition.Trailer() {
+                        m_selectedVehicleData.Trailers.Add(new Trailer() {
                             AssetName = data.info.name,
                             IsCollection = false,
                         });
@@ -345,7 +343,7 @@ namespace RandomTrainTrailers.UI
                 {
                     if(m_selectedVehicleData != null)
                     {
-                        m_selectedVehicleData.Trailers.Add(new TrailerDefinition.Trailer()
+                        m_selectedVehicleData.Trailers.Add(new Trailer()
                         {
                             AssetName = data.localeName,
                             IsCollection = true,
@@ -366,13 +364,13 @@ namespace RandomTrainTrailers.UI
                 {
                     if(m_selectedVehicleData != null)
                     {
-                        m_selectedVehicleData.Trailers.Add(new TrailerDefinition.Trailer()
+                        m_selectedVehicleData.Trailers.Add(new Trailer()
                         {
                             // Is multi trailer because it has a subtrailer
                             AssetName = "New Multi Trailer",
                             IsCollection = false,
-                            SubTrailers = new List<TrailerDefinition.Trailer>() {
-                                new TrailerDefinition.Trailer(data.info)
+                            SubTrailers = new List<Trailer>() {
+                                new Trailer(data.info)
                             }
                         });
                         UpdatePanels();
@@ -402,7 +400,7 @@ namespace RandomTrainTrailers.UI
                 {
                     if(m_selectedVehicleData != null)
                     {
-                        m_selectedVehicleData.LocalBlacklist.Add(new TrailerDefinition.BlacklistItem()
+                        m_selectedVehicleData.LocalBlacklist.Add(new BlacklistItem()
                         {
                             AssetName = data.info.name,
                         });
@@ -679,7 +677,7 @@ namespace RandomTrainTrailers.UI
         /// </summary>
         /// <param name="trailerDef"></param>
         /// <returns></returns>
-        public bool RemoveTrailer(TrailerDefinition.Trailer trailerDef)
+        public bool RemoveTrailer(Trailer trailerDef)
         {
             if(m_selectedVehicleData != null)
             {
@@ -706,7 +704,7 @@ namespace RandomTrainTrailers.UI
         /// </summary>
         /// <param name="trailerDef"></param>
         /// <returns></returns>
-        public bool RemoveBlacklist(TrailerDefinition.BlacklistItem itemDef)
+        public bool RemoveBlacklist(BlacklistItem itemDef)
         {
             if(m_selectedVehicleData != null)
             {
