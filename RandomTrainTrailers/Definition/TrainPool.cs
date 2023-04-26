@@ -1,35 +1,41 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Xml.Serialization;
 
 namespace RandomTrainTrailers.Definition
 {
+    public abstract class ItemReference<S, T> where S : ItemReference<S, T>, new()
+    {
+        public string Name { get; set; }
+
+        [XmlIgnore]
+        public T Reference { get; private set; }
+
+        public ItemReference<S, T> Copy()
+        {
+            var copy = new S()
+            {
+                Name = Name,
+                Reference = Reference,
+            };
+            return copy;
+        }
+
+        public void Resolve(IReadOnlyDictionary<string, T> items)
+        {
+            items.TryGetValue(Name, out var reference);
+            Reference = reference;
+        }
+    }
+
     public class TrainPool
     {
-        public class CollectionReference
+        public class CollectionReference : ItemReference<CollectionReference, TrailerCollection>
         {
-            /// <summary>
-            /// Name of the collection
-            /// </summary>
-            public string Name { get; set; }
+        }
 
-            [XmlIgnore]
-            public TrailerCollection TrailerCollection { get; private set; }
-
-            public void FromCollection(TrailerCollection collection)
-            {
-                Name = collection.Name;
-                TrailerCollection = collection;
-            }
-
-            public CollectionReference Copy()
-            {
-                var copy = new CollectionReference
-                {
-                    Name = Name,
-                    TrailerCollection = TrailerCollection,
-                };
-                return copy;
-            }
+        public class LocomotiveReference : ItemReference<LocomotiveReference, Locomotive>
+        {
         }
 
         /// <summary>
@@ -40,7 +46,7 @@ namespace RandomTrainTrailers.Definition
         /// <summary>
         /// The locomotives in this pool
         /// </summary>
-        public List<Locomotive> Locomotives { get; set; }
+        public List<LocomotiveReference> Locomotives { get; set; }
 
         /// <summary>
         /// The names of trailer collections to use for this pool
@@ -59,10 +65,28 @@ namespace RandomTrainTrailers.Definition
         [XmlAttribute("maxLocoCount")]
         public int MaxLocomotiveCount { get; set; } = 1;
 
+        /// <summary>
+        /// Minimum total train length for trains from this pool
+        /// </summary>
+        [XmlAttribute("minLength")]
+        public int MinTrainLength { get; set; } = 1;
+
+        /// <summary>
+        /// Maximum total train length for trains from this pool
+        /// </summary>
+        [XmlAttribute("maxLength")]
+        public int MaxTrainLength { get; set; } = 12;
+
+        /// <summary>
+        /// Use cargo contents for trailer selection
+        /// </summary>
+        [XmlAttribute("useCargo"), DefaultValue(true)]
+        public bool UseCargo { get; set; } = true;
+
         public TrainPool()
         {
             Name = string.Empty;
-            Locomotives = new List<Locomotive>();
+            Locomotives = new List<LocomotiveReference>();
             TrailerCollections = new List<CollectionReference>();
         }
 
@@ -73,10 +97,12 @@ namespace RandomTrainTrailers.Definition
                 Name = Name,
                 MaxLocomotiveCount = MaxLocomotiveCount,
                 MinLocomotiveCount = MinLocomotiveCount,
+                MaxTrainLength = MaxTrainLength,
+                MinTrainLength = MinTrainLength,
             };
             foreach (var item in Locomotives)
             {
-                copy.Locomotives.Add(item.Copy());
+                copy.Locomotives.Add(item);
             }
             foreach (var item in TrailerCollections)
             {

@@ -67,10 +67,13 @@ namespace RandomTrainTrailers.UI
         public Definition.Vehicle m_selectedVehicleData;
 
         private Definition.Vehicle m_copyData;
+        private TrailerImporter _trailerImporter = new TrailerImporter();
+        private UIWindow<UITrainPoolPanel> _trainPoolWindow;
 
         void LoadUserDef()
         {
             m_userDefinition = TrailerManager.GetUserDefinitionFromDisk();
+            _trainPoolWindow.Content.SetData(m_userDefinition);
         }
 
         void SaveUserDef()
@@ -127,6 +130,8 @@ namespace RandomTrainTrailers.UI
             go = new GameObject("RTTFlagsPanel");
             go.transform.parent = this.gameObject.transform;
             go.AddComponent<UIFlagsPanel>();
+
+            _trainPoolWindow = UIWindow<UITrainPoolPanel>.Create(800, 500, "Train Pools");
 
             // Adding main button
             UITabstrip toolStrip = view.FindUIComponent<UITabstrip>("MainToolstrip");
@@ -190,6 +195,10 @@ namespace RandomTrainTrailers.UI
             UILabel label = AddUIComponent<UILabel>();
             label.text = "Random Train Trailers";
             label.relativePosition = new Vector3(WIDTH / 2 - label.width / 2, 13);
+            label.eventClicked += (_, __) =>
+            {
+                _trainPoolWindow.Open();
+            };
 
             // drag
             UIDragHandle handle = AddUIComponent<UIDragHandle>();
@@ -322,10 +331,7 @@ namespace RandomTrainTrailers.UI
                 {
                     if(m_selectedVehicleData != null)
                     {
-                        m_selectedVehicleData.Trailers.Add(new Trailer() {
-                            AssetName = data.info.name,
-                            IsCollection = false,
-                        });
+                        m_selectedVehicleData.Trailers.Add(_trailerImporter.ImportFromAsset(data.info));
                         UpdatePanels();
                     }
                 },
@@ -364,14 +370,17 @@ namespace RandomTrainTrailers.UI
                 {
                     if(m_selectedVehicleData != null)
                     {
+                        var subTrailer = _trailerImporter.ImportFromAsset(data.info);
                         m_selectedVehicleData.Trailers.Add(new Trailer()
                         {
                             // Is multi trailer because it has a subtrailer
                             AssetName = "New Multi Trailer",
                             IsCollection = false,
                             SubTrailers = new List<Trailer>() {
-                                new Trailer(data.info)
-                            }
+                                subTrailer,
+                            },
+                            CargoType = subTrailer.CargoType,
+                            InvertProbability = subTrailer.InvertProbability,
                         });
                         UpdatePanels();
                     }

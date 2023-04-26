@@ -49,13 +49,13 @@ namespace RandomTrainTrailers
         {
             UIHelperBase group = helper.AddGroup(name);
             UITextField field = null;
-            field = (UITextField)group.AddTextfield("Global trailer limit", TrailerManager.globalTrailerLimit.value.ToString(), (s) =>
+            field = (UITextField)group.AddTextfield("Global trailer limit", TrailerManager.GlobalTrailerLimit.value.ToString(), (s) =>
             {
                 int value = 0;
                 if(int.TryParse(s, out value))
                 {
                     field.textColor = Color.white;
-                    TrailerManager.globalTrailerLimit.value = value;
+                    TrailerManager.GlobalTrailerLimit.value = value;
                 }
                 else
                 {
@@ -66,11 +66,11 @@ namespace RandomTrainTrailers
                 if(int.TryParse(s, out value))
                 {
                     field.textColor = Color.white;
-                    TrailerManager.globalTrailerLimit.value = value;
+                    TrailerManager.GlobalTrailerLimit.value = value;
                 }
                 else
                 {
-                    field.text = TrailerManager.globalTrailerLimit.value.ToString();
+                    field.text = TrailerManager.GlobalTrailerLimit.value.ToString();
                 }
             });
 

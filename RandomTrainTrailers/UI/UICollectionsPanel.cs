@@ -22,6 +22,8 @@ namespace RandomTrainTrailers.UI
 
         private TrailerCollection m_selectedCollection;
 
+        private TrailerImporter _importer = new TrailerImporter();
+
         public const int HEIGHT = 550;
         public const int WIDTH = 550;
 
@@ -173,11 +175,7 @@ namespace RandomTrainTrailers.UI
                 {
                     if(m_selectedCollection != null)
                     {
-                        m_selectedCollection.Trailers.Add(new Trailer()
-                        {
-                            AssetName = data.info.name,
-                            IsCollection = false,
-                        });
+                        m_selectedCollection.Trailers.Add(_importer.ImportFromAsset(data.info));
                         UpdatePanels();
                     }
                 },
@@ -194,14 +192,16 @@ namespace RandomTrainTrailers.UI
                 {
                     if(m_selectedCollection != null)
                     {
+                        var subTrailer = _importer.ImportFromAsset(data.info);
                         m_selectedCollection.Trailers.Add(new Trailer()
                         {
                             // Is multi trailer because it has a subtrailer
                             AssetName = "New Multi Trailer",
                             IsCollection = false,
                             SubTrailers = new List<Trailer>() {
-                                new Trailer(data.info)
-                            }
+                                subTrailer,
+                            },
+                            CargoType = subTrailer.CargoType,
                         });
                         UpdatePanels();
                     }

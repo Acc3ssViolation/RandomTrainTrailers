@@ -21,6 +21,21 @@ namespace RandomTrainTrailers
         AnimalProducts = 2048,
     }
 
+    [Flags]
+    public enum VariationMask
+    {
+        None = 0,
+        Goods = 1,
+        GoodsEmpty = 2,
+        AnimalProducts = 4,
+        Grain = 8,
+        Logs = 16,
+        LogsEmpty = 32,
+        OilProducts = 64,
+        Ore = 128,
+        OreEmpty = 256,
+    }
+
     public struct CargoParcel
     {
         public ushort building;

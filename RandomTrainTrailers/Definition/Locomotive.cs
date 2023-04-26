@@ -18,6 +18,12 @@ namespace RandomTrainTrailers.Definition
         [XmlAttribute("type"), DefaultValue(LocomotiveType.Unknown)]
         public LocomotiveType Type { get; set; }
 
+        /// <summary>
+        /// The total length of this locomotive.
+        /// </summary>
+        [XmlAttribute("length"), DefaultValue(1)]
+        public int Length { get; set; } = 1;
+
         [XmlIgnore]
         public bool CanBeLeadVehicle => _info != null ? _info.m_placementStyle == ItemClass.Placement.Automatic : false;
 
@@ -50,7 +56,8 @@ namespace RandomTrainTrailers.Definition
             var copy = new Locomotive
             {
                 AssetName = AssetName,
-                Type = Type
+                Type = Type,
+                Length = Length,
             };
             return copy;
         }

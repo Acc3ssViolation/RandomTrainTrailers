@@ -12,9 +12,11 @@ namespace RandomTrainTrailers
 {
     public static class TrailerManager
     {
-        public static SavedInt globalTrailerLimit = new SavedInt("globalTrailerLimit", Mod.settingsFile, -1, true);
+        public static readonly SavedInt GlobalTrailerLimit = new SavedInt("globalTrailerLimit", Mod.settingsFile, -1, true);
+
         private static Dictionary<string, Definition.Vehicle> vehicleDict = new Dictionary<string, Definition.Vehicle>();
         private static Dictionary<string, TrailerCollection> collectionDict = new Dictionary<string, TrailerCollection>();
+        private static Dictionary<string, Locomotive> _locomotiveMap = new Dictionary<string, Locomotive>();
         private static Dictionary<string, IList<TrainPool>> _leadVehicleToPool = new Dictionary<string, IList<TrainPool>>();
 
         private static HashSet<string> removedTrailers = new HashSet<string>();
@@ -29,6 +31,7 @@ namespace RandomTrainTrailers
             vehicleDict.Clear();
             collectionDict.Clear();
             _leadVehicleToPool.Clear();
+            _locomotiveMap.Clear();
 
             // Load default
             var def = DefaultTrailerConfig.DefaultDefinition;
@@ -334,10 +337,19 @@ namespace RandomTrainTrailers
                 }
             });
 
+            // Load locomotives
+            foreach (var locomotive in definition.Locomotives)
+            {
+                if (locomotive.VehicleInfo == null)
+                    continue;
+
+                _locomotiveMap[locomotive.AssetName] = locomotive;
+            }
+
             // Create a mapping from potential lead vehicles to the pools they are in
             foreach (var pool in definition.TrainPools)
             {
-                pool.RemoveUnavailableAssets();
+                pool.RemoveUnavailableLocomotives(_locomotiveMap);
                 pool.RemoveUnavailableCollections(collectionDict);
                 if (!pool.IsValid())
                 {
@@ -345,8 +357,9 @@ namespace RandomTrainTrailers
                     continue;
                 }
 
-                foreach (var locomotive in pool.Locomotives)
+                foreach (var locomotiveRef in pool.Locomotives)
                 {
+                    var locomotive = locomotiveRef.Reference;
                     if (!locomotive.CanBeLeadVehicle)
                         continue;
 
@@ -512,6 +525,40 @@ namespace RandomTrainTrailers
                 sb.AppendLine();
             }
 
+            sb.AppendLine("Locomotives:");
+            foreach (var locomotive in _locomotiveMap.Values)
+            {
+                sb.AppendLine("\tName: " + locomotive.AssetName);
+                sb.AppendLine("\tIs lead vehicle: " + locomotive.CanBeLeadVehicle);
+                sb.AppendLine("\tType: " + locomotive.Type);
+                sb.AppendLine();
+            }
+
+            var loggedPools = new HashSet<TrainPool>();
+            sb.AppendLine("Train pools:");
+            foreach (var pools in _leadVehicleToPool.Values)
+            {
+                foreach (var pool in pools)
+                {
+                    if (loggedPools.Contains(pool))
+                        continue;
+                    sb.AppendLine("\tName: " + pool.Name);
+                    sb.AppendLine("\tMin Locomotives: " + pool.MinLocomotiveCount);
+                    sb.AppendLine("\tMax Locomotives: " + pool.MaxLocomotiveCount);
+                    sb.AppendLine("\tLocomotives:");
+                    foreach (var locomotive in pool.Locomotives)
+                    {
+                        sb.AppendLine("\t\t" + locomotive.Name);
+                    }
+                    sb.AppendLine("\tCollections:");
+                    foreach (var trailerCollection in pool.TrailerCollections)
+                    {
+                        sb.AppendLine("\t\t" + trailerCollection.Name);
+                    }
+                    sb.AppendLine();
+                }
+            }
+
             Util.Log(sb.ToString());
         }
 
@@ -565,7 +612,7 @@ namespace RandomTrainTrailers
 
         public static int GetTrailerCountOverride()
         {
-            return globalTrailerLimit;
+            return GlobalTrailerLimit;
         }
     }
 }

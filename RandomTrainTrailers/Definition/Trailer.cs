@@ -22,7 +22,7 @@ namespace RandomTrainTrailers.Definition
         /// Weight for the random selection, defaults to 10. (int)
         /// </summary>
         [XmlAttribute("weight"), DefaultValue(10)]
-        public int Weight { get; set; }
+        public int Weight { get; set; } = 10;
 
         /// <summary>
         /// List of sub trailers. When this has elements this trailer is considered to be a Multi Trailer.

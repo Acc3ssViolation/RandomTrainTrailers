@@ -5,20 +5,18 @@ namespace RandomTrainTrailers.Definition
 {
     internal static class TrainPoolExtensions
     {
-        public static void RemoveUnavailableAssets(this TrainPool pool)
+        public static void RemoveUnavailableLocomotives(this TrainPool pool, IReadOnlyDictionary<string, Locomotive> locomotives)
         {
-            pool.Locomotives.RemoveAll(l => l.VehicleInfo == null);
+            foreach (var locomotiveRef in pool.Locomotives)
+                locomotiveRef.Resolve(locomotives);
+            pool.Locomotives.RemoveAll(c => c.Reference == null);
         }
 
-        public static void RemoveUnavailableCollections(this TrainPool pool, IDictionary<string, TrailerCollection> collections)
+        public static void RemoveUnavailableCollections(this TrainPool pool, IReadOnlyDictionary<string, TrailerCollection> collections)
         {
             foreach (var collectionRef in pool.TrailerCollections)
-            {
-                if (!collections.TryGetValue(collectionRef.Name, out var collection))
-                    continue;
-                collectionRef.FromCollection(collection);
-            }
-            pool.TrailerCollections.RemoveAll(c => c.TrailerCollection == null);
+                collectionRef.Resolve(collections);
+            pool.TrailerCollections.RemoveAll(c => c.Reference == null);
         }
 
         public static bool IsValid(this TrainPool pool)
@@ -29,6 +27,14 @@ namespace RandomTrainTrailers.Definition
                 return false;
             if (pool.MaxLocomotiveCount > 100)
                 return false;
+
+            if (pool.MaxTrainLength < pool.MinTrainLength)
+                return false;
+            if (pool.MinTrainLength < 1)
+                return false;
+            if (pool.MaxTrainLength > 100)
+                return false;
+
             return true;
         }
     }

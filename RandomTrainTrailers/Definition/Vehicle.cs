@@ -53,7 +53,7 @@ namespace RandomTrainTrailers.Definition
         /// Chance of actually having random trailers assigned, percentage, defaults to 100.
         /// </summary>
         [XmlAttribute("chance"), DefaultValue(100)]
-        public int RandomTrailerChance { get; set; }
+        public int RandomTrailerChance { get; set; } = 100;
 
         /// <summary>
         /// When true, adds the default trailers of this asset to the list of trailers for the picker. Defaults to true.

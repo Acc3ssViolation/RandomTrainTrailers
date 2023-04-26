@@ -83,6 +83,8 @@
     <Compile Include="Definition\Vehicle.cs" />
     <Compile Include="Detour\HarmonyDetourAIs.cs" />
     <Compile Include="Detour\RedirectionHelper.cs" />
+    <Compile Include="LocomotiveImporter.cs" />
+    <Compile Include="TrailerImporter.cs" />
     <Compile Include="TrailerRandomizer.cs" />
     <Compile Include="Mod.cs" />
     <Compile Include="ModLoadingExtension.cs" />
@@ -91,6 +93,7 @@
     <Compile Include="SharedTrailerConfigLoader.cs" />
     <Compile Include="Definition\TrailerDefinition.cs" />
     <Compile Include="TrailerManager.cs" />
+    <Compile Include="UI\RowData.cs" />
     <Compile Include="UI\UIAssetRow.cs" />
     <Compile Include="UI\UIBlacklistRow.cs" />
     <Compile Include="UI\UIFlagsPanel.cs" />
@@ -102,8 +105,10 @@
     <Compile Include="UI\UIMainPanel.cs" />
     <Compile Include="UI\UISubTrailerRow.cs" />
     <Compile Include="UI\UITrailerRow.cs" />
-    <Compile Include="UI\UITrainAssetItem.cs" />
+    <Compile Include="UI\UITrainPoolPanel.cs" />
+    <Compile Include="UI\UITrainPoolRow.cs" />
     <Compile Include="UI\UIUtils.cs" />
+    <Compile Include="UI\UIWindow.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="VehicleExtensions.cs" />
     <Compile Include="VehiclePrefabs.cs" />

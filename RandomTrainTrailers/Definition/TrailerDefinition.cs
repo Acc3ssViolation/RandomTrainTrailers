@@ -13,9 +13,14 @@ namespace RandomTrainTrailers.Definition
         public List<Vehicle> Vehicles { get; set; }
 
         /// <summary>
-        /// List of locomotive pools.
+        /// List of train pools.
         /// </summary>
         public List<TrainPool> TrainPools { get; set; }
+
+        /// <summary>
+        /// List of all locomotives. Can be shared among pools.
+        /// </summary>
+        public List<Locomotive> Locomotives { get; set; }
 
         /// <summary>
         /// List of trailer collections. Can be shared among vehicles.
@@ -26,6 +31,7 @@ namespace RandomTrainTrailers.Definition
         {
             Vehicles = new List<Vehicle>();
             TrainPools = new List<TrainPool>();
+            Locomotives = new List<Locomotive>();
             Collections = new List<TrailerCollection>();
         }
 
@@ -46,7 +52,12 @@ namespace RandomTrainTrailers.Definition
                 copy.Vehicles.Add(item.Copy());
             }
 
-            foreach(var item in Collections)
+            foreach (var item in Locomotives)
+            {
+                copy.Locomotives.Add(item.Copy());
+            }
+
+            foreach (var item in Collections)
             {
                 copy.Collections.Add(item.Copy());
             }
