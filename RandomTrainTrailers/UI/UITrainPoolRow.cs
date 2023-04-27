@@ -168,8 +168,7 @@ namespace RandomTrainTrailers.UI
         {
             var window = UIWindow.Create<UITrainPoolReferencePanel>(600, 500, "Locomotives in pool");
             window.DestroyOnClose = true;
-            // TODO: This reference to UIMainPanel feels a bit hacky
-            ((UITrainPoolReferencePanel)window.Content).SetData(UIMainPanel.main.m_userDefinition, _data.Value, UITrainPoolReferencePanel.DataType.Locomotives, this);
+            ((UITrainPoolReferencePanel)window.Content).SetData(UIDataManager.instance.AvailableDefinition, _data.Value, UITrainPoolReferencePanel.DataType.Locomotives, this);
             window.Open();
         }
 
@@ -177,8 +176,7 @@ namespace RandomTrainTrailers.UI
         {
             var window = UIWindow.Create<UITrainPoolReferencePanel>(600, 500, "Trailers in pool");
             window.DestroyOnClose = true;
-            // TODO: This reference to UIMainPanel feels a bit hacky
-            ((UITrainPoolReferencePanel)window.Content).SetData(UIMainPanel.main.m_userDefinition, _data.Value, UITrainPoolReferencePanel.DataType.TrailerCollections, this);
+            ((UITrainPoolReferencePanel)window.Content).SetData(UIDataManager.instance.AvailableDefinition, _data.Value, UITrainPoolReferencePanel.DataType.TrailerCollections, this);
             window.Open();
         }
 

@@ -6,7 +6,11 @@ namespace RandomTrainTrailers.Definition
 {
     public abstract class ItemReference
     {
+        [XmlAttribute("name")]
         public string Name { get; set; }
+
+        [XmlIgnore]
+        public abstract string DisplayName { get; }
     }
 
     public abstract class ItemReference<S, T>: ItemReference where S : ItemReference<S, T>, new()
@@ -35,10 +39,12 @@ namespace RandomTrainTrailers.Definition
     {
         public class CollectionReference : ItemReference<CollectionReference, TrailerCollection>
         {
+            public override string DisplayName => Reference?.Name ?? Name;
         }
 
         public class LocomotiveReference : ItemReference<LocomotiveReference, Locomotive>
         {
+            public override string DisplayName => Util.GetVehicleDisplayName(Name);
         }
 
         /// <summary>

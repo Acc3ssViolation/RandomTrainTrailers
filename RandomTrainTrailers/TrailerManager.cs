@@ -14,28 +14,29 @@ namespace RandomTrainTrailers
     {
         public static readonly SavedInt GlobalTrailerLimit = new SavedInt("globalTrailerLimit", Mod.settingsFile, -1, true);
 
-        private static Dictionary<string, Definition.Vehicle> vehicleDict = new Dictionary<string, Definition.Vehicle>();
-        private static Dictionary<string, TrailerCollection> collectionDict = new Dictionary<string, TrailerCollection>();
+        private static Dictionary<string, Definition.Vehicle> _vehicleDict = new Dictionary<string, Definition.Vehicle>();
+        private static Dictionary<string, TrailerCollection> _collectionDict = new Dictionary<string, TrailerCollection>();
         private static Dictionary<string, Locomotive> _locomotiveMap = new Dictionary<string, Locomotive>();
         private static Dictionary<string, IList<TrainPool>> _leadVehicleToPool = new Dictionary<string, IList<TrainPool>>();
 
-        private static HashSet<string> removedTrailers = new HashSet<string>();
-        private static HashSet<string> removedCollections = new HashSet<string>();
-        private static HashSet<string> removedVehicles = new HashSet<string>();
+        private static HashSet<string> _removedTrailers = new HashSet<string>();
+        private static HashSet<string> _removedCollections = new HashSet<string>();
+        private static HashSet<string> _removedVehicles = new HashSet<string>();
 
         public static void Setup()
         {
-            removedTrailers.Clear();
-            removedCollections.Clear();
-            removedVehicles.Clear();
-            vehicleDict.Clear();
-            collectionDict.Clear();
+            _removedTrailers.Clear();
+            _removedCollections.Clear();
+            _removedVehicles.Clear();
+            _vehicleDict.Clear();
+            _collectionDict.Clear();
             _leadVehicleToPool.Clear();
             _locomotiveMap.Clear();
 
+            ConfigurationManager.instance.Reset();
+
             // Load default
-            var def = DefaultTrailerConfig.DefaultDefinition;
-            ApplyDefinition(ref def);
+            ConfigurationManager.instance.Add(ConfigurationManager.Default, DefaultTrailerConfig.DefaultDefinition);
 
             // Load mods and assets
             var loader = new SharedTrailerConfigLoader();
@@ -75,7 +76,11 @@ namespace RandomTrainTrailers
                 loader.OnFileFound(path, asset.package.packageName, false);
             }
 
-            LoadUserDefinition();           // Load User Def LAST to allow for overrides
+            ConfigurationManager.instance.Add(ConfigurationManager.User, GetUserDefinitionFromDisk());
+
+            // Create a copy of the combined one because ApplyDefinition makes edits to it to filter out unloaded assets
+            var combined = ConfigurationManager.instance.GetCombinedDefinition().Copy();
+            ApplyDefinition(ref combined);
 
             LogRemovedAssets();
             DumpToLog();
@@ -83,12 +88,12 @@ namespace RandomTrainTrailers
 
         private static void LogRemovedAssets()
         {
-            if(removedTrailers.Count > 0) Util.Log("The following trailers were removed from 1 or more vehicles/collections:\r\n" + removedTrailers.Aggregate((sequence, next) => sequence + "\r\n" + next));
-            if(removedCollections.Count > 0) Util.Log("The following collections were removed due to being invalid or having 0 loaded trailers:\r\n" + removedCollections.Aggregate((sequence, next) => sequence + "\r\n" + next));
-            if(removedVehicles.Count > 0) Util.Log("The following vehicles were removed due to having no loaded collections or trailers:\r\n" + removedVehicles.Aggregate((sequence, next) => sequence + "\r\n" + next));
+            if(_removedTrailers.Count > 0) Util.Log("The following trailers were removed from 1 or more vehicles/collections:\r\n" + _removedTrailers.Aggregate((sequence, next) => sequence + "\r\n" + next));
+            if(_removedCollections.Count > 0) Util.Log("The following collections were removed due to being invalid or having 0 loaded trailers:\r\n" + _removedCollections.Aggregate((sequence, next) => sequence + "\r\n" + next));
+            if(_removedVehicles.Count > 0) Util.Log("The following vehicles were removed due to having no loaded collections or trailers:\r\n" + _removedVehicles.Aggregate((sequence, next) => sequence + "\r\n" + next));
         }
 
-        public static TrailerDefinition GetUserDefinitionFromDisk()
+        private static TrailerDefinition GetUserDefinitionFromDisk()
         {
             // User definition is stored in the game app data
             string path = Path.Combine(ColossalFramework.IO.DataLocation.localApplicationData, "RTT-Definition.xml");
@@ -135,50 +140,11 @@ namespace RandomTrainTrailers
             return false;
         }
 
-        private static void LoadUserDefinition()
-        {
-            // User definition is stored in the game app data
-            string path = Path.Combine(ColossalFramework.IO.DataLocation.localApplicationData, "RTT-Definition.xml");
-            try
-            {
-                if(File.Exists(path))
-                {
-                    TrailerDefinition definition;
-
-                    using(StreamReader sr = new StreamReader(path))
-                    {
-                        XmlSerializer serializer = new XmlSerializer(typeof(TrailerDefinition));
-                        definition = (TrailerDefinition)serializer.Deserialize(sr);
-                    }
-
-                    // Apply user definition
-                    ApplyDefinition(ref definition);
-
-                    Util.Log("Finished loading user definition from " + path);
-                }
-                else
-                {
-                    Util.Log("No user definition found at " + path + " creating empty definition file");
-
-                    var definition = new TrailerDefinition();
-                    using(StreamWriter sw = new StreamWriter(path))
-                    {
-                        XmlSerializer serializer = new XmlSerializer(typeof(TrailerDefinition));
-                        serializer.Serialize(sw, definition);
-                    }
-                }
-            }
-            catch(Exception e)
-            {
-                Util.LogError("Exception trying to load definition\r\n" + path + "\r\nException:\r\n" + e.Message + "\r\n" + e.StackTrace);
-            }
-        }
-
         /// <summary>
         /// Updates vehicle dictionary and blacklist
         /// </summary>
         /// <param name="definition">Definition to add. May be modified in the process!</param>
-        public static void ApplyDefinition(ref TrailerDefinition definition)
+        private static void ApplyDefinition(ref TrailerDefinition definition)
         {
             if(definition == null)
                 return;
@@ -187,14 +153,14 @@ namespace RandomTrainTrailers
             // Add trailer collections
             foreach(var collection in definition.Collections)
             {
-                if(!collectionDict.ContainsKey(collection.Name))
+                if(!_collectionDict.ContainsKey(collection.Name))
                 {
-                    collectionDict.Add(collection.Name, collection);
+                    _collectionDict.Add(collection.Name, collection);
                 }
                 else
                 {
                     Util.LogWarning("Duplicate collection name, overriding previous collection! " + collection.Name);
-                    collectionDict[collection.Name] = collection;
+                    _collectionDict[collection.Name] = collection;
                 }
             }
             // Extend and clean collections
@@ -202,7 +168,7 @@ namespace RandomTrainTrailers
             {
                 if(collection.BaseCollection != null)
                 {
-                    if(collectionDict.TryGetValue(collection.BaseCollection, out var baseCollection))
+                    if(_collectionDict.TryGetValue(collection.BaseCollection, out var baseCollection))
                     {
                         foreach(var trailer in baseCollection.Trailers)
                         {
@@ -222,13 +188,13 @@ namespace RandomTrainTrailers
                 CleanTrailerList(ref ct, new HashSet<string>());
                 if(collection.Trailers.Count == 0)
                 {
-                    removedCollections.Add(collection.Name);
+                    _removedCollections.Add(collection.Name);
                 }
             }
             // Clean up the dict
-            foreach(var entry in removedCollections)
+            foreach(var entry in _removedCollections)
             {
-                collectionDict.Remove(entry);
+                _collectionDict.Remove(entry);
             }
 
             Util.Log("Adding vehicle entries...", true);
@@ -270,7 +236,7 @@ namespace RandomTrainTrailers
                 {
                     if(trailerDef.IsCollection)
                     {
-                        if(collectionDict.TryGetValue(trailerDef.AssetName, out var collection))
+                        if(_collectionDict.TryGetValue(trailerDef.AssetName, out var collection))
                         {
                             vehicle.m_trailerCollections.Add(new Definition.Vehicle.Collection()
                             {
@@ -323,7 +289,7 @@ namespace RandomTrainTrailers
                     // Only the inline trailer collection is present
                     var remove = v.m_trailerCollections[0].m_trailerCollection.Trailers.Count < 1;
                     if(remove)
-                        removedVehicles.Add(v.AssetName);
+                        _removedVehicles.Add(v.AssetName);
                     return remove;
                 }
                 else
@@ -350,7 +316,7 @@ namespace RandomTrainTrailers
             foreach (var pool in definition.TrainPools)
             {
                 pool.RemoveUnavailableLocomotives(_locomotiveMap);
-                pool.RemoveUnavailableCollections(collectionDict);
+                pool.RemoveUnavailableCollections(_collectionDict);
                 if (!pool.IsValid())
                 {
                     Util.LogError($"Pool '{pool.Name}' is invalid and will not be loaded");
@@ -376,14 +342,14 @@ namespace RandomTrainTrailers
             // Add definition's vehicles to the dictionary
             foreach(var vehicle in definition.Vehicles)
             {
-                if(!vehicleDict.ContainsKey(vehicle.AssetName))
+                if(!_vehicleDict.ContainsKey(vehicle.AssetName))
                 {
-                    vehicleDict.Add(vehicle.AssetName, vehicle);
+                    _vehicleDict.Add(vehicle.AssetName, vehicle);
                 }
                 else
                 {
                     Util.LogWarning("Duplicate vehicle definition, overriding: " + vehicle.AssetName);
-                    vehicleDict[vehicle.AssetName] = vehicle;
+                    _vehicleDict[vehicle.AssetName] = vehicle;
                 }
 
                 // Cargo
@@ -449,7 +415,7 @@ namespace RandomTrainTrailers
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Collections:");
-            foreach(var collection in collectionDict.Values)
+            foreach(var collection in _collectionDict.Values)
             {
                 sb.AppendLine("\tName: " + collection.Name);
                 sb.AppendLine("\tBase: " + Convert.ToString(collection.BaseCollection));
@@ -476,7 +442,7 @@ namespace RandomTrainTrailers
             }
 
             sb.AppendLine("Vehicles:");
-            foreach(var vehicle in vehicleDict.Values)
+            foreach(var vehicle in _vehicleDict.Values)
             {
                 sb.AppendLine("\tName: " + vehicle.AssetName);
                 sb.AppendLine("\tChance: " + vehicle.RandomTrailerChance);
@@ -497,7 +463,7 @@ namespace RandomTrainTrailers
                 {
                     sb.AppendLine("\t\tName: " + collection.m_trailerCollection.Name);
                     sb.AppendLine("\t\tWeight: " + collection.m_weight);
-                    if(!collectionDict.ContainsKey(collection.m_trailerCollection.Name))
+                    if(!_collectionDict.ContainsKey(collection.m_trailerCollection.Name))
                     {
                         foreach(var trailer in collection.m_trailerCollection.Trailers)
                         {
@@ -542,6 +508,8 @@ namespace RandomTrainTrailers
                 {
                     if (loggedPools.Contains(pool))
                         continue;
+                    loggedPools.Add(pool);
+
                     sb.AppendLine("\tName: " + pool.Name);
                     sb.AppendLine("\tMin Locomotives: " + pool.MinLocomotiveCount);
                     sb.AppendLine("\tMax Locomotives: " + pool.MaxLocomotiveCount);
@@ -595,7 +563,7 @@ namespace RandomTrainTrailers
         /// <param name="assetName">The FULL name of the asset</param>
         public static Definition.Vehicle GetVehicleConfig(string assetName)
         {
-            vehicleDict.TryGetValue(assetName, out var vehicle);
+            _vehicleDict.TryGetValue(assetName, out var vehicle);
             return vehicle;
         }
 
@@ -607,7 +575,7 @@ namespace RandomTrainTrailers
 
         public static Dictionary<string, Definition.Vehicle> GetVehicleDictionary()
         {
-            return vehicleDict;
+            return _vehicleDict;
         }
 
         public static int GetTrailerCountOverride()

@@ -72,7 +72,8 @@ namespace RandomTrainTrailers.UI
 
         void LoadUserDef()
         {
-            m_userDefinition = TrailerManager.GetUserDefinitionFromDisk();
+            TrailerManager.Setup();
+            m_userDefinition = UIDataManager.instance.EditDefinition;
             ((UITrainPoolPanel)_trainPoolWindow.Content).SetData(m_userDefinition);
         }
 
@@ -729,19 +730,6 @@ namespace RandomTrainTrailers.UI
                 return b;
             }
             return false;
-        }
-
-        private void SetupFastList()
-        {
-            FastList<object> newRowsData = new FastList<object>();
-
-            for(int i = 0; i < 20; i++)
-            {
-                //newRowsData.Add(new UITrainAssetItem.Data { prefabIndex = -1, trainData = null });
-            }
-
-            trailerFastList.rowHeight = UITrailerRow.HEIGHT;
-            trailerFastList.rowsData = newRowsData;
         }
 
         public void UpdateTrainList()

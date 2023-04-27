@@ -285,6 +285,8 @@ namespace RandomTrainTrailers
                     previousVehicleId = trailerId;
                 }
             }
+
+            Util.Log($"Spawned {locomotiveCount} locomotives and {trainLength - locomotiveCount} trailers for {vehicle.Info.name} [{id}] using pool {pool.Name}");
         }
 
         private static int SpawnLocomotive(out ushort lastId, ushort previousId, Locomotive locomotive, Randomizer randomizer)

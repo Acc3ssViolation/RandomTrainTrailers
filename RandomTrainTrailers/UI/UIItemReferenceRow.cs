@@ -41,7 +41,8 @@ namespace RandomTrainTrailers.UI
             EnsureComponents();
 
             _selectedCheckbox.isChecked = _data.Selected;
-            _nameLabel.text = _data.Value.Name;
+            _nameLabel.text = _data.Value.DisplayName;
+            tooltip = _data.Value.DisplayName;
 
             if (_isRowOdd)
             {

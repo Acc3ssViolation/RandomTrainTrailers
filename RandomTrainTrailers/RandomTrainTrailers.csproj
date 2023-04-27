@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="CargoParcel.cs" />
     <Compile Include="AbstractConfigLoader.cs" />
+    <Compile Include="ConfigurationManager.cs" />
     <Compile Include="DebugBehaviour.cs" />
     <Compile Include="DefaultTrailerConfig.cs" />
     <Compile Include="Definition\BlacklistItem.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="UI\RowData.cs" />
     <Compile Include="UI\UIAssetRow.cs" />
     <Compile Include="UI\UIBlacklistRow.cs" />
+    <Compile Include="UI\UIDataManager.cs" />
     <Compile Include="UI\UIFlagsPanel.cs" />
     <Compile Include="UI\UIMultiTrailerPanel.cs" />
     <Compile Include="UI\UICollectionsPanel.cs" />

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace RandomTrainTrailers.Definition
 {
@@ -26,6 +27,9 @@ namespace RandomTrainTrailers.Definition
         /// List of trailer collections. Can be shared among vehicles.
         /// </summary>
         public List<TrailerCollection> Collections { get; set; }
+
+        [XmlIgnore]
+        public string Name { get; set; }
 
         public TrailerDefinition()
         {

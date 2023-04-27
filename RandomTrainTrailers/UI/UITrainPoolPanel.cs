@@ -2,6 +2,7 @@
 using RandomTrainTrailers.Definition;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace RandomTrainTrailers.UI
@@ -113,6 +114,16 @@ namespace RandomTrainTrailers.UI
                 CreatePool();
             };
 
+            var importLocomotives = UIUtils.CreateButton(panel);
+            importLocomotives.text = "Import Locomotives";
+            importLocomotives.width = 180;
+            importLocomotives.relativePosition = UIUtils.RightOf(_createButton);
+            importLocomotives.anchor = UIAnchorStyle.Left | UIAnchorStyle.CenterVertical;
+            importLocomotives.eventClicked += (_, __) =>
+            {
+                ImportAllLocomotives();
+            };
+
             return panel;
         }
 
@@ -131,6 +142,35 @@ namespace RandomTrainTrailers.UI
             _trailerDefinition.TrainPools.Add(pool);
             _poolList.rowsData.Add(new RowData<TrainPool>(pool, DeletePool));
             _poolList.Refresh();
+        }
+
+        private void ImportAllLocomotives()
+        {
+            ConfirmPanel.ShowModal(Mod.name, $"Are you sure you want to import all available locomotive assets?", delegate (UIComponent comp, int ret)
+            {
+                if (ret == 1)
+                {
+                    ImportAllLocomotivesImpl();
+                }
+            });
+        }
+
+        private void ImportAllLocomotivesImpl()
+        {
+            var importer = new LocomotiveImporter();
+            var available = UIDataManager.instance.AvailableDefinition;
+            var cargoTrains = VehiclePrefabs.cargoTrains;
+            foreach (var train in cargoTrains)
+            {
+                if (train.isTrailer || available.Locomotives.Any(l => l.VehicleInfo == train.info))
+                    continue;
+
+                var locomotive = importer.ImportFromAsset(train.info);
+                Util.Log($"Imported '{locomotive.AssetName}' as locomotive of type '{locomotive.Type}'");
+                UIDataManager.instance.EditDefinition.Locomotives.Add(locomotive);
+            }
+
+            UIDataManager.instance.Invalidate();
         }
 
         private void DisableSelected()

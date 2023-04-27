@@ -21,7 +21,7 @@ namespace RandomTrainTrailers
                 return;
             }
             Util.Log("Loading RTT config from " + (isMod ? "mod " : "asset ") + name);
-            TrailerManager.ApplyDefinition(ref config);
+            ConfigurationManager.instance.Add(path, config);
         }
 
         public override void Prepare()
