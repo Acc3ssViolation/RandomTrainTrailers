@@ -250,7 +250,7 @@ namespace RandomTrainTrailers
         public static void GenerateTrain(ref Vehicle vehicle, ushort id, TrainPool pool, Randomizer randomizer)
         {
             var trainLength = randomizer.Int32(pool.MinTrainLength, pool.MaxTrainLength);
-            if (trainLength > TrailerManager.GlobalTrailerLimit.value)
+            if (TrailerManager.GlobalTrailerLimit > 0 && trainLength > TrailerManager.GlobalTrailerLimit.value)
                 trainLength = TrailerManager.GlobalTrailerLimit.value;
             var locomotiveCount = randomizer.Int32(pool.MinLocomotiveCount, pool.MaxLocomotiveCount);
             if (locomotiveCount > trainLength)
@@ -265,7 +265,7 @@ namespace RandomTrainTrailers
             // Spawn leading locomotives
             for (; currentTrailerIndex < (locomotiveCount - 1); currentTrailerIndex++)
             {
-                var locomotive = pool.Locomotives.FirstOrDefault().Reference;
+                var locomotive = pool.Locomotives[randomizer.Int32((uint)pool.Locomotives.Count)].Reference;
                 var spawnedCount = SpawnLocomotive(out var trailerId, previousVehicleId, locomotive, randomizer);
                 if (spawnedCount == 0)
                     continue;
@@ -275,7 +275,7 @@ namespace RandomTrainTrailers
             }
 
             // Spawn rest of the train
-            var trailerCollection = pool.TrailerCollections.FirstOrDefault().Reference;
+            var trailerCollection = pool.TrailerCollections[randomizer.Int32((uint)pool.TrailerCollections.Count)].Reference;
             for (; currentTrailerIndex < trainLength; currentTrailerIndex++)
             {
                 var spawnedTrailerCount = SpawnRandomTrailer(out var trailerId, previousVehicleId, trailerCollection, randomizer, 0);
