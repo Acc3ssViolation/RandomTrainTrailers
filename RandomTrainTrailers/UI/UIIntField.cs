@@ -1,4 +1,5 @@
 ﻿using ColossalFramework.UI;
+using System;
 using UnityEngine;
 
 namespace RandomTrainTrailers.UI
@@ -19,9 +20,9 @@ namespace RandomTrainTrailers.UI
             }
         }
 
-        public void IntFieldHandler(ref int target)
+        public void IntFieldHandler(ref int target, Predicate<int> predicate = null)
         {
-            IntFieldHandler(this.textField, this.textField.text, ref target);
+            IntFieldHandler(this.textField, this.textField.text, ref target, predicate);
         }
 
         public static UIIntField CreateField(string label, UIComponent parent, bool buttons = true)
@@ -68,10 +69,9 @@ namespace RandomTrainTrailers.UI
             return field;
         }
 
-        public static void IntFieldHandler(UITextField field, string value, ref int target)
+        public static void IntFieldHandler(UITextField field, string value, ref int target, Predicate<int> predicate = null)
         {
-            int v;
-            if(int.TryParse(value, out v))
+            if (int.TryParse(value, out int v) && (predicate == null || predicate(v)))
             {
                 target = v;
                 field.color = Color.white;

@@ -184,7 +184,10 @@ namespace RandomTrainTrailers.UI
 
         private void OpenSettingsWindow()
         {
-
+            var window = UIWindow.Create<UITrainPoolSettings>(300, 200, _data.Value.Name);
+            window.DestroyOnClose = true;
+            ((UITrainPoolSettings)window.Content).SetData(_data.Value);
+            window.Open();
         }
     }
 }

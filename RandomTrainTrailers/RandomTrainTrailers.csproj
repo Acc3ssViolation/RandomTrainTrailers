@@ -109,6 +109,7 @@
     <Compile Include="UI\UITrainPoolPanel.cs" />
     <Compile Include="UI\UIItemReferenceRow.cs" />
     <Compile Include="UI\UITrainPoolRow.cs" />
+    <Compile Include="UI\UITrainPoolSettings.cs" />
     <Compile Include="UI\UIUtils.cs" />
     <Compile Include="UI\UIWindow.cs" />
     <Compile Include="Util.cs" />

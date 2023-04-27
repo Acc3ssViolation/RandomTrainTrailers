@@ -39,7 +39,7 @@ namespace RandomTrainTrailers.UI
             base.Awake();
 
             name = $"{GetType().Name}";
-            backgroundSprite = "UnlockingPanel2";
+            backgroundSprite = "MenuPanel2";
             isVisible = false;
             canFocus = true;
             isInteractive = true;
@@ -57,32 +57,30 @@ namespace RandomTrainTrailers.UI
 
         private void CreateComponents()
         {
+            // Use a panel for the title bar. No background sprite so that it looks different from the rest of the panel.
+            var titlePanel = AddUIComponent<UIPanel>();
+            titlePanel.width = width;
+            titlePanel.height = 40;
+            titlePanel.relativePosition = Vector3.zero;
+            titlePanel.anchor = UIAnchorStyle.Left | UIAnchorStyle.Right | UIAnchorStyle.Top;
+
             // header text
-            _titleLabel = AddUIComponent<UILabel>();
+            _titleLabel = titlePanel.AddUIComponent<UILabel>();
             _titleLabel.text = _title;
             _titleLabel.relativePosition = new Vector3(width / 2 - _titleLabel.width / 2, 13);
             _titleLabel.anchor = UIAnchorStyle.Top | UIAnchorStyle.CenterHorizontal;
-            
+
             // drag
-            UIDragHandle handle = AddUIComponent<UIDragHandle>();
+            UIDragHandle handle = titlePanel.AddUIComponent<UIDragHandle>();
             handle.target = this;
             handle.constrainToScreen = true;
-            handle.width = width;
-            handle.height = 40;
+            handle.width = titlePanel.width;
+            handle.height = titlePanel.height;
             handle.relativePosition = Vector3.zero;
-            handle.anchor = UIAnchorStyle.Left | UIAnchorStyle.Right | UIAnchorStyle.Top;
-
-            // Resize
-            var resizeHandle = AddUIComponent<UIResizeHandle>();
-            resizeHandle.height = 9;
-            resizeHandle.width = 9;
-            resizeHandle.relativePosition = new Vector3(width - resizeHandle.width, height - resizeHandle.height);
-            resizeHandle.anchor = UIAnchorStyle.Bottom | UIAnchorStyle.Right;
-            resizeHandle.hoverCursor = FindResizeCursor();
-            resizeHandle.edges = UIResizeHandle.ResizeEdge.Bottom | UIResizeHandle.ResizeEdge.Right;
+            handle.anchor = UIAnchorStyle.All;
 
             // close button
-            UIButton closeButton = UIUtils.CreateButton(this);
+            UIButton closeButton = UIUtils.CreateButton(titlePanel);
             closeButton.size = new Vector2(30, 30);
             closeButton.normalBgSprite = "buttonclose";
             closeButton.hoveredBgSprite = "buttonclosehover";
@@ -99,6 +97,15 @@ namespace RandomTrainTrailers.UI
                 }
             };
             closeButton.anchor = UIAnchorStyle.Top | UIAnchorStyle.Right;
+
+            // Resize
+            var resizeHandle = AddUIComponent<UIResizeHandle>();
+            resizeHandle.height = 9;
+            resizeHandle.width = 9;
+            resizeHandle.relativePosition = new Vector3(width - resizeHandle.width, height - resizeHandle.height);
+            resizeHandle.anchor = UIAnchorStyle.Bottom | UIAnchorStyle.Right;
+            resizeHandle.hoverCursor = FindResizeCursor();
+            resizeHandle.edges = UIResizeHandle.ResizeEdge.Bottom | UIResizeHandle.ResizeEdge.Right;
 
             // Content
             _content = (UIPanel)AddUIComponent(_contentType);
