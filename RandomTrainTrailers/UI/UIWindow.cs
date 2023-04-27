@@ -124,16 +124,18 @@ namespace RandomTrainTrailers.UI
         public static UIWindow Create<T>(int width, int height, string title) where T : UIPanel
         {
             var go = new GameObject(title);
+            var view = UIView.GetAView();
+            go.transform.SetParent(view.transform);
+
             var window = go.AddComponent<UIWindow>();
             window._contentType = typeof(T);
             window.size = new Vector2(width, height);
             window.minimumSize = window.size;
             window.Title = title;
+
             // We need to do this here instead of in Awake, otherwise _contentType isn't set yet.
             // We could use Start() but I want Content to be set when we exit this method.
             window.CreateComponents();
-            var view = UIView.GetAView();
-            go.transform.SetParent(view.transform);
             return window;
         }
     }

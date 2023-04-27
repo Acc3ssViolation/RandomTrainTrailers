@@ -4,10 +4,13 @@ using System.Xml.Serialization;
 
 namespace RandomTrainTrailers.Definition
 {
-    public abstract class ItemReference<S, T> where S : ItemReference<S, T>, new()
+    public abstract class ItemReference
     {
         public string Name { get; set; }
+    }
 
+    public abstract class ItemReference<S, T>: ItemReference where S : ItemReference<S, T>, new()
+    {
         [XmlIgnore]
         public T Reference { get; private set; }
 
@@ -69,7 +72,7 @@ namespace RandomTrainTrailers.Definition
         /// Minimum total train length for trains from this pool
         /// </summary>
         [XmlAttribute("minLength")]
-        public int MinTrainLength = 1;
+        public int MinTrainLength = 12;
 
         /// <summary>
         /// Maximum total train length for trains from this pool
@@ -80,7 +83,7 @@ namespace RandomTrainTrailers.Definition
         /// <summary>
         /// Use cargo contents for trailer selection
         /// </summary>
-        [XmlAttribute("useCargo"), DefaultValue(true)]
+        [XmlAttribute("useCargo")]
         public bool UseCargo { get; set; } = true;
 
         /// <summary>

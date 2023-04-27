@@ -12,7 +12,7 @@ namespace RandomTrainTrailers.UI
         public RowData(T value, Action<RowData<T>> delete)
         {
             Value = value;
-            Delete = delete ?? throw new ArgumentNullException(nameof(delete));
+            Delete = delete;
         }
     }
 }
