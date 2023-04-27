@@ -29,6 +29,21 @@ namespace RandomTrainTrailers.UI
             return button;
         }
 
+        public static Vector3 RightOf(UIComponent other, float margin = 10)
+        {
+            return new Vector3(other.relativePosition.x + other.width + margin, other.relativePosition.y);
+        }
+
+        public static Vector3 LeftOf(UIComponent self, UIComponent other, float margin = 10)
+        {
+            return new Vector3(other.relativePosition.x - self.width - margin, other.relativePosition.y);
+        }
+
+        public static Vector3 Below(UIComponent other, float margin = 10)
+        {
+            return new Vector3(other.relativePosition.x, other.relativePosition.y + other.height + margin);
+        }
+
         public static UICheckBox CreateCheckBox(UIComponent parent)
         {
             UICheckBox checkBox = (UICheckBox)parent.AddUIComponent<UICheckBox>();

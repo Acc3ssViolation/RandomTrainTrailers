@@ -599,10 +599,10 @@ namespace RandomTrainTrailers
             return vehicle;
         }
 
-        public static IReadOnlyList<TrainPool> GetVehiclePools(string assetName)
+        public static IList<TrainPool> GetVehiclePools(string assetName)
         {
             _leadVehicleToPool.TryGetValue(assetName, out var vehiclePool);
-            return (IReadOnlyList<TrainPool>)vehiclePool;
+            return vehiclePool;
         }
 
         public static Dictionary<string, Definition.Vehicle> GetVehicleDictionary()

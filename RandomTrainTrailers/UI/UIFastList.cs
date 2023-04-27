@@ -372,6 +372,7 @@ namespace RandomTrainTrailers.UI
         /// </summary>
         public void Refresh()
         {
+            m_updateContent = true;
             DisplayAt(m_pos);
         }
         #endregion
@@ -382,6 +383,7 @@ namespace RandomTrainTrailers.UI
             base.Start();
 
             SetupControls();
+            OnSizeChanged();
         }
 
         public override void OnDestroy()
@@ -414,6 +416,7 @@ namespace RandomTrainTrailers.UI
             m_scrollbar.AlignTo(this, UIAlignAnchor.TopRight);
 
             CheckRows();
+            Refresh();
         }
 
         protected override void OnMouseWheel(UIMouseEventParameter p)

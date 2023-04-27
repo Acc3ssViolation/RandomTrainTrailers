@@ -1,9 +1,11 @@
-﻿using ColossalFramework.UI;
+﻿using ColossalFramework;
+using ColossalFramework.UI;
+using System;
 using UnityEngine;
 
 namespace RandomTrainTrailers.UI
 {
-    internal class UIWindow<T> : UIPanel where T: UIPanel
+    internal class UIWindow : UIPanel
     {
         public string Title
         {
@@ -22,11 +24,15 @@ namespace RandomTrainTrailers.UI
             }
         }
 
-        public T Content => _content;
+        public bool DestroyOnClose { get; set; }
+
+        public Type ContentType => _contentType;
+        public UIPanel Content => _content;
 
         private string _title;
         private UILabel _titleLabel;
-        private T _content;
+        private UIPanel _content;
+        private Type _contentType;
 
         public override void Awake()
         {
@@ -41,8 +47,6 @@ namespace RandomTrainTrailers.UI
             height = 400;
             var view = UIView.GetAView();
             relativePosition = new Vector3(Mathf.Floor((view.fixedWidth - width) / 2), Mathf.Floor((view.fixedHeight - height) / 2));
-
-            CreateComponents();
         }
 
         public void Open()
@@ -68,9 +72,14 @@ namespace RandomTrainTrailers.UI
             handle.relativePosition = Vector3.zero;
             handle.anchor = UIAnchorStyle.Left | UIAnchorStyle.Right | UIAnchorStyle.Top;
 
-            // TODO: Resize?
-            //var resizeHandle = AddUIComponent<UIResizeHandle>();
-
+            // Resize
+            var resizeHandle = AddUIComponent<UIResizeHandle>();
+            resizeHandle.height = 9;
+            resizeHandle.width = 9;
+            resizeHandle.relativePosition = new Vector3(width - resizeHandle.width, height - resizeHandle.height);
+            resizeHandle.anchor = UIAnchorStyle.Bottom | UIAnchorStyle.Right;
+            resizeHandle.hoverCursor = FindResizeCursor();
+            resizeHandle.edges = UIResizeHandle.ResizeEdge.Bottom | UIResizeHandle.ResizeEdge.Right;
 
             // close button
             UIButton closeButton = UIUtils.CreateButton(this);
@@ -80,23 +89,51 @@ namespace RandomTrainTrailers.UI
             closeButton.pressedBgSprite = "buttonclosepressed";
             closeButton.relativePosition = new Vector3(width - 35, 5);
             closeButton.eventClicked += (c, p) => {
-                Hide();
+                if (DestroyOnClose)
+                {
+                    Destroy(gameObject);
+                }
+                else
+                {
+                    Hide();
+                }
             };
+            closeButton.anchor = UIAnchorStyle.Top | UIAnchorStyle.Right;
 
             // Content
-            _content = AddUIComponent<T>();
-            _content.width = width;
-            _content.height = height - 50;
-            _content.relativePosition = new Vector3(0, 50);
+            _content = (UIPanel)AddUIComponent(_contentType);
+            _content.width = width - 20;
+            _content.height = height - 60;
+            _content.relativePosition = new Vector3(10, 50);
             _content.anchor = UIAnchorStyle.All;
         }
 
-        public static UIWindow<T> Create(int width, int height, string title)
+        private CursorInfo FindResizeCursor()
+        {
+            var handles = FindObjectsOfType<UIResizeHandle>();
+            foreach (var handle in handles)
+            {
+                if (handle.hoverCursor == null)
+                    continue;
+                if (handle.hoverCursor.name == "ResizeVertical")
+                    return handle.hoverCursor;
+            }
+            return null;
+        }
+
+        public static UIWindow Create<T>(int width, int height, string title) where T : UIPanel
         {
             var go = new GameObject(title);
-            var window = go.AddComponent<UIWindow<T>>();
+            var window = go.AddComponent<UIWindow>();
+            window._contentType = typeof(T);
             window.size = new Vector2(width, height);
+            window.minimumSize = window.size;
             window.Title = title;
+            // We need to do this here instead of in Awake, otherwise _contentType isn't set yet.
+            // We could use Start() but I want Content to be set when we exit this method.
+            window.CreateComponents();
+            var view = UIView.GetAView();
+            go.transform.SetParent(view.transform);
             return window;
         }
     }

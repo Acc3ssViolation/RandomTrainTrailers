@@ -21,7 +21,7 @@ namespace RandomTrainTrailers.Definition
             return copy;
         }
 
-        public void Resolve(IReadOnlyDictionary<string, T> items)
+        public void Resolve(IDictionary<string, T> items)
         {
             items.TryGetValue(Name, out var reference);
             Reference = reference;
@@ -57,31 +57,37 @@ namespace RandomTrainTrailers.Definition
         /// Minimum amount of locomotives for trains from this pool
         /// </summary>
         [XmlAttribute("minLocoCount")]
-        public int MinLocomotiveCount { get; set; } = 1;
+        public int MinLocomotiveCount = 1;
 
         /// <summary>
         /// Maximum amount of locomotives for trains from this pool
         /// </summary>
         [XmlAttribute("maxLocoCount")]
-        public int MaxLocomotiveCount { get; set; } = 1;
+        public int MaxLocomotiveCount = 1;
 
         /// <summary>
         /// Minimum total train length for trains from this pool
         /// </summary>
         [XmlAttribute("minLength")]
-        public int MinTrainLength { get; set; } = 1;
+        public int MinTrainLength = 1;
 
         /// <summary>
         /// Maximum total train length for trains from this pool
         /// </summary>
         [XmlAttribute("maxLength")]
-        public int MaxTrainLength { get; set; } = 12;
+        public int MaxTrainLength = 12;
 
         /// <summary>
         /// Use cargo contents for trailer selection
         /// </summary>
         [XmlAttribute("useCargo"), DefaultValue(true)]
         public bool UseCargo { get; set; } = true;
+
+        /// <summary>
+        /// Use this pool for train generation
+        /// </summary>
+        [XmlAttribute("enabled")]
+        public bool Enabled { get; set; } = true;
 
         public TrainPool()
         {
@@ -99,6 +105,8 @@ namespace RandomTrainTrailers.Definition
                 MinLocomotiveCount = MinLocomotiveCount,
                 MaxTrainLength = MaxTrainLength,
                 MinTrainLength = MinTrainLength,
+                Enabled = Enabled,
+                UseCargo = UseCargo,
             };
             foreach (var item in Locomotives)
             {

@@ -45,6 +45,12 @@ namespace RandomTrainTrailers
                     UIObject = new GameObject("RandomTrainTrailers");
                     UIObject.transform.SetParent(view.transform);
                     UIObject.AddComponent<UIMainPanel>();
+
+                    Util.Log("UI is enabled");
+                }
+                else
+                {
+                    Util.Log("UI is disabled");
                 }
             }
         }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace RandomTrainTrailers.UI
 {
-    public struct UIIntField
+    public class UIIntField
     {
         public UIPanel panel;
         public UITextField textField;

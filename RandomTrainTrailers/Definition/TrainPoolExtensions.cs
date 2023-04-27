@@ -5,14 +5,14 @@ namespace RandomTrainTrailers.Definition
 {
     internal static class TrainPoolExtensions
     {
-        public static void RemoveUnavailableLocomotives(this TrainPool pool, IReadOnlyDictionary<string, Locomotive> locomotives)
+        public static void RemoveUnavailableLocomotives(this TrainPool pool, IDictionary<string, Locomotive> locomotives)
         {
             foreach (var locomotiveRef in pool.Locomotives)
                 locomotiveRef.Resolve(locomotives);
             pool.Locomotives.RemoveAll(c => c.Reference == null);
         }
 
-        public static void RemoveUnavailableCollections(this TrainPool pool, IReadOnlyDictionary<string, TrailerCollection> collections)
+        public static void RemoveUnavailableCollections(this TrainPool pool, IDictionary<string, TrailerCollection> collections)
         {
             foreach (var collectionRef in pool.TrailerCollections)
                 collectionRef.Resolve(collections);

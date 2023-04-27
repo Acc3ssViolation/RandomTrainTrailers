@@ -68,12 +68,12 @@ namespace RandomTrainTrailers.UI
 
         private Definition.Vehicle m_copyData;
         private TrailerImporter _trailerImporter = new TrailerImporter();
-        private UIWindow<UITrainPoolPanel> _trainPoolWindow;
+        private UIWindow _trainPoolWindow;
 
         void LoadUserDef()
         {
             m_userDefinition = TrailerManager.GetUserDefinitionFromDisk();
-            _trainPoolWindow.Content.SetData(m_userDefinition);
+            ((UITrainPoolPanel)_trainPoolWindow.Content).SetData(m_userDefinition);
         }
 
         void SaveUserDef()
@@ -112,8 +112,6 @@ namespace RandomTrainTrailers.UI
             height = HEIGHT;
             relativePosition = new Vector3(Mathf.Floor((view.fixedWidth - width) / 2), Mathf.Floor((view.fixedHeight - height) / 2));
 
-            CreateComponents();
-
             // Add window for adding new sets
            var  go = new GameObject("RTTFindAssetPanel");
             go.transform.parent = this.gameObject.transform;
@@ -131,7 +129,7 @@ namespace RandomTrainTrailers.UI
             go.transform.parent = this.gameObject.transform;
             go.AddComponent<UIFlagsPanel>();
 
-            _trainPoolWindow = UIWindow<UITrainPoolPanel>.Create(800, 500, "Train Pools");
+            _trainPoolWindow = UIWindow.Create<UITrainPoolPanel>(870, 500, "Train Pools");
 
             // Adding main button
             UITabstrip toolStrip = view.FindUIComponent<UITabstrip>("MainToolstrip");
@@ -185,6 +183,9 @@ namespace RandomTrainTrailers.UI
 
             // No idea why this is done, but I'm sure SamsamTS knows what he's doing
             view.FindUIComponent<UITabContainer>("TSContainer").AddUIComponent<UIPanel>().color = new Color32(0, 0, 0, 0);
+
+            // Create our own components
+            CreateComponents();
         }
 
         private void CreateComponents()
@@ -195,10 +196,6 @@ namespace RandomTrainTrailers.UI
             UILabel label = AddUIComponent<UILabel>();
             label.text = "Random Train Trailers";
             label.relativePosition = new Vector3(WIDTH / 2 - label.width / 2, 13);
-            label.eventClicked += (_, __) =>
-            {
-                _trainPoolWindow.Open();
-            };
 
             // drag
             UIDragHandle handle = AddUIComponent<UIDragHandle>();
@@ -639,6 +636,16 @@ namespace RandomTrainTrailers.UI
                 TrailerManager.Setup();
             };
             m_loadButton.tooltip = "Loads config from disk and applies it to the current game.";
+
+            // TEST: Button to open train pool window
+            button = UIUtils.CreateButton(this);
+            button.text = "Trains";
+            button.relativePosition = m_saveButton.relativePosition + new Vector3(0, -(m_saveButton.height * 2 + 10));
+            button.eventClicked += (c, m) =>
+            {
+                _trainPoolWindow.Open();
+            };
+            button.tooltip = "Open the train edit window.";
 
 
             LoadUserDef();
