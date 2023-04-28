@@ -22,7 +22,7 @@ namespace RandomTrainTrailers.Definition
         /// The total length of this locomotive.
         /// </summary>
         [XmlAttribute("length"), DefaultValue(1)]
-        public int Length { get; set; } = 1;
+        public int Length = 1;
 
         /// <summary>
         /// If this locomotive is enabled an can be used.

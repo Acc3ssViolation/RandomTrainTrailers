@@ -135,11 +135,10 @@ namespace RandomTrainTrailers.UI
 
         private void OpenSettingsWindow()
         {
-            return;
-            //var window = UIWindow.Create<UITrainPoolSettings>(300, 200, _data.Value.Name);
-            //window.DestroyOnClose = true;
-            //((UITrainPoolSettings)window.Content).SetData(_data.Value);
-            //window.Open();
+            var window = UIWindow.Create<UILocomotiveSettings>(300, 440, _nameField.text);
+            window.DestroyOnClose = true;
+            ((UILocomotiveSettings)window.Content).SetData(_data.Value);
+            window.Open();
         }
     }
 }

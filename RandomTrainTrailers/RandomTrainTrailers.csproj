@@ -103,6 +103,7 @@
     <Compile Include="UI\UIConstants.cs" />
     <Compile Include="UI\UIDataManager.cs" />
     <Compile Include="UI\UIFlagsPanel.cs" />
+    <Compile Include="UI\UIPreviewPanel.cs" />
     <Compile Include="UI\UITrailerRow.cs" />
     <Compile Include="UI\UITrailersPanel.cs" />
     <Compile Include="UI\UIMultiTrailerPanel.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="UI\UIItemReferenceRow.cs" />
     <Compile Include="UI\UILocomotiveRow.cs" />
     <Compile Include="UI\UITrainPoolRow.cs" />
+    <Compile Include="UI\UILocomotiveSettings.cs" />
     <Compile Include="UI\UITrainPoolSettings.cs" />
     <Compile Include="UI\UIUtils.cs" />
     <Compile Include="UI\UIWindow.cs" />
