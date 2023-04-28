@@ -1,6 +1,7 @@
 ﻿using ColossalFramework.UI;
 using RandomTrainTrailers.Definition;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RandomTrainTrailers.UI
@@ -35,7 +36,8 @@ namespace RandomTrainTrailers.UI
             {
                 if (_locomotive != null)
                 {
-                    _length.IntFieldHandler(ref _locomotive.Length, (v) => v >= 1);
+                    if (_length.IntFieldHandler(ref _locomotive.Length, (v) => v >= 1))
+                        UpdatePreview();
                 }   
             };
 
@@ -86,7 +88,34 @@ namespace RandomTrainTrailers.UI
             if (index < 0 || index >= _type.items.Length)
                 index = 0;
             _type.selectedIndex = index;
-            _previewPanel.VehicleInfo = _locomotive.VehicleInfo;
+
+            UpdatePreview();
+        }
+
+        private void UpdatePreview()
+        {
+            if (_locomotive.Length == 1)
+            {
+                _previewPanel.VehicleInfo = _locomotive.VehicleInfo;
+            }
+            else if (_locomotive.Length > 1 && _locomotive?.VehicleInfo?.m_trailers != null)
+            {
+                var infos = new List<VehicleRenderInfo>(_locomotive.Length)
+                {
+                    new VehicleRenderInfo(_locomotive.VehicleInfo, false)
+                };
+                var trailers = _locomotive.VehicleInfo.m_trailers;
+                var trailerCount = _locomotive.Length - 1;
+                if (trailerCount > trailers.Length)
+                    trailerCount = trailers.Length;
+
+                for (var i = 0; i < trailerCount; i++)
+                {
+                    infos.Add(new VehicleRenderInfo(trailers[i].m_info, trailers[i].m_invertProbability >= 50));
+                }
+
+                _previewPanel.VehicleInfos = infos;
+            }
         }
     }
 }

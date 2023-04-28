@@ -20,9 +20,9 @@ namespace RandomTrainTrailers.UI
             }
         }
 
-        public void IntFieldHandler(ref int target, Predicate<int> predicate = null)
+        public bool IntFieldHandler(ref int target, Predicate<int> predicate = null)
         {
-            IntFieldHandler(this.textField, this.textField.text, ref target, predicate);
+            return IntFieldHandler(this.textField, this.textField.text, ref target, predicate);
         }
 
         public static UIIntField CreateField(string label, UIComponent parent, bool buttons = true)
@@ -69,16 +69,18 @@ namespace RandomTrainTrailers.UI
             return field;
         }
 
-        public static void IntFieldHandler(UITextField field, string value, ref int target, Predicate<int> predicate = null)
+        public static bool IntFieldHandler(UITextField field, string value, ref int target, Predicate<int> predicate = null)
         {
             if (int.TryParse(value, out int v) && (predicate == null || predicate(v)))
             {
                 target = v;
                 field.color = Color.white;
+                return true;
             }
             else
             {
                 field.color = Color.red;
+                return false;
             }
         }
     }

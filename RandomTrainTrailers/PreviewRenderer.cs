@@ -1,8 +1,23 @@
 ﻿using ColossalFramework;
+using Epic.OnlineServices.Presence;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RandomTrainTrailers
 {
+    public struct VehicleRenderInfo
+    {
+        public VehicleInfo VehicleInfo { get; set; }
+        public bool Inverted { get; set; }
+
+        public VehicleRenderInfo(VehicleInfo vehicleInfo, bool inverted)
+        {
+            VehicleInfo = vehicleInfo ?? throw new ArgumentNullException(nameof(vehicleInfo));
+            Inverted = inverted;
+        }
+    }
+
     public class PreviewRenderer : MonoBehaviour
     {
         private Camera m_camera;
@@ -59,10 +74,15 @@ namespace RandomTrainTrailers
 
         public void RenderVehicle(VehicleInfo info)
         {
-            RenderVehicle(info, info.m_color0, false);
+            RenderVehicle(new VehicleRenderInfo[] { new VehicleRenderInfo { VehicleInfo = info } }, info.m_color0, false);
         }
 
-        public void RenderVehicle(VehicleInfo info, Color color, bool useColor = true)
+        public void RenderVehicle(IList<VehicleRenderInfo> infos)
+        {
+            RenderVehicle(infos, infos[0].VehicleInfo.m_color0, false);
+        }
+
+        public void RenderVehicle(IList<VehicleRenderInfo> vehicles, Color color, bool useColor = true)
         {
             InfoManager infoManager = Singleton<InfoManager>.instance;
             InfoManager.InfoMode currentMod = infoManager.CurrentMode;
@@ -88,39 +108,77 @@ namespace RandomTrainTrailers
                 DayNightProperties.instance.moonLightSource.enabled = false;
             }
 
-            Vector3 one = Vector3.one;
+            // Calculate the positions of each vehicle
+            var positions = new List<Vector3>(vehicles.Count);
+            var totalLength = 0f;
+            var totalWidth = 0f;
+            var totalHeight = 0f;
+            var prevPos = Vector3.zero;
+            var prevOffset = 0f;
 
-            float magnitude = info.m_mesh.bounds.extents.magnitude;
+            foreach (var vehicle in vehicles)
+            {
+                var size = vehicle.VehicleInfo.m_generatedInfo.m_size;
+                var offset = vehicle.Inverted ? -vehicle.VehicleInfo.m_attachOffsetBack : -vehicle.VehicleInfo.m_attachOffsetFront;
+                offset += size.z * 0.5f;
+                var newPos = prevPos + Vector3.back * prevOffset + Vector3.back * offset;
+                positions.Add(newPos);
+
+                prevPos = newPos;
+                prevOffset = vehicle.Inverted ? -vehicle.VehicleInfo.m_attachOffsetFront : -vehicle.VehicleInfo.m_attachOffsetBack;
+                prevOffset += size.z * 0.5f;
+
+                // Keep track of total vehicle size
+                totalLength += size.z;
+                if (size.y > totalHeight)
+                    totalHeight = size.y;
+                if (size.x > totalWidth)
+                    totalWidth = size.x;
+            }
+
+            // Shift all positions so we are centered
+            var centerOffset = new Vector3(0, -totalHeight / 2, totalLength / 2);
+
+            // Set up the camera
+            float magnitude = new Vector3(totalWidth, totalHeight, totalLength).magnitude / 2;
             float num = magnitude + 16f;
             float num2 = magnitude * m_zoom;
-
             m_camera.transform.position = Vector3.forward * num2;
             m_camera.transform.rotation = Quaternion.AngleAxis(180, Vector3.up);
             m_camera.nearClipPlane = Mathf.Max(num2 - num * 1.5f, 0.01f);
             m_camera.farClipPlane = num2 + num * 1.5f;
 
-            Quaternion rotation = Quaternion.Euler(20f, 0f, 0f) * Quaternion.Euler(0f, m_rotation, 0f);
-            Vector3 position = rotation * -info.m_mesh.bounds.center;
+            // Render the vehicles
+            var shader = vehicles[0].VehicleInfo.m_material.shader;
+            for (var i = 0; i < vehicles.Count; i++)
+            {
+                var info = vehicles[i].VehicleInfo;
+                var inverted = vehicles[i].Inverted;
 
-            Vector3 swayPosition = Vector3.zero;
+                Vector3 one = Vector3.one;
+                Quaternion rotation = Quaternion.Euler(20f, 0f, 0f) * Quaternion.Euler(0f, m_rotation, 0f);
+                Vector3 position = rotation * (positions[i] + centerOffset);
 
-            VehicleManager instance = Singleton<VehicleManager>.instance;
-            Matrix4x4 matrixBody = Matrix4x4.TRS(position, rotation, Vector3.one);
-            Matrix4x4 matrixTyre = info.m_vehicleAI.CalculateTyreMatrix(Vehicle.Flags.Created, ref position, ref rotation, ref one, ref matrixBody);
+                VehicleManager instance = Singleton<VehicleManager>.instance;
+                if (inverted)
+                    rotation = rotation * Quaternion.Euler(0, 180f, 0);
+                Matrix4x4 matrixBody = Matrix4x4.TRS(position, rotation, Vector3.one);
+                Matrix4x4 matrixTyre = info.m_vehicleAI.CalculateTyreMatrix(Vehicle.Flags.Created, ref position, ref rotation, ref one, ref matrixBody);
 
-            MaterialPropertyBlock materialBlock = instance.m_materialBlock;
-            materialBlock.Clear();
-            materialBlock.SetMatrix(instance.ID_TyreMatrix, matrixTyre);
-            materialBlock.SetVector(instance.ID_TyrePosition, Vector3.zero);
-            materialBlock.SetVector(instance.ID_LightState, Vector3.zero);
-            if(useColor) materialBlock.SetColor(instance.ID_Color, color);
+                MaterialPropertyBlock materialBlock = instance.m_materialBlock;
+                materialBlock.Clear();
+                materialBlock.SetMatrix(instance.ID_TyreMatrix, matrixTyre);
+                materialBlock.SetVector(instance.ID_TyrePosition, Vector3.zero);
+                materialBlock.SetVector(instance.ID_LightState, Vector3.zero);
+                if (useColor) materialBlock.SetColor(instance.ID_Color, color);
 
-            instance.m_drawCallData.m_defaultCalls = instance.m_drawCallData.m_defaultCalls + 1;
+                instance.m_drawCallData.m_defaultCalls = instance.m_drawCallData.m_defaultCalls + 1;
 
-            info.m_material.SetVectorArray(instance.ID_TyreLocation, info.m_generatedInfo.m_tyres);
-            Graphics.DrawMesh(info.m_mesh, matrixBody, info.m_material, 0, m_camera, 0, materialBlock, true, true);
+                info.m_material.SetVectorArray(instance.ID_TyreLocation, info.m_generatedInfo.m_tyres);
+                Graphics.DrawMesh(info.m_mesh, matrixBody, info.m_material, 0, m_camera, 0, materialBlock, true, true);
+            }
 
-            m_camera.RenderWithShader(info.m_material.shader, "");
+            m_camera.RenderWithShader(shader, "");
 
             sunLight.intensity = lightIntensity;
             sunLight.color = lightColor;

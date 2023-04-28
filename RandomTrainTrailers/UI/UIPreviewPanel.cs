@@ -1,4 +1,6 @@
 ﻿using ColossalFramework.UI;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RandomTrainTrailers.UI
@@ -8,7 +10,7 @@ namespace RandomTrainTrailers.UI
         private UITextureSprite _preview;
         private PreviewRenderer _previewRenderer;
         private int _resolutionFactor = 2;
-        private VehicleInfo _vehicleInfo;
+        private IList<VehicleRenderInfo> _vehicleInfos;
         private UILabel _noVehicleLabel;
 
         public int ResolutionFactor
@@ -26,12 +28,25 @@ namespace RandomTrainTrailers.UI
 
         public VehicleInfo VehicleInfo
         {
-            get => _vehicleInfo;
+            get => _vehicleInfos?[0].VehicleInfo;
             set
             {
-                if (_vehicleInfo != value)
+                if (_vehicleInfos != null && _vehicleInfos.Count == 1 && _vehicleInfos[0].VehicleInfo == value)
+                    return;
+
+                _vehicleInfos = new List<VehicleRenderInfo> { new VehicleRenderInfo { VehicleInfo = value } };
+                RenderVehicle();
+            }
+        }
+
+        public IList<VehicleRenderInfo> VehicleInfos
+        {
+            get => _vehicleInfos;
+            set
+            {
+                if (_vehicleInfos != value)
                 {
-                    _vehicleInfo = value;
+                    _vehicleInfos = value;
                     RenderVehicle();
                 }
             }
@@ -105,11 +120,11 @@ namespace RandomTrainTrailers.UI
 
         private void RenderVehicle()
         {
-            if (_vehicleInfo != null && _previewRenderer != null)
+            if (_vehicleInfos != null && _previewRenderer != null)
             {
-                _previewRenderer.RenderVehicle(_vehicleInfo);
-                _noVehicleLabel.isVisible = _vehicleInfo == null;
-                _preview.isVisible = _vehicleInfo != null;
+                _previewRenderer.RenderVehicle(_vehicleInfos);
+                _noVehicleLabel.isVisible = _vehicleInfos == null;
+                _preview.isVisible = _vehicleInfos != null;
             }
         }
 
