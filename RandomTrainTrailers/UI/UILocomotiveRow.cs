@@ -135,7 +135,7 @@ namespace RandomTrainTrailers.UI
 
         private void OpenSettingsWindow()
         {
-            var window = UIWindow.Create<UILocomotiveSettings>(300, 440, _nameField.text);
+            var window = UIWindow.Create<UILocomotiveSettings>(300, 460, _nameField.text);
             window.DestroyOnClose = true;
             ((UILocomotiveSettings)window.Content).SetData(_data.Value);
             window.Open();

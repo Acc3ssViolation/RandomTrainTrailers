@@ -247,7 +247,7 @@ namespace RandomTrainTrailers
             }
         }
 
-        public static void GenerateTrain(ref Vehicle vehicle, ushort id, TrainPool pool, Randomizer randomizer)
+        public static void GenerateTrain(ref Vehicle vehicle, ushort id, TrainPool pool, Locomotive leadLocomotive, Randomizer randomizer)
         {
             var trainLength = randomizer.Int32(pool.MinTrainLength, pool.MaxTrainLength);
             if (TrailerManager.GlobalTrailerLimit > 0 && trainLength > TrailerManager.GlobalTrailerLimit.value)
@@ -259,48 +259,60 @@ namespace RandomTrainTrailers
             var savedGateIndexes = GetGateIndexes(ref vehicle);
             RemoveTrailers(ref vehicle, id);
 
-            var currentTrailerIndex = 0;
             var previousVehicleId = id;
 
+            var totalSpawnedCount = 1;
             // Spawn leading locomotives
-            for (; currentTrailerIndex < (locomotiveCount - 1); currentTrailerIndex++)
+            for (var i = 0; i < locomotiveCount; i++)
             {
-                var locomotive = pool.Locomotives[randomizer.Int32((uint)pool.Locomotives.Count)].Reference;
-                var spawnedCount = SpawnLocomotive(out var trailerId, previousVehicleId, locomotive, randomizer);
+                var isFirst = i == 0;
+                var locomotive = isFirst ? leadLocomotive : pool.Locomotives[randomizer.Int32((uint)pool.Locomotives.Count)].Reference;
+                var spawnedCount = SpawnLocomotive(out var trailerId, previousVehicleId, locomotive, randomizer, isFirst);
+
+                // Prevent spawning too many locomotives
+                if ((isFirst || spawnedCount > 1) && !locomotive.IsSingleUnit)
+                    i += (spawnedCount - 1);
+
                 if (spawnedCount == 0)
                     continue;
 
-                currentTrailerIndex += spawnedCount - 1;
+                totalSpawnedCount += spawnedCount;
                 previousVehicleId = trailerId;
             }
 
             // Spawn rest of the train
-            for (; currentTrailerIndex < trainLength; currentTrailerIndex++)
+            var wagonCount = trainLength - locomotiveCount;
+            for (var i = 0; i < wagonCount && totalSpawnedCount < trainLength; i++)
             {
                 var trailer = pool.Trailers[randomizer.Int32((uint)pool.Trailers.Count)].Reference;
-                var spawnedTrailerCount = SpawnTrailerDefinition(out var trailerId, previousVehicleId, trailer, randomizer, 0);
-                if (spawnedTrailerCount > 0)
-                {
-                    currentTrailerIndex += spawnedTrailerCount - 1;
-                    previousVehicleId = trailerId;
-                }
+                var spawnedCount = SpawnTrailerDefinition(out var trailerId, previousVehicleId, trailer, randomizer, 0);
+                if (spawnedCount == 0)
+                    continue;
+                totalSpawnedCount += spawnedCount;
+                previousVehicleId = trailerId;
             }
 
-            Util.Log($"Spawned {locomotiveCount} locomotives and {trainLength - locomotiveCount} trailers for {vehicle.Info.name} [{id}] using pool {pool.Name}");
+            Util.Log($"Spawned {locomotiveCount} locomotives for a total train length of {trainLength} for {vehicle.Info.name} [{id}] using pool {pool.Name}");
         }
 
-        private static int SpawnLocomotive(out ushort lastId, ushort previousId, Locomotive locomotive, Randomizer randomizer)
+        private static int SpawnLocomotive(out ushort lastId, ushort previousId, Locomotive locomotive, Randomizer randomizer, bool skipFirst = false)
         {
             lastId = 0;
 
-            var trailerCount = Mathf.Clamp(locomotive.Length - 1, 0, locomotive.VehicleInfo.m_trailers?.Length ?? 1);
+            var trailerCount = Mathf.Clamp(locomotive.Length - 1, 0, locomotive.VehicleInfo.m_trailers?.Length ?? 0);
             var spawnedCount = 0;
 
-            if (!SpawnTrailer(out var trailerId, previousId, locomotive.VehicleInfo, false, 0))
-                return 0;
-            spawnedCount++;
-            previousId = trailerId;
+            // Spawn the leading part. This may be skipped
+            ushort trailerId;
+            if (!skipFirst)
+            {
+                if (!SpawnTrailer(out trailerId, previousId, locomotive.VehicleInfo, false, 0))
+                    return 0;
+                spawnedCount++;
+                previousId = trailerId;
+            }
 
+            // Spawn the 'trailers' that make up the rest of the locomotive
             for(var i = 0; i < trailerCount; i++)
             {
                 var trailer = locomotive.VehicleInfo.m_trailers[i];

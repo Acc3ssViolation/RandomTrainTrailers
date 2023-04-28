@@ -30,6 +30,12 @@ namespace RandomTrainTrailers.Definition
         [XmlAttribute("enabled")]
         public bool Enabled { get; set; } = true;
 
+        /// <summary>
+        /// Indicates if this locomotive counts as a single unit when deciding on the amount of locomotives for a train.
+        /// </summary>
+        [XmlAttribute("isSingleUnit"), DefaultValue(true)]
+        public bool IsSingleUnit { get; set; } = true;
+
         [XmlIgnore]
         public bool CanBeLeadVehicle => _info != null ? _info.m_placementStyle == ItemClass.Placement.Automatic : false;
 
@@ -65,6 +71,7 @@ namespace RandomTrainTrailers.Definition
                 Type = Type,
                 Length = Length,
                 Enabled = Enabled,
+                IsSingleUnit = IsSingleUnit,
             };
             return copy;
         }

@@ -164,7 +164,8 @@ namespace RandomTrainTrailers.Detour
                     var randomizer = new Randomizer(Time.frameCount * (long)vehicleID);
                     var poolIndex = randomizer.Int32((uint)pools.Count);
                     var pool = pools[poolIndex];
-                    TrailerRandomizer.GenerateTrain(ref vehicleData, vehicleID, pool, randomizer);
+                    var locomotive = TrailerManager.GetLocomotive(vehicleData.Info.name);
+                    TrailerRandomizer.GenerateTrain(ref vehicleData, vehicleID, pool, locomotive, randomizer);
                     return true;
                 }
 

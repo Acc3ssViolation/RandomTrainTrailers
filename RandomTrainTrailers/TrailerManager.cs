@@ -588,9 +588,9 @@ namespace RandomTrainTrailers
             return vehiclePool;
         }
 
-        public static Dictionary<string, Definition.Vehicle> GetVehicleDictionary()
+        public static Locomotive GetLocomotive(string name)
         {
-            return _vehicleDict;
+            return _locomotiveMap[name];
         }
 
         public static int GetTrailerCountOverride()

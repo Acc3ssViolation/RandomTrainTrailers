@@ -12,6 +12,7 @@ namespace RandomTrainTrailers.UI
 
         private UIDropDown _type;
         private UIIntField _length;
+        private UICheckBox _isSingleUnit;
         private UIPreviewPanel _previewPanel;
 
         public override void Start()
@@ -41,7 +42,18 @@ namespace RandomTrainTrailers.UI
                 }   
             };
 
-            _type = CreateDropDown("Type", this, UIUtils.Below(_length.panel));
+            _isSingleUnit = UIUtils.CreateCheckBox(this);
+            _isSingleUnit.label.text = "Is single unit";
+            _isSingleUnit.relativePosition = UIUtils.Below(_length.panel);
+            _isSingleUnit.tooltip = "When checked this locomotive counts as a single unit for the total locomotive count";
+            _isSingleUnit.anchor = UIAnchorStyle.Left | UIAnchorStyle.Bottom;
+            _isSingleUnit.eventCheckChanged += (_, __) =>
+            {
+                if (_locomotive != null)
+                    _locomotive.IsSingleUnit = _isSingleUnit.isChecked;
+            };
+
+            _type = CreateDropDown("Type", this, UIUtils.Below(_isSingleUnit));
             _type.eventSelectedIndexChanged += (_, __) =>
             {
                 if (_locomotive != null)
@@ -88,6 +100,7 @@ namespace RandomTrainTrailers.UI
             if (index < 0 || index >= _type.items.Length)
                 index = 0;
             _type.selectedIndex = index;
+            _isSingleUnit.isChecked = _locomotive.IsSingleUnit;
 
             UpdatePreview();
         }
