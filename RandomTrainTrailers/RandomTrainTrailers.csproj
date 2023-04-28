@@ -97,6 +97,7 @@
     <Compile Include="UI\RowData.cs" />
     <Compile Include="UI\UIAssetRow.cs" />
     <Compile Include="UI\UIBlacklistRow.cs" />
+    <Compile Include="UI\UIConstants.cs" />
     <Compile Include="UI\UIDataManager.cs" />
     <Compile Include="UI\UIFlagsPanel.cs" />
     <Compile Include="UI\UIMultiTrailerPanel.cs" />
@@ -107,9 +108,11 @@
     <Compile Include="UI\UIMainPanel.cs" />
     <Compile Include="UI\UISubTrailerRow.cs" />
     <Compile Include="UI\UITrailerRow.cs" />
+    <Compile Include="UI\UILocomotivesPanel.cs" />
     <Compile Include="UI\UITrainPoolReferencePanel.cs" />
     <Compile Include="UI\UITrainPoolPanel.cs" />
     <Compile Include="UI\UIItemReferenceRow.cs" />
+    <Compile Include="UI\UILocomotiveRow.cs" />
     <Compile Include="UI\UITrainPoolRow.cs" />
     <Compile Include="UI\UITrainPoolSettings.cs" />
     <Compile Include="UI\UIUtils.cs" />

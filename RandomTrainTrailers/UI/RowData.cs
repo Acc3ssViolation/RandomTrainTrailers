@@ -2,9 +2,13 @@
 
 namespace RandomTrainTrailers.UI
 {
-    internal class RowData<T>
+    internal abstract class RowData
     {
         public bool Selected { get; set; }
+    }
+
+    internal class RowData<T> : RowData
+    {
         public T Value { get; set; }
 
         public Action<RowData<T>> Delete { get; set; }

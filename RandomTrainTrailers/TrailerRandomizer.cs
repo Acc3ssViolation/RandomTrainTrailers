@@ -275,10 +275,10 @@ namespace RandomTrainTrailers
             }
 
             // Spawn rest of the train
-            var trailerCollection = pool.TrailerCollections[randomizer.Int32((uint)pool.TrailerCollections.Count)].Reference;
             for (; currentTrailerIndex < trainLength; currentTrailerIndex++)
             {
-                var spawnedTrailerCount = SpawnRandomTrailer(out var trailerId, previousVehicleId, trailerCollection, randomizer, 0);
+                var trailer = pool.Trailers[randomizer.Int32((uint)pool.Trailers.Count)].Reference;
+                var spawnedTrailerCount = SpawnTrailerDefinition(out var trailerId, previousVehicleId, trailer, randomizer, 0);
                 if (spawnedTrailerCount > 0)
                 {
                     currentTrailerIndex += spawnedTrailerCount - 1;
@@ -423,14 +423,13 @@ namespace RandomTrainTrailers
             lastTrailerId = 0;
 
             // Spawn the trailer
-            if(trailer.IsMultiTrailer())
+            if(trailer.IsMultiTrailer)
             {
                 // Spawn all subtrailers
-                var infos = trailer.GetInfos();
+                var infos = trailer.VehicleInfos;
                 for(int i = 0; i < infos.Count; i++)
                 {
-                    ushort trailerId;
-                    if(SpawnTrailer(out trailerId, prevVehicleId, infos[i], randomizer.Int32(100u) < trailer.SubTrailers[i].InvertProbability, gateIndex))
+                    if (SpawnTrailer(out ushort trailerId, prevVehicleId, infos[i], randomizer.Int32(100u) < trailer.SubTrailers[i].InvertProbability, gateIndex))
                     {
                         prevVehicleId = trailerId;
                         lastTrailerId = trailerId;
@@ -446,7 +445,7 @@ namespace RandomTrainTrailers
             }
 
             // Spawn single trailer
-            var info = trailer.GetInfo();
+            var info = trailer.VehicleInfos[0];
             if(SpawnTrailer(out lastTrailerId, prevVehicleId, info, randomizer.Int32(100u) < trailer.InvertProbability, gateIndex))
             {
                 return 1;

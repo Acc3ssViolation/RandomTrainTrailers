@@ -12,11 +12,11 @@ namespace RandomTrainTrailers.Definition
             pool.Locomotives.RemoveAll(c => c.Reference == null);
         }
 
-        public static void RemoveUnavailableCollections(this TrainPool pool, IDictionary<string, TrailerCollection> collections)
+        public static void RemoveUnavailableTrailers(this TrainPool pool, IDictionary<string, Trailer> trailers)
         {
-            foreach (var collectionRef in pool.TrailerCollections)
-                collectionRef.Resolve(collections);
-            pool.TrailerCollections.RemoveAll(c => c.Reference == null);
+            foreach (var collectionRef in pool.Trailers)
+                collectionRef.Resolve(trailers);
+            pool.Trailers.RemoveAll(c => c.Reference == null);
         }
 
         public static bool IsValid(this TrainPool pool)

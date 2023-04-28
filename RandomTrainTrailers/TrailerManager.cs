@@ -16,7 +16,9 @@ namespace RandomTrainTrailers
 
         private static Dictionary<string, Definition.Vehicle> _vehicleDict = new Dictionary<string, Definition.Vehicle>();
         private static Dictionary<string, TrailerCollection> _collectionDict = new Dictionary<string, TrailerCollection>();
+
         private static Dictionary<string, Locomotive> _locomotiveMap = new Dictionary<string, Locomotive>();
+        private static Dictionary<string, Trailer> _trailerMap = new Dictionary<string, Trailer>();
         private static Dictionary<string, IList<TrainPool>> _leadVehicleToPool = new Dictionary<string, IList<TrainPool>>();
 
         private static HashSet<string> _removedTrailers = new HashSet<string>();
@@ -32,6 +34,7 @@ namespace RandomTrainTrailers
             _collectionDict.Clear();
             _leadVehicleToPool.Clear();
             _locomotiveMap.Clear();
+            _trailerMap.Clear();
 
             ConfigurationManager.instance.Reset();
 
@@ -312,21 +315,33 @@ namespace RandomTrainTrailers
                 _locomotiveMap[locomotive.AssetName] = locomotive;
             }
 
+            // Load trailers
+            foreach (var trailer in definition.Trailers)
+            {
+                if (trailer.VehicleInfos == null)
+                    continue;
+
+                _trailerMap[trailer.AssetName] = trailer;
+            }
+
             // Create a mapping from potential lead vehicles to the pools they are in
             foreach (var pool in definition.TrainPools)
             {
                 pool.RemoveUnavailableLocomotives(_locomotiveMap);
-                pool.RemoveUnavailableCollections(_collectionDict);
+                pool.RemoveUnavailableTrailers(_trailerMap);
                 if (!pool.IsValid())
                 {
                     Util.LogError($"Pool '{pool.Name}' is invalid and will not be loaded");
                     continue;
                 }
 
+                if (!pool.Enabled)
+                    continue;
+
                 foreach (var locomotiveRef in pool.Locomotives)
                 {
                     var locomotive = locomotiveRef.Reference;
-                    if (!locomotive.CanBeLeadVehicle)
+                    if (!locomotive.CanBeLeadVehicle || !locomotive.Enabled)
                         continue;
 
                     if (!_leadVehicleToPool.TryGetValue(locomotive.AssetName, out var poolsForLocomotive))
@@ -425,7 +440,7 @@ namespace RandomTrainTrailers
                     sb.AppendLine("\t\t\tWeight: " + trailer.Weight);
                     sb.AppendLine("\t\t\tCargo: " + trailer.CargoType);
 
-                    if(trailer.IsMultiTrailer())
+                    if(trailer.IsMultiTrailer)
                     {
                         foreach(var sub in trailer.SubTrailers)
                         {
@@ -471,7 +486,7 @@ namespace RandomTrainTrailers
                             sb.AppendLine("\t\t\tWeight: " + trailer.Weight);
                             sb.AppendLine("\t\t\tCargo: " + trailer.CargoType);
 
-                            if(trailer.IsMultiTrailer())
+                            if(trailer.IsMultiTrailer)
                             {
                                 foreach(var sub in trailer.SubTrailers)
                                 {
@@ -519,7 +534,7 @@ namespace RandomTrainTrailers
                         sb.AppendLine("\t\t" + locomotive.Name);
                     }
                     sb.AppendLine("\tCollections:");
-                    foreach (var trailerCollection in pool.TrailerCollections)
+                    foreach (var trailerCollection in pool.Trailers)
                     {
                         sb.AppendLine("\t\t" + trailerCollection.Name);
                     }
@@ -541,15 +556,15 @@ namespace RandomTrainTrailers
             trailers.RemoveAll((t) =>
             {
                 var remove = false;
-                if(t.IsMultiTrailer())
+                if(t.IsMultiTrailer)
                 {
-                    remove = t.IsCollection || t.GetInfos() == null || t.SubTrailers.Count < 1 || localBlacklist.Contains(t.AssetName);
+                    remove = t.IsCollection || t.VehicleInfos == null || t.SubTrailers.Count < 1 || localBlacklist.Contains(t.AssetName);
 
                     //if(remove) removedTrailers.Add(t.AssetName);
                 }
                 else
                 {
-                    remove = t.IsCollection || t.GetInfo() == null || localBlacklist.Contains(t.AssetName);
+                    remove = t.IsCollection || t.VehicleInfos == null || localBlacklist.Contains(t.AssetName);
 
                     //if(remove) removedTrailers.Add(t.AssetName);
                 }

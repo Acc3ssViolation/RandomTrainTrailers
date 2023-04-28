@@ -40,22 +40,68 @@ namespace RandomTrainTrailers.Definition
         /// The cargo types mask that this wagon can carry. Used for cargo-based trailer selection.
         /// </summary>
         [DefaultValue(CargoFlags.None)]
-        public CargoFlags CargoType { get; set; }
+        public CargoFlags CargoType { get; set; } = CargoFlags.None;
 
-        private VehicleInfo m_info;
+        /// <summary>
+        /// If this trailer is enabled an can be used.
+        /// </summary>
+        [XmlAttribute("enabled")]
+        public bool Enabled { get; set; } = true;
+
+        [XmlIgnore]
+        public bool IsMultiTrailer => SubTrailers.Count > 0;
+
+        /// <summary>
+        /// A list of vehicle infos for this trailer.
+        /// Will be null if the info cannot be found or if this is a multi-trailer and any of the sub trailers cannot find their info.
+        /// </summary>
+        [XmlIgnore]
+        public IList<VehicleInfo> VehicleInfos
+        {
+            get
+            {
+                if (m_infos == null)
+                {
+                    m_infos = new List<VehicleInfo>();
+                    if (IsMultiTrailer)
+                    {
+                        foreach (var trailer in SubTrailers)
+                        {
+                            var info = trailer.VehicleInfos?[0];
+                            if (info != null)
+                            {
+                                m_infos.Add(info);
+                            }
+                            else
+                            {
+                                m_infos = null;
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var info = Util.FindVehicle(AssetName, string.Empty);
+                        if (info != null)
+                            m_infos.Add(info);
+                        else
+                            m_infos = null;
+                    }
+                }
+                return m_infos;
+            }
+        }
+
         private List<VehicleInfo> m_infos;
 
         public Trailer()
         {
-            InvertProbability = 0;
-            Weight = 10;
-
             SubTrailers = new List<Trailer>();
         }
 
         public Trailer(VehicleInfo info) : this()
         {
-            m_info = info;
+            m_infos = new List<VehicleInfo> { info };
             AssetName = info.name;
         }
 
@@ -64,56 +110,19 @@ namespace RandomTrainTrailers.Definition
             AssetName = name;
         }
 
-        public VehicleInfo GetInfo()
-        {
-            if(m_info == null)
-            {
-                m_info = Util.FindVehicle(AssetName, "");
-                if(m_info == null)
-                    Util.LogWarning(AssetName + " can not be found!");
-                AssetName = m_info != null ? m_info.name : AssetName;
-            }
-            return m_info;
-        }
-
-        public List<VehicleInfo> GetInfos()
-        {
-            if(m_infos == null)
-            {
-                m_infos = new List<VehicleInfo>();
-                foreach(var trailer in SubTrailers)
-                {
-                    var info = trailer.GetInfo();
-                    if(info != null)
-                    {
-                        m_infos.Add(info);
-                    }
-                    else
-                    {
-                        m_infos = null;
-                        return null;
-                    }
-                }
-            }
-            return m_infos;
-        }
-
-        public bool IsMultiTrailer()
-        {
-            return SubTrailers.Count > 0;
-        }
-
         public Trailer Copy()
         {
-            var copy = new Trailer();
+            var copy = new Trailer
+            {
+                AssetName = AssetName,
+                InvertProbability = InvertProbability,
+                Weight = Weight,
+                IsCollection = IsCollection,
+                CargoType = CargoType,
+                Enabled = Enabled
+            };
 
-            copy.AssetName = AssetName;
-            copy.InvertProbability = InvertProbability;
-            copy.Weight = Weight;
-            copy.IsCollection = IsCollection;
-            copy.CargoType = CargoType;
-
-            if(IsMultiTrailer())
+            if (IsMultiTrailer)
             {
                 foreach(var trailer in SubTrailers)
                 {

@@ -146,7 +146,7 @@ namespace RandomTrainTrailers.UI
                 return;
 
             bool collection = itemData.data.IsCollection;
-            bool multiTrailer = itemData.data.IsMultiTrailer();
+            bool multiTrailer = itemData.data.IsMultiTrailer;
 
             m_currentDataItem = itemData;
 
@@ -169,9 +169,8 @@ namespace RandomTrainTrailers.UI
                 }
                 else
                 {
-                    labelAssetName.textColor = (itemData.data.GetInfo() == null) ? Color.red : Color.white;
-                }
-                
+                    labelAssetName.textColor = (itemData.data.VehicleInfos == null) ? Color.red : Color.white;
+                }   
             }
             // Settings
             fieldInvert.SetValue(itemData.data.InvertProbability);

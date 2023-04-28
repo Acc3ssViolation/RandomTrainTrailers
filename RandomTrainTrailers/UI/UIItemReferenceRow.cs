@@ -42,16 +42,16 @@ namespace RandomTrainTrailers.UI
 
             _selectedCheckbox.isChecked = _data.Selected;
             _nameLabel.text = _data.Value.DisplayName;
+            _nameLabel.textColor = _data.Value.IsAvailable ? UIConstants.TextColor : UIConstants.InvalidTextColor;
             tooltip = _data.Value.DisplayName;
 
             if (_isRowOdd)
             {
-                backgroundSprite = "UnlockingItemBackground";
-                color = new Color32(255, 255, 255, 255);
+                backgroundSprite = UIConstants.OddRowBackground;
             }
             else
             {
-                backgroundSprite = null;
+                backgroundSprite = UIConstants.EvenRowBackground;
             }
         }
 

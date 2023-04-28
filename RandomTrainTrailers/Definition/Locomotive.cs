@@ -24,6 +24,12 @@ namespace RandomTrainTrailers.Definition
         [XmlAttribute("length"), DefaultValue(1)]
         public int Length { get; set; } = 1;
 
+        /// <summary>
+        /// If this locomotive is enabled an can be used.
+        /// </summary>
+        [XmlAttribute("enabled")]
+        public bool Enabled { get; set; } = true;
+
         [XmlIgnore]
         public bool CanBeLeadVehicle => _info != null ? _info.m_placementStyle == ItemClass.Placement.Automatic : false;
 
@@ -58,6 +64,7 @@ namespace RandomTrainTrailers.Definition
                 AssetName = AssetName,
                 Type = Type,
                 Length = Length,
+                Enabled = Enabled,
             };
             return copy;
         }

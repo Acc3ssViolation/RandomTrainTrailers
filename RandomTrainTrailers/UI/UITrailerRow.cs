@@ -176,7 +176,7 @@ namespace RandomTrainTrailers.UI
                 return;
 
             bool collection = itemData.IsCollection;
-            bool multiTrailer = itemData.IsMultiTrailer();
+            bool multiTrailer = itemData.IsMultiTrailer;
 
             m_currentDataItem = itemData;
 
@@ -192,14 +192,7 @@ namespace RandomTrainTrailers.UI
             }
             else
             {
-                if(multiTrailer)
-                {
-                    labelAssetName.textColor = (itemData.GetInfos() == null) ? Color.red : Color.white;
-                }
-                else
-                {
-                    labelAssetName.textColor = (itemData.GetInfo() == null) ? Color.red : Color.white;
-                }   
+                labelAssetName.textColor = (itemData.VehicleInfos == null) ? Color.red : Color.white;
             }
             // Settings
             fieldWeight.SetValue(itemData.Weight);

@@ -11,6 +11,9 @@ namespace RandomTrainTrailers.Definition
 
         [XmlIgnore]
         public abstract string DisplayName { get; }
+
+        [XmlIgnore]
+        public abstract bool IsAvailable { get; }
     }
 
     public abstract class ItemReference<S, T>: ItemReference where S : ItemReference<S, T>, new()
@@ -33,13 +36,15 @@ namespace RandomTrainTrailers.Definition
             items.TryGetValue(Name, out var reference);
             Reference = reference;
         }
+
+        public override bool IsAvailable => Reference != null;
     }
 
     public class TrainPool
     {
-        public class CollectionReference : ItemReference<CollectionReference, TrailerCollection>
+        public class TrailerReference : ItemReference<TrailerReference, Trailer>
         {
-            public override string DisplayName => Reference?.Name ?? Name;
+            public override string DisplayName => Util.GetVehicleDisplayName(Name);
         }
 
         public class LocomotiveReference : ItemReference<LocomotiveReference, Locomotive>
@@ -58,9 +63,9 @@ namespace RandomTrainTrailers.Definition
         public List<LocomotiveReference> Locomotives { get; set; }
 
         /// <summary>
-        /// The names of trailer collections to use for this pool
+        /// The names of trailers to use for this pool
         /// </summary>
-        public List<CollectionReference> TrailerCollections { get; set; }
+        public List<TrailerReference> Trailers { get; set; }
 
         /// <summary>
         /// Minimum amount of locomotives for trains from this pool
@@ -102,7 +107,7 @@ namespace RandomTrainTrailers.Definition
         {
             Name = string.Empty;
             Locomotives = new List<LocomotiveReference>();
-            TrailerCollections = new List<CollectionReference>();
+            Trailers = new List<TrailerReference>();
         }
 
         public TrainPool Copy()
@@ -121,9 +126,9 @@ namespace RandomTrainTrailers.Definition
             {
                 copy.Locomotives.Add(item);
             }
-            foreach (var item in TrailerCollections)
+            foreach (var item in Trailers)
             {
-                copy.TrailerCollections.Add(item);
+                copy.Trailers.Add(item);
             }
             return copy;
         }

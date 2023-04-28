@@ -117,7 +117,7 @@ namespace RandomTrainTrailers
                 else
                 {
                     MergeInto(to[toItem].Locomotives, item.Locomotives, (a, b) => a.Name == b.Name);
-                    MergeInto(to[toItem].TrailerCollections, item.TrailerCollections, (a, b) => a.Name == b.Name);
+                    MergeInto(to[toItem].Trailers, item.Trailers, (a, b) => a.Name == b.Name);
                     to[toItem].UseCargo = item.UseCargo;
                     to[toItem].Enabled = item.Enabled;
                     to[toItem].MinLocomotiveCount = item.MinLocomotiveCount;

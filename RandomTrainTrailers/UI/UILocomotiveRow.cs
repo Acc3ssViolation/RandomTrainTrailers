@@ -4,19 +4,17 @@ using UnityEngine;
 
 namespace RandomTrainTrailers.UI
 {
-    internal class UITrainPoolRow : UIPanel, IUIFastListRow
+    internal class UILocomotiveRow : UIPanel, IUIFastListRow
     {
         public const float Height = 50;
 
-        private RowData<TrainPool> _data;
+        private RowData<Locomotive> _data;
         private bool _isRowOdd;
         private bool _createdComponents;
 
         private UICheckBox _selectedCheckbox;
         private UIButton _deleteButton;
-        private UITextField _nameField;
-        private UIButton _locomotiveButton;
-        private UIButton _wagonButton;
+        private UILabel _nameField;
         private UIButton _settings;
         private UICheckBox _enabled;
         
@@ -30,7 +28,7 @@ namespace RandomTrainTrailers.UI
 
         public void Display(object data, bool isRowOdd)
         {
-            if (data is RowData<TrainPool> pool)
+            if (data is RowData<Locomotive> pool)
             {
                 _data = pool;
                 _isRowOdd = isRowOdd;
@@ -46,9 +44,8 @@ namespace RandomTrainTrailers.UI
             EnsureComponents();
 
             _selectedCheckbox.isChecked = _data.Selected;
-            _nameField.text = _data.Value.Name;
-            _wagonButton.text = $"{_data.Value.Trailers.Count} wagons";
-            _locomotiveButton.text = $"{_data.Value.Locomotives.Count} locomotives";
+            _nameField.text = Util.GetVehicleDisplayName(_data.Value.AssetName);
+            _nameField.textColor = _data.Value.VehicleInfo != null ? UIConstants.TextColor : UIConstants.InvalidTextColor;
             _enabled.isChecked = _data.Value.Enabled;
 
             if (_isRowOdd)
@@ -84,49 +81,11 @@ namespace RandomTrainTrailers.UI
                     _data.Selected = _selectedCheckbox.isChecked;
             };
 
-            // Name of pool (will expand on resize)
-            _nameField = UIUtils.CreateTextField(this);
+            // Name of locomotive
+            _nameField = AddUIComponent<UILabel>();
             _nameField.relativePosition = UIUtils.RightOf(_selectedCheckbox);
             _nameField.width = 250;
-            _nameField.anchor = UIAnchorStyle.Left | UIAnchorStyle.CenterVertical | UIAnchorStyle.Right;
-            _nameField.eventTextChanged += (_, __) =>
-            {
-                if (_data != null)
-                    _data.Value.Name = _nameField.text;
-            };
-
-            // Locomotive button
-            _locomotiveButton = UIUtils.CreateButton(this);
-            _locomotiveButton.text = "{Num} locomotives";
-            _locomotiveButton.width = 150;
-            _locomotiveButton.relativePosition = UIUtils.RightOf(_nameField);
-            _locomotiveButton.anchor = UIAnchorStyle.Right | UIAnchorStyle.CenterVertical;
-            _locomotiveButton.eventClicked += (_, __) =>
-            {
-                OpenLocomotiveWindow();
-            };
-
-            // Wagon button
-            _wagonButton = UIUtils.CreateButton(this);
-            _wagonButton.text = "{Num} wagons";
-            _wagonButton.width = 120;
-            _wagonButton.relativePosition = UIUtils.RightOf(_locomotiveButton);
-            _wagonButton.anchor = UIAnchorStyle.Right | UIAnchorStyle.CenterVertical;
-            _wagonButton.eventClicked += (_, __) =>
-            {
-                OpenWagonWindow();
-            };
-
-            // Settings
-            _settings = UIUtils.CreateButton(this);
-            _settings.text = "Settings";
-            _settings.width = 90;
-            _settings.relativePosition = UIUtils.RightOf(_wagonButton);
-            _settings.anchor = UIAnchorStyle.Right | UIAnchorStyle.CenterVertical;
-            _settings.eventClicked += (_, __) =>
-            {
-                OpenSettingsWindow();
-            };
+            _nameField.anchor = UIAnchorStyle.Left | UIAnchorStyle.CenterVertical;
 
             // Delete button
             _deleteButton = UIUtils.CreateButton(this);
@@ -138,7 +97,7 @@ namespace RandomTrainTrailers.UI
             _deleteButton.anchor = UIAnchorStyle.Right | UIAnchorStyle.CenterVertical;
             _deleteButton.eventClicked += (c, p) =>
             {
-                ConfirmPanel.ShowModal(Mod.name, $"Are you sure you want to delete '{_data?.Value.Name}'?", (_, ret) =>
+                ConfirmPanel.ShowModal(Mod.name, $"Are you sure you want to delete '{_nameField.text}'?", (_, ret) =>
                 {
                     if (ret == 1)
                     {
@@ -146,7 +105,7 @@ namespace RandomTrainTrailers.UI
                     }
                 });
             };
-            _deleteButton.tooltip = "Deletes the pool";
+            _deleteButton.tooltip = "Deletes the locomotive";
 
             // Enabled checkbox
             _enabled = UIUtils.CreateCheckBox(this);
@@ -160,31 +119,27 @@ namespace RandomTrainTrailers.UI
                     _data.Value.Enabled = _enabled.isChecked;
             };
 
+            // Settings
+            _settings = UIUtils.CreateButton(this);
+            _settings.text = "Settings";
+            _settings.width = 90;
+            _settings.relativePosition = UIUtils.LeftOf(_settings, _enabled);
+            _settings.anchor = UIAnchorStyle.Right | UIAnchorStyle.CenterVertical;
+            _settings.eventClicked += (_, __) =>
+            {
+                OpenSettingsWindow();
+            };
+
             _createdComponents = true;
-        }
-
-        private void OpenLocomotiveWindow()
-        {
-            var window = UIWindow.Create<UITrainPoolReferencePanel>(600, 500, "Locomotives in pool");
-            window.DestroyOnClose = true;
-            ((UITrainPoolReferencePanel)window.Content).SetData(UIDataManager.instance.AvailableDefinition, _data.Value, UITrainPoolReferencePanel.DataType.Locomotives, this);
-            window.Open();
-        }
-
-        private void OpenWagonWindow()
-        {
-            var window = UIWindow.Create<UITrainPoolReferencePanel>(600, 500, "Trailers in pool");
-            window.DestroyOnClose = true;
-            ((UITrainPoolReferencePanel)window.Content).SetData(UIDataManager.instance.AvailableDefinition, _data.Value, UITrainPoolReferencePanel.DataType.Trailers, this);
-            window.Open();
         }
 
         private void OpenSettingsWindow()
         {
-            var window = UIWindow.Create<UITrainPoolSettings>(300, 200, _data.Value.Name);
-            window.DestroyOnClose = true;
-            ((UITrainPoolSettings)window.Content).SetData(_data.Value);
-            window.Open();
+            return;
+            //var window = UIWindow.Create<UITrainPoolSettings>(300, 200, _data.Value.Name);
+            //window.DestroyOnClose = true;
+            //((UITrainPoolSettings)window.Content).SetData(_data.Value);
+            //window.Open();
         }
     }
 }

@@ -12,7 +12,7 @@ namespace RandomTrainTrailers.UI
         public enum DataType
         {
             Locomotives,
-            TrailerCollections,
+            Trailers,
         }
 
         private TrailerDefinition _trailerDefinition;
@@ -137,8 +137,8 @@ namespace RandomTrainTrailers.UI
                 _availableList.rowsData.Remove(row);
                 if (_type == DataType.Locomotives)
                     _pool.Locomotives.Add((TrainPool.LocomotiveReference)row.Value);
-                else if (_type == DataType.TrailerCollections)
-                    _pool.TrailerCollections.Add((TrainPool.CollectionReference)row.Value);
+                else if (_type == DataType.Trailers)
+                    _pool.Trailers.Add((TrainPool.TrailerReference)row.Value);
             }
 
             _assignedList.Refresh();
@@ -159,8 +159,8 @@ namespace RandomTrainTrailers.UI
                 _assignedList.rowsData.Remove(row);
                 if (_type == DataType.Locomotives)
                     _pool.Locomotives.Remove((TrainPool.LocomotiveReference)row.Value);
-                else if (_type == DataType.TrailerCollections)
-                    _pool.TrailerCollections.Remove((TrainPool.CollectionReference)row.Value);
+                else if (_type == DataType.Trailers)
+                    _pool.Trailers.Remove((TrainPool.TrailerReference)row.Value);
             }
 
             _assignedList.Refresh();
@@ -202,16 +202,16 @@ namespace RandomTrainTrailers.UI
                     available.Add(new RowData<ItemReference>(new TrainPool.LocomotiveReference { Name = loco.AssetName }, null));
                 }
             }
-            else if (_type == DataType.TrailerCollections)
+            else if (_type == DataType.Trailers)
             {
-                foreach (var pool in _pool.TrailerCollections)
+                foreach (var pool in _pool.Trailers)
                     assigned.Add(new RowData<ItemReference>(pool, null));
 
-                foreach (var collection in _trailerDefinition.Collections)
+                foreach (var trailer in _trailerDefinition.Trailers)
                 {
-                    if (_pool.TrailerCollections.Any(l => l.Name == collection.Name))
+                    if (_pool.Trailers.Any(l => l.Name == trailer.AssetName))
                         continue;
-                    available.Add(new RowData<ItemReference>(new TrainPool.CollectionReference { Name = collection.Name }, null));
+                    available.Add(new RowData<ItemReference>(new TrainPool.TrailerReference { Name = trailer.AssetName }, null));
                 }
             }
             else
