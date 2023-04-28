@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace RandomTrainTrailers.Definition
 {
-    public class Trailer
+    public class Trailer : IEnableable
     {
         /// <summary>
         /// Name of the trailer asset. Not required for Multi Trailers.

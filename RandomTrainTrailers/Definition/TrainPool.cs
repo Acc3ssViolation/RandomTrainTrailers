@@ -50,7 +50,7 @@ namespace RandomTrainTrailers.Definition
         public override bool IsAvailable => Reference != null;
     }
 
-    public class TrainPool
+    public class TrainPool : IEnableable
     {
         public class TrailerReference : ItemReference<TrailerReference, Trailer>
         {

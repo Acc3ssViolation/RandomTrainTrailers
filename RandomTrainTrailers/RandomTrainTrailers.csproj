@@ -76,6 +76,7 @@
     <Compile Include="DebugBehaviour.cs" />
     <Compile Include="DefaultTrailerConfig.cs" />
     <Compile Include="Definition\BlacklistItem.cs" />
+    <Compile Include="Definition\IEnableable.cs" />
     <Compile Include="Definition\Locomotive.cs" />
     <Compile Include="Definition\TrainPool.cs" />
     <Compile Include="Definition\TrainPoolExtensions.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="UI\FilterableFastList.cs" />
     <Compile Include="UI\RowData.cs" />
     <Compile Include="UI\UIAssetRow.cs" />
+    <Compile Include="UI\UIBaseListPanel.cs" />
     <Compile Include="UI\UIBlacklistRow.cs" />
     <Compile Include="UI\UIConstants.cs" />
     <Compile Include="UI\UIDataManager.cs" />

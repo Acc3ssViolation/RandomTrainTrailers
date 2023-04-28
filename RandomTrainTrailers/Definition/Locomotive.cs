@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace RandomTrainTrailers.Definition
 {
-    public class Locomotive
+    public class Locomotive : IEnableable
     {
         /// <summary>
         /// Name of the train asset.
