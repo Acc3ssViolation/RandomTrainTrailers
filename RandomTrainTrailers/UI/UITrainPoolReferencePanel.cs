@@ -2,6 +2,7 @@
 using RandomTrainTrailers.Definition;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using UnityEngine;
 
@@ -21,8 +22,8 @@ namespace RandomTrainTrailers.UI
         // TODO: Remove this and get some other mechanism to propagate UI refreshes on changes
         private UITrainPoolRow _parentRow;
 
-        private UIFastList _availableList;
-        private UIFastList _assignedList;
+        private FilterableFastList<ItemReference> _availableList;
+        private FilterableFastList<ItemReference> _assignedList;
 
         public override void Start()
         {
@@ -34,25 +35,30 @@ namespace RandomTrainTrailers.UI
 
         private void CreateComponents()
         {
-            const float Margin = 10;
-            float listWidth = (width - Margin) / 2;
-            _availableList = CreateList(Vector3.zero, listWidth, "Available", () =>
+            _availableList = CreateList(Vector3.zero, "Available", () =>
             {
                 AssignSelected();
             });
-            _assignedList = CreateList(new Vector3(listWidth + Margin, 0), listWidth, "Assigned", () =>
+            _assignedList = CreateList(new Vector3(width / 2, 0), "Assigned", () =>
             {
                 RemoveSelected();
             });
         }
 
-        private UIFastList CreateList(Vector3 relativePosition, float width, string title, Action onMoveClicked)
+        private FilterableFastList<ItemReference> CreateList(Vector3 relativePosition, string title, Action onMoveClicked)
         {
-            var topRowPanel = AddUIComponent<UIPanel>();
-            topRowPanel.width = width;
+            var totalPanel = AddUIComponent<UIPanel>();
+            totalPanel.width = width / 2;
+            totalPanel.height = height;
+            totalPanel.relativePosition = relativePosition;
+            totalPanel.anchor = UIAnchorStyle.All | UIAnchorStyle.Proportional;
+
+            // The top row with buttons
+            var topRowPanel = totalPanel.AddUIComponent<UIPanel>();
+            topRowPanel.width = totalPanel.width;
             topRowPanel.height = 30;
-            topRowPanel.relativePosition = relativePosition;
-            topRowPanel.anchor = UIAnchorStyle.Top | UIAnchorStyle.Left | UIAnchorStyle.Right | UIAnchorStyle.Proportional;
+            topRowPanel.relativePosition = relativePosition.x > 0 ? new Vector3(5, 0) : new Vector3(0, 0);
+            topRowPanel.anchor = UIAnchorStyle.Top | UIAnchorStyle.Left | UIAnchorStyle.Right;
 
             var label = topRowPanel.AddUIComponent<UILabel>();
             label.text = title;
@@ -71,24 +77,54 @@ namespace RandomTrainTrailers.UI
             moveButton.relativePosition = UIUtils.RightOf(selectButton);
             moveButton.anchor = UIAnchorStyle.Left | UIAnchorStyle.CenterVertical;
 
-            var list = UIFastList.Create<UIItemReferenceRow>(this);
-            list.relativePosition = UIUtils.Below(topRowPanel);
-            list.width = width;
+            // The row with filter options
+            var filterRowPanel = totalPanel.AddUIComponent<UIPanel>();
+            filterRowPanel.width = totalPanel.width;
+            filterRowPanel.height = 30;
+            filterRowPanel.relativePosition = UIUtils.Below(topRowPanel);
+            filterRowPanel.anchor = UIAnchorStyle.Top | UIAnchorStyle.Left | UIAnchorStyle.Right;
+
+            var filterLabel = filterRowPanel.AddUIComponent<UILabel>();
+            filterLabel.text = "Filter";
+            filterLabel.relativePosition = new Vector3(0, 0);
+            filterLabel.anchor = UIAnchorStyle.Left | UIAnchorStyle.CenterVertical;
+
+            var filterField = UIUtils.CreateTextField(filterRowPanel);
+            filterField.relativePosition = UIUtils.RightOf(filterLabel);
+            filterField.width = 230;
+            filterField.anchor = UIAnchorStyle.Left | UIAnchorStyle.CenterVertical;
+
+            // The panel itself
+            var list = UIFastList.Create<UIItemReferenceRow>(totalPanel);
+            list.relativePosition = UIUtils.Below(filterRowPanel);
+            list.width = totalPanel.width - 5;
             list.height = height - list.relativePosition.y;
             list.rowHeight = UITrainPoolRow.Height;
             list.backgroundSprite = "UnlockingPanel";
-            list.anchor = UIAnchorStyle.All | UIAnchorStyle.Proportional;
+            list.anchor = UIAnchorStyle.All;
 
+            var filterable = new FilterableFastList<ItemReference>(list);
+            filterable.SetFilter((item) =>
+            {
+                // TODO: Add things like /enabled /disabled, etc.
+                var filter = filterField.text.ToUpperInvariant();
+                return item.Name.ToUpperInvariant().Contains(filter) || item.DisplayName.ToUpperInvariant().Contains(filter);
+            });
+
+            filterField.eventTextChanged += (_, __) =>
+            {
+                filterable.ApplyFilter();
+            };
             selectButton.eventClicked += (_, __) =>
             {
-                SelectAll(list);
+                filterable.SelectAll();
             };
             moveButton.eventClicked += (_, __) =>
             {
                 onMoveClicked();
             };
 
-            return list;
+            return filterable;
         }
 
         public void SetData(TrainPool pool, DataType type, UITrainPoolRow parentRow)
@@ -99,85 +135,48 @@ namespace RandomTrainTrailers.UI
             UpdateData();
         }
 
-        private void SelectAll(UIFastList list)
-        {
-            var allSelected = true;
-
-            foreach (var row in list.rowsData)
-            {
-                var rowData = (RowData<ItemReference>)row;
-                if (!rowData.Selected)
-                {
-                    allSelected = false;
-                    break;
-                }
-            }
-
-            foreach (var row in list.rowsData)
-            {
-                var rowData = (RowData<ItemReference>)row;
-                rowData.Selected = !allSelected;
-            }
-
-            list.Refresh();
-        }
-
         private void AssignSelected()
         {
-            var rows = GetSelectedRows(_availableList);
+            var rows = _availableList.GetSelectedRows();
 
             if (rows.Count == 0)
                 return;
 
             foreach (var row in rows)
             {
-                _assignedList.rowsData.Add(row);
-                _availableList.rowsData.Remove(row);
+                _assignedList.Add(row, false);
+                _availableList.Remove(row, false);
                 if (_type == DataType.Locomotives)
                     _pool.Locomotives.Add((TrainPool.LocomotiveReference)row.Value);
                 else if (_type == DataType.Trailers)
                     _pool.Trailers.Add((TrainPool.TrailerReference)row.Value);
             }
 
-            _assignedList.Refresh();
-            _availableList.Refresh();
+            _assignedList.ApplyFilter();
+            _availableList.ApplyFilter();
             _parentRow?.UpdateDisplay();
         }
 
         private void RemoveSelected()
         {
-            var rows = GetSelectedRows(_assignedList);
+            var rows = _assignedList.GetSelectedRows();
 
             if (rows.Count == 0)
                 return;
 
             foreach (var row in rows)
             {
-                _availableList.rowsData.Add(row);
-                _assignedList.rowsData.Remove(row);
+                _availableList.Add(row, false);
+                _assignedList.Remove(row, false);
                 if (_type == DataType.Locomotives)
                     _pool.Locomotives.Remove((TrainPool.LocomotiveReference)row.Value);
                 else if (_type == DataType.Trailers)
                     _pool.Trailers.Remove((TrainPool.TrailerReference)row.Value);
             }
 
-            _assignedList.Refresh();
-            _availableList.Refresh();
+            _assignedList.ApplyFilter();
+            _availableList.ApplyFilter();
             _parentRow?.UpdateDisplay();
-        }
-
-        private List<RowData<ItemReference>> GetSelectedRows(UIFastList list)
-        {
-            var result = new List<RowData<ItemReference>>();
-
-            foreach (var row in list.rowsData)
-            {
-                var rowData = (RowData<ItemReference>)row;
-                if (rowData.Selected)
-                    result.Add(rowData);
-            }
-
-            return result;
         }
 
         private void UpdateData()
@@ -185,8 +184,8 @@ namespace RandomTrainTrailers.UI
             if (_availableList == null || _assignedList == null || _pool == null)
                 return;
 
-            var assigned = new FastList<object>();
-            var available = new FastList<object>();
+            var assigned = new List<RowData<ItemReference>>();
+            var available = new List<RowData<ItemReference>>();
 
             var availableDef = UIDataManager.instance.AvailableDefinition;
 
@@ -220,8 +219,8 @@ namespace RandomTrainTrailers.UI
                 return;
             }
 
-            _availableList.rowsData = available;
-            _assignedList.rowsData = assigned;
+            _availableList.Data = available;
+            _assignedList.Data = assigned;
         }
     }
 }

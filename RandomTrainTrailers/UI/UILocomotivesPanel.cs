@@ -9,7 +9,7 @@ namespace RandomTrainTrailers.UI
 {
     internal class UILocomotivesPanel : UIPanel
     {
-        private UIFastList _locomotiveList;
+        private FilterableFastList<Locomotive> _locomotiveList;
         private TrailerDefinition _trailerDefinition;
         private UIButton _importButton;
         private UIButton _deleteButton;
@@ -29,18 +29,53 @@ namespace RandomTrainTrailers.UI
             const float Margin = 10;
 
             var selectionPanel = CreateSelectionButtons();
-
-            // Main list of items
-            _locomotiveList = UIFastList.Create<UILocomotiveRow>(this);
-            _locomotiveList.relativePosition = UIUtils.Below(selectionPanel);
-            _locomotiveList.width = width;
-            _locomotiveList.height = height - (selectionPanel.height + Margin);
-            _locomotiveList.rowHeight = UILocomotiveRow.Height;
-            _locomotiveList.backgroundSprite = "UnlockingPanel";
-            _locomotiveList.anchor = UIAnchorStyle.All;
-
+            _locomotiveList = CreateList(UIUtils.Below(selectionPanel));
             var buttonPanel = CreateEditButtons();
-            _locomotiveList.height -= buttonPanel.height + Margin;
+            _locomotiveList.UIList.height -= buttonPanel.height + Margin;
+        }
+
+        private FilterableFastList<Locomotive> CreateList(Vector3 relativePosition)
+        {
+            // Filter
+            var filterPanel = AddUIComponent<UIPanel>();
+            filterPanel.height = 30;
+            filterPanel.width = width;
+            filterPanel.relativePosition = relativePosition;
+            filterPanel.anchor = UIAnchorStyle.Top | UIAnchorStyle.Left | UIAnchorStyle.Right;
+
+            var filterLabel = filterPanel.AddUIComponent<UILabel>();
+            filterLabel.text = "Filter";
+            filterLabel.relativePosition = new Vector3(0, 0);
+            filterLabel.anchor = UIAnchorStyle.Left | UIAnchorStyle.CenterVertical;
+
+            var filterField = UIUtils.CreateTextField(filterPanel);
+            filterField.relativePosition = UIUtils.RightOf(filterLabel);
+            filterField.width = 250;
+            filterField.anchor = UIAnchorStyle.Left | UIAnchorStyle.CenterVertical;
+
+            // Main list
+            var list = UIFastList.Create<UILocomotiveRow>(this);
+            list.relativePosition = UIUtils.Below(filterPanel);
+            list.width = width;
+            list.height = height - list.relativePosition.y;
+            list.rowHeight = UILocomotiveRow.Height;
+            list.backgroundSprite = UIConstants.FastListBackground;
+            list.anchor = UIAnchorStyle.All;
+
+            var filterable = new FilterableFastList<Locomotive>(list);
+            filterable.SetFilter((item) =>
+            {
+                var itemName = item.AssetName.ToUpperInvariant();
+                var altItemName = Util.GetVehicleDisplayName(item.AssetName).ToUpperInvariant();
+                var filter = filterField.text.ToUpperInvariant();
+                return itemName.Contains(filter) || altItemName.Contains(filter);
+            });
+            filterField.eventTextChanged += (_, __) =>
+            {
+                filterable.ApplyFilter();
+            };
+
+            return filterable;
         }
 
         private UIPanel CreateSelectionButtons()
@@ -58,7 +93,7 @@ namespace RandomTrainTrailers.UI
             _selectAllButton.anchor = UIAnchorStyle.Left | UIAnchorStyle.CenterVertical;
             _selectAllButton.eventClicked += (_, __) =>
             {
-                SelectAll();
+                _locomotiveList.SelectAll();
             };
 
             _deleteButton = UIUtils.CreateButton(panel);
@@ -154,7 +189,7 @@ namespace RandomTrainTrailers.UI
 
         private void DisableSelected()
         {
-            var selected = GetSelectedRows();
+            var selected = _locomotiveList.GetSelectedRows();
 
             if (selected.Count == 0)
                 return;
@@ -167,7 +202,7 @@ namespace RandomTrainTrailers.UI
 
         private void EnableSelected()
         {
-            var selected = GetSelectedRows();
+            var selected = _locomotiveList.GetSelectedRows();
 
             if (selected.Count == 0)
                 return;
@@ -178,32 +213,9 @@ namespace RandomTrainTrailers.UI
             _locomotiveList.Refresh();
         }
 
-        private void SelectAll()
-        {
-            var allSelected = true;
-
-            foreach (var row in _locomotiveList.rowsData)
-            {
-                var rowData = (RowData)row;
-                if (!rowData.Selected)
-                {
-                    allSelected = false;
-                    break;
-                }
-            }
-
-            foreach (var row in _locomotiveList.rowsData)
-            {
-                var rowData = (RowData)row;
-                rowData.Selected = !allSelected;
-            }
-
-            _locomotiveList.Refresh();
-        }
-
         private void DeleteSelected()
         {
-            var rows = GetSelectedRows();
+            var rows = _locomotiveList.GetSelectedRows();
 
             if (rows.Count == 0)
                 return;
@@ -215,7 +227,7 @@ namespace RandomTrainTrailers.UI
                     foreach (var row in rows)
                     {
                         _trailerDefinition.Locomotives.Remove(row.Value);
-                        _locomotiveList.rowsData.Remove(row);
+                        _locomotiveList.Remove(row, false);
                     }
                     _locomotiveList.Refresh();
                     UIDataManager.instance.Invalidate();
@@ -223,25 +235,10 @@ namespace RandomTrainTrailers.UI
             });
         }
 
-        private List<RowData<Locomotive>> GetSelectedRows()
-        {
-            var result = new List<RowData<Locomotive>>();
-
-            foreach (var row in _locomotiveList.rowsData)
-            {
-                var rowData = (RowData<Locomotive>)row;
-                if (rowData.Selected)
-                    result.Add(rowData);
-            }
-
-            return result;
-        }
-
         private void DeleteLocomotive(RowData<Locomotive> rowData)
         {
             _trailerDefinition.Locomotives.Remove(rowData.Value);
-            _locomotiveList.rowsData.Remove(rowData);
-            _locomotiveList.Refresh();
+            _locomotiveList.Remove(rowData);
             UIDataManager.instance.Invalidate();
         }
 
@@ -250,14 +247,14 @@ namespace RandomTrainTrailers.UI
             if (_locomotiveList == null || _trailerDefinition == null)
                 return;
 
-            var list = new FastList<object>();
+            var list = new List<RowData<Locomotive>>();
 
             foreach (var pool in _trailerDefinition.Locomotives)
             {
                 list.Add(new RowData<Locomotive>(pool, DeleteLocomotive));
             }
 
-            _locomotiveList.rowsData = list;
+            _locomotiveList.Data = list;
         }
     }
 }

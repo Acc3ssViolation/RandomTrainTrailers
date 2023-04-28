@@ -94,6 +94,7 @@
     <Compile Include="SharedTrailerConfigLoader.cs" />
     <Compile Include="Definition\TrailerDefinition.cs" />
     <Compile Include="TrailerManager.cs" />
+    <Compile Include="UI\FilterableFastList.cs" />
     <Compile Include="UI\RowData.cs" />
     <Compile Include="UI\UIAssetRow.cs" />
     <Compile Include="UI\UIBlacklistRow.cs" />

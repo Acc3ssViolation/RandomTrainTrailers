@@ -9,7 +9,7 @@ namespace RandomTrainTrailers.UI
 {
     internal class UITrailersPanel : UIPanel
     {
-        private UIFastList _trailerList;
+        private FilterableFastList<Trailer> _trailerList;
         private TrailerDefinition _trailerDefinition;
         private UIButton _importButton;
         private UIButton _deleteButton;
@@ -29,18 +29,53 @@ namespace RandomTrainTrailers.UI
             const float Margin = 10;
 
             var selectionPanel = CreateSelectionButtons();
-
-            // Main list of items
-            _trailerList = UIFastList.Create<UITrailerRow>(this);
-            _trailerList.relativePosition = UIUtils.Below(selectionPanel);
-            _trailerList.width = width;
-            _trailerList.height = height - (selectionPanel.height + Margin);
-            _trailerList.rowHeight = UITrailerRow.Height;
-            _trailerList.backgroundSprite = UIConstants.FastListBackground;
-            _trailerList.anchor = UIAnchorStyle.All;
-
+            _trailerList = CreateList(UIUtils.Below(selectionPanel));
             var buttonPanel = CreateEditButtons();
-            _trailerList.height -= buttonPanel.height + Margin;
+            _trailerList.UIList.height -= buttonPanel.height + Margin;
+        }
+
+        private FilterableFastList<Trailer> CreateList(Vector3 relativePosition)
+        {
+            // Filter
+            var filterPanel = AddUIComponent<UIPanel>();
+            filterPanel.height = 30;
+            filterPanel.width = width;
+            filterPanel.relativePosition = relativePosition;
+            filterPanel.anchor = UIAnchorStyle.Top | UIAnchorStyle.Left | UIAnchorStyle.Right;
+
+            var filterLabel = filterPanel.AddUIComponent<UILabel>();
+            filterLabel.text = "Filter";
+            filterLabel.relativePosition = new Vector3(0, 0);
+            filterLabel.anchor = UIAnchorStyle.Left | UIAnchorStyle.CenterVertical;
+
+            var filterField = UIUtils.CreateTextField(filterPanel);
+            filterField.relativePosition = UIUtils.RightOf(filterLabel);
+            filterField.width = 250;
+            filterField.anchor = UIAnchorStyle.Left | UIAnchorStyle.CenterVertical;
+
+            // Main list
+            var list = UIFastList.Create<UITrailerRow>(this);
+            list.relativePosition = UIUtils.Below(filterPanel);
+            list.width = width;
+            list.height = height - list.relativePosition.y;
+            list.rowHeight = UITrailerRow.Height;
+            list.backgroundSprite = UIConstants.FastListBackground;
+            list.anchor = UIAnchorStyle.All;
+
+            var filterable = new FilterableFastList<Trailer>(list);
+            filterable.SetFilter((item) =>
+            {
+                var itemName = item.AssetName.ToUpperInvariant();
+                var altItemName = Util.GetVehicleDisplayName(item.AssetName).ToUpperInvariant();
+                var filter = filterField.text.ToUpperInvariant();
+                return itemName.Contains(filter) || altItemName.Contains(filter);
+            });
+            filterField.eventTextChanged += (_, __) =>
+            {
+                filterable.ApplyFilter();
+            };
+
+            return filterable;
         }
 
         private UIPanel CreateSelectionButtons()
@@ -58,7 +93,7 @@ namespace RandomTrainTrailers.UI
             _selectAllButton.anchor = UIAnchorStyle.Left | UIAnchorStyle.CenterVertical;
             _selectAllButton.eventClicked += (_, __) =>
             {
-                SelectAll();
+                _trailerList.SelectAll();
             };
 
             _deleteButton = UIUtils.CreateButton(panel);
@@ -155,7 +190,7 @@ namespace RandomTrainTrailers.UI
 
         private void DisableSelected()
         {
-            var selected = GetSelectedRows();
+            var selected = _trailerList.GetSelectedRows();
 
             if (selected.Count == 0)
                 return;
@@ -168,7 +203,7 @@ namespace RandomTrainTrailers.UI
 
         private void EnableSelected()
         {
-            var selected = GetSelectedRows();
+            var selected = _trailerList.GetSelectedRows();
 
             if (selected.Count == 0)
                 return;
@@ -179,32 +214,9 @@ namespace RandomTrainTrailers.UI
             _trailerList.Refresh();
         }
 
-        private void SelectAll()
-        {
-            var allSelected = true;
-
-            foreach (var row in _trailerList.rowsData)
-            {
-                var rowData = (RowData)row;
-                if (!rowData.Selected)
-                {
-                    allSelected = false;
-                    break;
-                }
-            }
-
-            foreach (var row in _trailerList.rowsData)
-            {
-                var rowData = (RowData)row;
-                rowData.Selected = !allSelected;
-            }
-
-            _trailerList.Refresh();
-        }
-
         private void DeleteSelected()
         {
-            var rows = GetSelectedRows();
+            var rows = _trailerList.GetSelectedRows();
 
             if (rows.Count == 0)
                 return;
@@ -216,7 +228,7 @@ namespace RandomTrainTrailers.UI
                     foreach (var row in rows)
                     {
                         _trailerDefinition.Trailers.Remove(row.Value);
-                        _trailerList.rowsData.Remove(row);
+                        _trailerList.Remove(row, false);
                     }
                     _trailerList.Refresh();
                     UIDataManager.instance.Invalidate();
@@ -224,25 +236,10 @@ namespace RandomTrainTrailers.UI
             });
         }
 
-        private List<RowData<Trailer>> GetSelectedRows()
-        {
-            var result = new List<RowData<Trailer>>();
-
-            foreach (var row in _trailerList.rowsData)
-            {
-                var rowData = (RowData<Trailer>)row;
-                if (rowData.Selected)
-                    result.Add(rowData);
-            }
-
-            return result;
-        }
-
         private void DeleteTrailer(RowData<Trailer> rowData)
         {
             _trailerDefinition.Trailers.Remove(rowData.Value);
-            _trailerList.rowsData.Remove(rowData);
-            _trailerList.Refresh();
+            _trailerList.Remove(rowData);
             UIDataManager.instance.Invalidate();
         }
 
@@ -251,14 +248,14 @@ namespace RandomTrainTrailers.UI
             if (_trailerList == null || _trailerDefinition == null)
                 return;
 
-            var list = new FastList<object>();
+            var list = new List<RowData<Trailer>>();
 
             foreach (var pool in _trailerDefinition.Trailers)
             {
                 list.Add(new RowData<Trailer>(pool, DeleteTrailer));
             }
 
-            _trailerList.rowsData = list;
+            _trailerList.Data = list;
         }
     }
 }
