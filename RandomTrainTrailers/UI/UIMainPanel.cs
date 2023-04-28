@@ -421,7 +421,7 @@ namespace RandomTrainTrailers.UI
             };
 
             // fastlist
-            trailerFastList = UIFastList.Create<UITrailerRow>(trailerPanel);
+            trailerFastList = UIFastList.Create<UILegacyTrailerRow>(trailerPanel);
             trailerFastList.backgroundSprite = "UnlockingPanel";
             trailerFastList.width = trailerPanel.width;
             trailerFastList.height = trailerPanel.height - 35 - 35;
@@ -812,7 +812,7 @@ namespace RandomTrainTrailers.UI
                 trailerPanel.isVisible = false;
             }
 
-            trailerFastList.rowHeight = UITrailerRow.HEIGHT;
+            trailerFastList.rowHeight = UILegacyTrailerRow.HEIGHT;
             trailerFastList.rowsData = newRowsData;
 
             blacklistFastList.rowHeight = UIBlacklistRow.HEIGHT;

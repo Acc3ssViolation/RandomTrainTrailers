@@ -211,7 +211,7 @@ namespace RandomTrainTrailers.UI
             m_addMultiTrailer.tooltip = "Adds a new Multi Trailer with the trailer you select as the first subtrailer.";
 
             // fastlist
-            m_trailerFastList = UIFastList.Create<UITrailerRow>(m_trailerPanel);
+            m_trailerFastList = UIFastList.Create<UILegacyTrailerRow>(m_trailerPanel);
             m_trailerFastList.backgroundSprite = "UnlockingPanel";
             m_trailerFastList.width = m_trailerPanel.width;
             m_trailerFastList.height = m_trailerPanel.height - 35;
@@ -353,7 +353,7 @@ namespace RandomTrainTrailers.UI
                 m_trailerPanel.isVisible = false;
             }
 
-            m_trailerFastList.rowHeight = UITrailerRow.HEIGHT;
+            m_trailerFastList.rowHeight = UILegacyTrailerRow.HEIGHT;
             m_trailerFastList.rowsData = newRowsData;
         }
 

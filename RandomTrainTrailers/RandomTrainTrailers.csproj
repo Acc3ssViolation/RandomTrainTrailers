@@ -100,6 +100,8 @@
     <Compile Include="UI\UIConstants.cs" />
     <Compile Include="UI\UIDataManager.cs" />
     <Compile Include="UI\UIFlagsPanel.cs" />
+    <Compile Include="UI\UITrailerRow2.cs" />
+    <Compile Include="UI\UITrailersPanel.cs" />
     <Compile Include="UI\UIMultiTrailerPanel.cs" />
     <Compile Include="UI\UICollectionsPanel.cs" />
     <Compile Include="UI\UIFastList.cs" />
@@ -107,7 +109,7 @@
     <Compile Include="UI\UIIntField.cs" />
     <Compile Include="UI\UIMainPanel.cs" />
     <Compile Include="UI\UISubTrailerRow.cs" />
-    <Compile Include="UI\UITrailerRow.cs" />
+    <Compile Include="UI\UILegacyTrailerRow.cs" />
     <Compile Include="UI\UILocomotivesPanel.cs" />
     <Compile Include="UI\UITrainPoolReferencePanel.cs" />
     <Compile Include="UI\UITrainPoolPanel.cs" />

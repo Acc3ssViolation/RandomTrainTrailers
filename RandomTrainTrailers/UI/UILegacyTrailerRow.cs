@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace RandomTrainTrailers.UI
 {
-    public class UITrailerRow : UIPanel, IUIFastListRow
+    public class UILegacyTrailerRow : UIPanel, IUIFastListRow
     { 
         private UIMainPanel mainPanel;
 
