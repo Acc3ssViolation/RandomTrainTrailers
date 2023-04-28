@@ -100,7 +100,7 @@
     <Compile Include="UI\UIConstants.cs" />
     <Compile Include="UI\UIDataManager.cs" />
     <Compile Include="UI\UIFlagsPanel.cs" />
-    <Compile Include="UI\UITrailerRow2.cs" />
+    <Compile Include="UI\UITrailerRow.cs" />
     <Compile Include="UI\UITrailersPanel.cs" />
     <Compile Include="UI\UIMultiTrailerPanel.cs" />
     <Compile Include="UI\UICollectionsPanel.cs" />

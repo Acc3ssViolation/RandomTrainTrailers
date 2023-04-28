@@ -70,6 +70,7 @@ namespace RandomTrainTrailers.UI
         private TrailerImporter _trailerImporter = new TrailerImporter();
         private UIWindow _trainPoolWindow;
         private UIWindow _locomotivePoolWindow;
+        private UIWindow _trailerPoolWindow;
 
         void LoadUserDef()
         {
@@ -77,6 +78,7 @@ namespace RandomTrainTrailers.UI
             m_userDefinition = UIDataManager.instance.EditDefinition;
             ((UITrainPoolPanel)_trainPoolWindow.Content).SetData(m_userDefinition);
             ((UILocomotivesPanel)_locomotivePoolWindow.Content).SetData(m_userDefinition);
+            ((UITrailersPanel)_trailerPoolWindow.Content).SetData(m_userDefinition);
         }
 
         void SaveUserDef()
@@ -134,6 +136,7 @@ namespace RandomTrainTrailers.UI
 
             _trainPoolWindow = UIWindow.Create<UITrainPoolPanel>(870, 500, "Train Pools");
             _locomotivePoolWindow = UIWindow.Create<UILocomotivesPanel>(870, 500, "Locomotives");
+            _trailerPoolWindow = UIWindow.Create<UITrailersPanel>(870, 500, "Trailers");
 
             // Adding main button
             UITabstrip toolStrip = view.FindUIComponent<UITabstrip>("MainToolstrip");
@@ -660,6 +663,15 @@ namespace RandomTrainTrailers.UI
                 _locomotivePoolWindow.Open();
             };
             button.tooltip = "Open the locomotive edit window.";
+
+            button = UIUtils.CreateButton(this);
+            button.text = "Trailers";
+            button.relativePosition = UIUtils.Below(prevButton);
+            button.eventClicked += (c, m) =>
+            {
+                _trailerPoolWindow.Open();
+            };
+            button.tooltip = "Open the trailer edit window.";
 
 
             LoadUserDef();

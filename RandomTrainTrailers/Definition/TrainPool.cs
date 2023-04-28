@@ -31,6 +31,16 @@ namespace RandomTrainTrailers.Definition
             return copy;
         }
 
+        public ItemReference()
+        {
+        }
+
+        public ItemReference(string name, T reference)
+        {
+            Name = name;
+            Reference = reference;
+        }
+
         public void Resolve(IDictionary<string, T> items)
         {
             items.TryGetValue(Name, out var reference);
@@ -45,11 +55,29 @@ namespace RandomTrainTrailers.Definition
         public class TrailerReference : ItemReference<TrailerReference, Trailer>
         {
             public override string DisplayName => Util.GetVehicleDisplayName(Name);
+            public override bool IsAvailable => Reference?.VehicleInfos != null;
+
+            public TrailerReference()
+            {
+            }
+
+            public TrailerReference(Trailer trailer) : base(trailer.AssetName, trailer)
+            { 
+            }
         }
 
         public class LocomotiveReference : ItemReference<LocomotiveReference, Locomotive>
         {
             public override string DisplayName => Util.GetVehicleDisplayName(Name);
+            public override bool IsAvailable => Reference?.VehicleInfo != null;
+
+            public LocomotiveReference()
+            {
+            }
+
+            public LocomotiveReference(Locomotive locomotive) : base(locomotive.AssetName, locomotive)
+            {
+            }
         }
 
         /// <summary>

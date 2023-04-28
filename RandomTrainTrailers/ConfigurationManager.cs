@@ -28,10 +28,12 @@ namespace RandomTrainTrailers
                         Name = "Merged"
                     };
                 }
-                _combinedDefinition.Locomotives.Clear();
-                _combinedDefinition.Collections.Clear();
-                _combinedDefinition.TrainPools.Clear();
+
                 _combinedDefinition.Vehicles.Clear();
+                _combinedDefinition.Collections.Clear();
+                _combinedDefinition.Locomotives.Clear();
+                _combinedDefinition.TrainPools.Clear();
+                _combinedDefinition.Trailers.Clear();
 
                 foreach (var definition in _loadedDefinitions)
                     MergeInto(_combinedDefinition, definition);
@@ -72,9 +74,10 @@ namespace RandomTrainTrailers
         private void MergeInto(TrailerDefinition to, TrailerDefinition from)
         {
             MergeInto(to.Locomotives, from.Locomotives, (a, b) => a.AssetName == b.AssetName);
+            MergeInto(to.Trailers, from.Trailers, (a, b) => a.AssetName == b.AssetName);
+            MergeInto(to.TrainPools, from.TrainPools);
             MergeInto(to.Collections, from.Collections);
             MergeInto(to.Vehicles, from.Vehicles, (a, b) => a.AssetName == b.AssetName);
-            MergeInto(to.TrainPools, from.TrainPools);
         }
 
         private void MergeInto<T>(List<T> to, List<T> from, Func<T, T, bool> equals)

@@ -9,5 +9,7 @@ namespace RandomTrainTrailers.UI
 
         public static readonly string EvenRowBackground = null;
         public static readonly string OddRowBackground = "UnlockingItemBackground";
+
+        public static readonly string FastListBackground = "UnlockingPanel";
     }
 }

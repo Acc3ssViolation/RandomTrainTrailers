@@ -43,7 +43,7 @@ namespace RandomTrainTrailers.UI
             _selectedCheckbox.isChecked = _data.Selected;
             _nameLabel.text = _data.Value.DisplayName;
             _nameLabel.textColor = _data.Value.IsAvailable ? UIConstants.TextColor : UIConstants.InvalidTextColor;
-            tooltip = _data.Value.DisplayName;
+            tooltip = _data.Value.Name;
 
             if (_isRowOdd)
             {

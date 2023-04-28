@@ -533,7 +533,7 @@ namespace RandomTrainTrailers
                     {
                         sb.AppendLine("\t\t" + locomotive.Name);
                     }
-                    sb.AppendLine("\tCollections:");
+                    sb.AppendLine("\tTrailers:");
                     foreach (var trailerCollection in pool.Trailers)
                     {
                         sb.AppendLine("\t\t" + trailerCollection.Name);

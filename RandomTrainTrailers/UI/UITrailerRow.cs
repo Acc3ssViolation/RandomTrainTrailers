@@ -1,14 +1,15 @@
 ﻿using ColossalFramework.UI;
 using RandomTrainTrailers.Definition;
 using UnityEngine;
+using static TimeMilestone;
 
 namespace RandomTrainTrailers.UI
 {
-    internal class UITrailerRow2 : UIPanel, IUIFastListRow
+    internal class UITrailerRow : UIPanel, IUIFastListRow
     {
         public const float Height = 50;
 
-        private RowData<Locomotive> _data;
+        private RowData<Trailer> _data;
         private bool _isRowOdd;
         private bool _createdComponents;
 
@@ -17,6 +18,7 @@ namespace RandomTrainTrailers.UI
         private UILabel _nameField;
         private UIButton _settings;
         private UICheckBox _enabled;
+        private UIButton _cargoType;
         
         public void Deselect(bool isRowOdd)
         {
@@ -28,7 +30,7 @@ namespace RandomTrainTrailers.UI
 
         public void Display(object data, bool isRowOdd)
         {
-            if (data is RowData<Locomotive> pool)
+            if (data is RowData<Trailer> pool)
             {
                 _data = pool;
                 _isRowOdd = isRowOdd;
@@ -45,8 +47,9 @@ namespace RandomTrainTrailers.UI
 
             _selectedCheckbox.isChecked = _data.Selected;
             _nameField.text = Util.GetVehicleDisplayName(_data.Value.AssetName);
-            _nameField.textColor = _data.Value.VehicleInfo != null ? UIConstants.TextColor : UIConstants.InvalidTextColor;
+            _nameField.textColor = _data.Value.VehicleInfos != null ? UIConstants.TextColor : UIConstants.InvalidTextColor;
             _enabled.isChecked = _data.Value.Enabled;
+            _cargoType.tooltip = _data.Value.CargoType.ToString();
 
             if (_isRowOdd)
             {
@@ -81,7 +84,7 @@ namespace RandomTrainTrailers.UI
                     _data.Selected = _selectedCheckbox.isChecked;
             };
 
-            // Name of locomotive
+            // Name of trailer
             _nameField = AddUIComponent<UILabel>();
             _nameField.relativePosition = UIUtils.RightOf(_selectedCheckbox);
             _nameField.width = 250;
@@ -105,7 +108,7 @@ namespace RandomTrainTrailers.UI
                     }
                 });
             };
-            _deleteButton.tooltip = "Deletes the locomotive";
+            _deleteButton.tooltip = "Deletes the trailer";
 
             // Enabled checkbox
             _enabled = UIUtils.CreateCheckBox(this);
@@ -130,11 +133,41 @@ namespace RandomTrainTrailers.UI
                 OpenSettingsWindow();
             };
 
+            // Cargo type
+            // TODO: I'd actually like a row of icons, one for each cargo type. That way it's easy to quickly see what cargo types are set.
+            _cargoType = UIUtils.CreateButton(this);
+            _cargoType.size = new Vector2(44, 30);
+            _cargoType.atlas = UIUtils.GetAtlas("Thumbnails");
+            _cargoType.normalBgSprite = "ZoningIndustrial";
+            _cargoType.hoveredBgSprite = "ZoningIndustrialHovered";
+            _cargoType.pressedBgSprite = "ZoningIndustrialPressed";
+            _cargoType.relativePosition = UIUtils.LeftOf(_cargoType, _settings);
+            _cargoType.anchor = UIAnchorStyle.Right | UIAnchorStyle.CenterVertical;
+            _cargoType.eventClicked += (c, p) => {
+                if (_data == null)
+                    return;
+
+                // TODO: Flags panel is always behind these windows, probably because it is a child of UIMainPanel
+                UIFlagsPanel.Main.Show("Cargo type", _data.Value.CargoType, (flags) =>
+                {
+                    if (_data == null)
+                        return;
+
+                    _data.Value.CargoType = flags;
+                    UpdateDisplay();
+                });
+            };
+
             _createdComponents = true;
         }
 
         private void OpenSettingsWindow()
         {
+            // TODO: Replace with new UI
+            if (_data.Value.IsMultiTrailer)
+            {
+                UIMultiTrailerPanel.main.Show(_data.Value);
+            }
             return;
             //var window = UIWindow.Create<UITrainPoolSettings>(300, 200, _data.Value.Name);
             //window.DestroyOnClose = true;

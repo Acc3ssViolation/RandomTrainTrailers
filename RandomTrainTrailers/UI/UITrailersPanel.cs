@@ -9,7 +9,7 @@ namespace RandomTrainTrailers.UI
 {
     internal class UITrailersPanel : UIPanel
     {
-        private UIFastList _locomotiveList;
+        private UIFastList _trailerList;
         private TrailerDefinition _trailerDefinition;
         private UIButton _importButton;
         private UIButton _deleteButton;
@@ -31,16 +31,16 @@ namespace RandomTrainTrailers.UI
             var selectionPanel = CreateSelectionButtons();
 
             // Main list of items
-            _locomotiveList = UIFastList.Create<UILocomotiveRow>(this);
-            _locomotiveList.relativePosition = UIUtils.Below(selectionPanel);
-            _locomotiveList.width = width;
-            _locomotiveList.height = height - (selectionPanel.height + Margin);
-            _locomotiveList.rowHeight = UILocomotiveRow.Height;
-            _locomotiveList.backgroundSprite = "UnlockingPanel";
-            _locomotiveList.anchor = UIAnchorStyle.All;
+            _trailerList = UIFastList.Create<UITrailerRow>(this);
+            _trailerList.relativePosition = UIUtils.Below(selectionPanel);
+            _trailerList.width = width;
+            _trailerList.height = height - (selectionPanel.height + Margin);
+            _trailerList.rowHeight = UITrailerRow.Height;
+            _trailerList.backgroundSprite = UIConstants.FastListBackground;
+            _trailerList.anchor = UIAnchorStyle.All;
 
             var buttonPanel = CreateEditButtons();
-            _locomotiveList.height -= buttonPanel.height + Margin;
+            _trailerList.height -= buttonPanel.height + Margin;
         }
 
         private UIPanel CreateSelectionButtons()
@@ -104,13 +104,13 @@ namespace RandomTrainTrailers.UI
             panel.anchor = UIAnchorStyle.Left | UIAnchorStyle.Right | UIAnchorStyle.Bottom;
 
             _importButton = UIUtils.CreateButton(panel);
-            _importButton.text = "Import Locomotives";
+            _importButton.text = "Import Trailers";
             _importButton.width = 180;
             _importButton.relativePosition = new Vector3(0, 0);
             _importButton.anchor = UIAnchorStyle.Left | UIAnchorStyle.CenterVertical;
             _importButton.eventClicked += (_, __) =>
             {
-                ImportAllLocomotives();
+                ImportAllTrailers();
             };
 
             return panel;
@@ -122,30 +122,31 @@ namespace RandomTrainTrailers.UI
             UpdateData();
         }
 
-        private void ImportAllLocomotives()
+        private void ImportAllTrailers()
         {
-            ConfirmPanel.ShowModal(Mod.name, $"Are you sure you want to import all available locomotive assets?", delegate (UIComponent comp, int ret)
+            ConfirmPanel.ShowModal(Mod.name, $"Are you sure you want to import all available trailer assets?", delegate (UIComponent comp, int ret)
             {
                 if (ret == 1)
                 {
-                    ImportAllLocomotivesImpl();
+                    ImportAllTrailersImpl();
                 }
             });
         }
 
-        private void ImportAllLocomotivesImpl()
+        private void ImportAllTrailersImpl()
         {
-            var importer = new LocomotiveImporter();
+            var importer = new TrailerImporter();
             var available = UIDataManager.instance.AvailableDefinition;
             var cargoTrains = VehiclePrefabs.cargoTrains;
             foreach (var train in cargoTrains)
             {
-                if (train.isTrailer || available.Locomotives.Any(l => l.VehicleInfo == train.info))
+                // We only want trailer assets that aren't yet in use as a trailer or as a locomotive
+                if (!train.isTrailer || available.Trailers.Any(l => l.VehicleInfos.Any(i => i == train.info)) || available.Locomotives.Any(l => l.VehicleInfo == train.info))
                     continue;
 
-                var locomotive = importer.ImportFromAsset(train.info);
-                Util.Log($"Imported '{locomotive.AssetName}' as locomotive of type '{locomotive.Type}'");
-                UIDataManager.instance.EditDefinition.Locomotives.Add(locomotive);
+                var trailer = importer.ImportFromAsset(train.info);
+                Util.Log($"Imported '{trailer.AssetName}' as trailer for cargo '{trailer.CargoType}'");
+                UIDataManager.instance.EditDefinition.Trailers.Add(trailer);
             }
 
             UIDataManager.instance.Invalidate();
@@ -162,7 +163,7 @@ namespace RandomTrainTrailers.UI
             foreach (var row in selected)
                 row.Value.Enabled = false;
 
-            _locomotiveList.Refresh();
+            _trailerList.Refresh();
         }
 
         private void EnableSelected()
@@ -175,14 +176,14 @@ namespace RandomTrainTrailers.UI
             foreach (var row in selected)
                 row.Value.Enabled = true;
 
-            _locomotiveList.Refresh();
+            _trailerList.Refresh();
         }
 
         private void SelectAll()
         {
             var allSelected = true;
 
-            foreach (var row in _locomotiveList.rowsData)
+            foreach (var row in _trailerList.rowsData)
             {
                 var rowData = (RowData)row;
                 if (!rowData.Selected)
@@ -192,13 +193,13 @@ namespace RandomTrainTrailers.UI
                 }
             }
 
-            foreach (var row in _locomotiveList.rowsData)
+            foreach (var row in _trailerList.rowsData)
             {
                 var rowData = (RowData)row;
                 rowData.Selected = !allSelected;
             }
 
-            _locomotiveList.Refresh();
+            _trailerList.Refresh();
         }
 
         private void DeleteSelected()
@@ -214,22 +215,22 @@ namespace RandomTrainTrailers.UI
                 {
                     foreach (var row in rows)
                     {
-                        _trailerDefinition.Locomotives.Remove(row.Value);
-                        _locomotiveList.rowsData.Remove(row);
+                        _trailerDefinition.Trailers.Remove(row.Value);
+                        _trailerList.rowsData.Remove(row);
                     }
-                    _locomotiveList.Refresh();
+                    _trailerList.Refresh();
                     UIDataManager.instance.Invalidate();
                 }
             });
         }
 
-        private List<RowData<Locomotive>> GetSelectedRows()
+        private List<RowData<Trailer>> GetSelectedRows()
         {
-            var result = new List<RowData<Locomotive>>();
+            var result = new List<RowData<Trailer>>();
 
-            foreach (var row in _locomotiveList.rowsData)
+            foreach (var row in _trailerList.rowsData)
             {
-                var rowData = (RowData<Locomotive>)row;
+                var rowData = (RowData<Trailer>)row;
                 if (rowData.Selected)
                     result.Add(rowData);
             }
@@ -237,27 +238,27 @@ namespace RandomTrainTrailers.UI
             return result;
         }
 
-        private void DeleteLocomotive(RowData<Locomotive> rowData)
+        private void DeleteTrailer(RowData<Trailer> rowData)
         {
-            _trailerDefinition.Locomotives.Remove(rowData.Value);
-            _locomotiveList.rowsData.Remove(rowData);
-            _locomotiveList.Refresh();
+            _trailerDefinition.Trailers.Remove(rowData.Value);
+            _trailerList.rowsData.Remove(rowData);
+            _trailerList.Refresh();
             UIDataManager.instance.Invalidate();
         }
 
         private void UpdateData()
         {
-            if (_locomotiveList == null || _trailerDefinition == null)
+            if (_trailerList == null || _trailerDefinition == null)
                 return;
 
             var list = new FastList<object>();
 
-            foreach (var pool in _trailerDefinition.Locomotives)
+            foreach (var pool in _trailerDefinition.Trailers)
             {
-                list.Add(new RowData<Locomotive>(pool, DeleteLocomotive));
+                list.Add(new RowData<Trailer>(pool, DeleteTrailer));
             }
 
-            _locomotiveList.rowsData = list;
+            _trailerList.rowsData = list;
         }
     }
 }

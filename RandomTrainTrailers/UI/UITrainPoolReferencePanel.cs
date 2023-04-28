@@ -15,7 +15,6 @@ namespace RandomTrainTrailers.UI
             Trailers,
         }
 
-        private TrailerDefinition _trailerDefinition;
         private TrainPool _pool;
         private DataType _type;
 
@@ -92,9 +91,8 @@ namespace RandomTrainTrailers.UI
             return list;
         }
 
-        public void SetData(TrailerDefinition trailerDefinition, TrainPool pool, DataType type, UITrainPoolRow parentRow)
+        public void SetData(TrainPool pool, DataType type, UITrainPoolRow parentRow)
         {
-            _trailerDefinition = trailerDefinition;
             _pool = pool;
             _type = type;
             _parentRow = parentRow;
@@ -190,28 +188,30 @@ namespace RandomTrainTrailers.UI
             var assigned = new FastList<object>();
             var available = new FastList<object>();
 
+            var availableDef = UIDataManager.instance.AvailableDefinition;
+
             if (_type == DataType.Locomotives)
             {
-                foreach (var pool in _pool.Locomotives)
-                    assigned.Add(new RowData<ItemReference>(pool, null));
+                foreach (var locomotiveRef in _pool.Locomotives)
+                    assigned.Add(new RowData<ItemReference>(locomotiveRef, null));
 
-                foreach (var loco in _trailerDefinition.Locomotives)
+                foreach (var locomotive in availableDef.Locomotives)
                 {
-                    if (_pool.Locomotives.Any(l => l.Name == loco.AssetName))
+                    if (_pool.Locomotives.Any(l => l.Name == locomotive.AssetName))
                         continue;
-                    available.Add(new RowData<ItemReference>(new TrainPool.LocomotiveReference { Name = loco.AssetName }, null));
+                    available.Add(new RowData<ItemReference>(new TrainPool.LocomotiveReference(locomotive), null));
                 }
             }
             else if (_type == DataType.Trailers)
             {
-                foreach (var pool in _pool.Trailers)
-                    assigned.Add(new RowData<ItemReference>(pool, null));
+                foreach (var trailerRef in _pool.Trailers)
+                    assigned.Add(new RowData<ItemReference>(trailerRef, null));
 
-                foreach (var trailer in _trailerDefinition.Trailers)
+                foreach (var trailer in availableDef.Trailers)
                 {
                     if (_pool.Trailers.Any(l => l.Name == trailer.AssetName))
                         continue;
-                    available.Add(new RowData<ItemReference>(new TrainPool.TrailerReference { Name = trailer.AssetName }, null));
+                    available.Add(new RowData<ItemReference>(new TrainPool.TrailerReference(trailer), null));
                 }
             }
             else
