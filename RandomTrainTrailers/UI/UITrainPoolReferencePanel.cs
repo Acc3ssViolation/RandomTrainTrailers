@@ -8,13 +8,17 @@ using UnityEngine;
 
 namespace RandomTrainTrailers.UI
 {
-    internal class UITrainPoolReferencePanel : UIPanel
+    internal class UITrainPoolReferencePanel : UIPanel, IUIWindowPanel
     {
         public enum DataType
         {
             Locomotives,
             Trailers,
         }
+
+        public float DefaultWidth => 600;
+        public float DefaultHeight => 500;
+        public string DefaultTitle => "Locomotives in pool";
 
         private TrainPool _pool;
         private DataType _type;

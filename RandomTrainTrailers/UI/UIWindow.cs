@@ -5,6 +5,13 @@ using UnityEngine;
 
 namespace RandomTrainTrailers.UI
 {
+    internal interface IUIWindowPanel
+    {
+        float DefaultWidth { get; }
+        float DefaultHeight { get; }
+        string DefaultTitle { get; }
+    }
+
     internal class UIWindow : UIPanel
     {
         public string Title
@@ -128,7 +135,19 @@ namespace RandomTrainTrailers.UI
             return null;
         }
 
-        public static UIWindow Create<T>(int width, int height, string title) where T : UIPanel
+        public static UIWindow Create<T>() where T : UIPanel, IUIWindowPanel
+        {
+            // There must be a nicer way to do this :p
+            var temp = new GameObject().AddComponent<T>();
+            var title = temp.DefaultTitle;
+            var width = temp.DefaultWidth;
+            var height = temp.DefaultHeight;
+            Destroy(temp.gameObject);
+
+            return Create<T>(width, height, title);
+        }
+
+        private static UIWindow Create<T>(float width, float height, string title) where T : UIPanel
         {
             var go = new GameObject(title);
             var view = UIView.GetAView();

@@ -4,8 +4,12 @@ using UnityEngine;
 
 namespace RandomTrainTrailers.UI
 {
-    internal class UITrainPoolSettings : UIPanel
+    internal class UITrainPoolSettings : UIPanel, IUIWindowPanel
     {
+        public float DefaultWidth => 300;
+        public float DefaultHeight => 200;
+        public string DefaultTitle => "{TrainPool}";
+
         private TrainPool _pool;
 
         private UIIntField _minLength;

@@ -1,10 +1,49 @@
 ﻿using RandomTrainTrailers.Definition;
+using System.Collections.Generic;
 using static VehicleInfo;
 
 namespace RandomTrainTrailers
 {
     internal class TrailerImporter
     {
+        private static readonly Dictionary<string, Trailer> Empty = new Dictionary<string, Trailer>();
+
+        private IDictionary<string, Trailer> _trailers = Empty;
+
+        public void SetTrailers(TrailerDefinition trailerDefinition)
+        {
+            if (_trailers == Empty)
+                _trailers = new Dictionary<string, Trailer>();
+            else
+                _trailers.Clear();
+
+            foreach (var collection in trailerDefinition.Collections)
+            {
+                foreach (var trailer in collection.Trailers)
+                {
+                    if (trailer.IsCollection)
+                        continue;
+
+                    if (_trailers.ContainsKey(trailer.AssetName))
+                        Util.LogWarning($"Duplicate trailer definition '{trailer.AssetName}'");
+                    _trailers[trailer.AssetName] = trailer;
+                }
+            }
+
+            foreach (var vehicle in trailerDefinition.Vehicles)
+            {
+                foreach (var trailer in vehicle.Trailers)
+                {
+                    if (trailer.IsCollection)
+                        continue;
+
+                    if (_trailers.ContainsKey(trailer.AssetName))
+                        Util.LogWarning($"Duplicate trailer definition '{trailer.AssetName}'");
+                    _trailers[trailer.AssetName] = trailer;
+                }
+            }
+        }
+
         public Trailer ImportFromAsset(ref VehicleTrailer trailer)
             => ImportFromAsset(trailer.m_info, trailer.m_invertProbability);
 
@@ -23,6 +62,15 @@ namespace RandomTrainTrailers
 
         private CargoFlags GuessCargoType(VehicleInfo vehicleInfo)
         {
+            if (_trailers.TryGetValue(vehicleInfo.name, out var trailerDef))
+            {
+                if (trailerDef.CargoType != CargoFlags.None)
+                {
+                    Util.Log($"Imported cargo type for '{vehicleInfo.name}' from existing trailer definition");
+                    return trailerDef.CargoType;
+                }
+            }
+
             if (vehicleInfo.m_subMeshes == null)
                 return CargoFlags.None;
 

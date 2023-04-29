@@ -5,6 +5,7 @@ namespace RandomTrainTrailers.UI
 {
     internal class UITrainPoolPanel : UIBaseListPanel<TrainPool, UITrainPoolRow>
     {
+        public override string DefaultTitle => "Train Pools";
         protected override float RowHeight => UITrainPoolRow.Height;
 
         protected override bool Filter(TrainPool item, string filter)

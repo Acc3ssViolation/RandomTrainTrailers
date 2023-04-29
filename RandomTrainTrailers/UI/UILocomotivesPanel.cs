@@ -1,6 +1,7 @@
 ﻿using ColossalFramework.UI;
 using RandomTrainTrailers.Definition;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 
@@ -9,7 +10,9 @@ namespace RandomTrainTrailers.UI
     internal class UILocomotivesPanel : UIBaseListPanel<Locomotive, UILocomotiveRow>
     {
         private UIButton _importButton;
+        private UIButton _createButton;
 
+        public override string DefaultTitle => "Locomotives";
         protected override float RowHeight => UILocomotiveRow.Height;
 
         protected override void CreateEditButtons(UIPanel panel)
@@ -22,6 +25,15 @@ namespace RandomTrainTrailers.UI
             _importButton.eventClicked += (_, __) =>
             {
                 ImportAllLocomotives();
+            };
+
+            _createButton = UIUtils.CreateButton(panel);
+            _createButton.relativePosition = UIUtils.RightOf(_importButton);
+            _createButton.text = "Create";
+            _createButton.anchor = UIAnchorStyle.Left | UIAnchorStyle.CenterVertical;
+            _createButton.eventClicked -= (_, __) =>
+            {
+                CreateLocomotive();
             };
         }
 
@@ -53,6 +65,33 @@ namespace RandomTrainTrailers.UI
 
             UIDataManager.instance.Invalidate();
             UpdateData();
+        }
+
+        private void CreateLocomotive()
+        {
+            // TODO: Use new panel
+            Util.Log("CreateLocomotive 1");
+            var findAsset = UIFindAssetPanel.main;
+            findAsset.Show((vehicle) =>
+            {
+                if (vehicle == null)
+                    return;
+
+                var available = UIDataManager.instance.AvailableDefinition;
+                if (available.Locomotives.Any(l => l.VehicleInfo == vehicle.info) || available.Trailers.Any(l => l.VehicleInfos?.Contains(vehicle.info) ?? false))
+                {
+                    Util.ShowWarningMessage($"Vehicle {vehicle.localeName} is already in use as a locomotive or trailer");
+                    return;
+                }
+
+                var importer = new LocomotiveImporter();
+                var locomotive = importer.ImportFromAsset(vehicle.info);
+                Util.Log($"Imported '{locomotive.AssetName}' as locomotive of type '{locomotive.Type}'");
+                UIDataManager.instance.EditDefinition.Locomotives.Add(locomotive);
+                UIDataManager.instance.Invalidate();
+                UpdateData();
+            }, UIFindAssetPanel.DisplayMode.Both);
+            Util.Log("CreateLocomotive 2");
         }
 
         protected override bool Filter(Locomotive item, string filter)

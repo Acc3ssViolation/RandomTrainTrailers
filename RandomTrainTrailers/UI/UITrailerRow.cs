@@ -48,6 +48,7 @@ namespace RandomTrainTrailers.UI
             _selectedCheckbox.isChecked = _data.Selected;
             _nameField.text = Util.GetVehicleDisplayName(_data.Value.AssetName);
             _nameField.textColor = _data.Value.VehicleInfos != null ? UIConstants.TextColor : UIConstants.InvalidTextColor;
+            _nameField.tooltip = _data.Value.AssetName;
             _enabled.isChecked = _data.Value.Enabled;
             _cargoType.tooltip = _data.Value.CargoType.ToString();
 
@@ -168,11 +169,13 @@ namespace RandomTrainTrailers.UI
             {
                 UIMultiTrailerPanel.main.Show(_data.Value);
             }
-            return;
-            //var window = UIWindow.Create<UITrainPoolSettings>(300, 200, _data.Value.Name);
-            //window.DestroyOnClose = true;
-            //((UITrainPoolSettings)window.Content).SetData(_data.Value);
-            //window.Open();
+
+            // Single trailer window?
+            var window = UIWindow.Create<UITrailerSettings>();
+            window.Title = _nameField.text;
+            window.DestroyOnClose = true;
+            ((UITrailerSettings)window.Content).SetData(_data.Value);
+            window.Open();
         }
     }
 }

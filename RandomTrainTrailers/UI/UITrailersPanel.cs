@@ -10,6 +10,7 @@ namespace RandomTrainTrailers.UI
     {
         private UIButton _importButton;
 
+        public override string DefaultTitle => "Trailers";
         protected override float RowHeight => UITrailerRow.Height;
 
         protected override void CreateEditButtons(UIPanel panel)
@@ -39,12 +40,13 @@ namespace RandomTrainTrailers.UI
         private void ImportAllTrailersImpl()
         {
             var importer = new TrailerImporter();
+            importer.SetTrailers(TrailerDefinition);
             var available = UIDataManager.instance.AvailableDefinition;
             var cargoTrains = VehiclePrefabs.cargoTrains;
             foreach (var train in cargoTrains)
             {
                 // We only want trailer assets that aren't yet in use as a trailer or as a locomotive
-                if (!train.isTrailer || available.Trailers.Any(l => l.VehicleInfos.Any(i => i == train.info)) || available.Locomotives.Any(l => l.VehicleInfo == train.info))
+                if (!train.isTrailer || available.Trailers.Any(l => (l.VehicleInfos?.Any(i => i == train.info)) ?? false) || available.Locomotives.Any(l => l.VehicleInfo == train.info))
                     continue;
 
                 var trailer = importer.ImportFromAsset(train.info);

@@ -134,9 +134,9 @@ namespace RandomTrainTrailers.UI
             go.transform.parent = this.gameObject.transform;
             go.AddComponent<UIFlagsPanel>();
 
-            _trainPoolWindow = UIWindow.Create<UITrainPoolPanel>(870, 500, "Train Pools");
-            _locomotivePoolWindow = UIWindow.Create<UILocomotivesPanel>(870, 500, "Locomotives");
-            _trailerPoolWindow = UIWindow.Create<UITrailersPanel>(870, 500, "Trailers");
+            _trainPoolWindow = UIWindow.Create<UITrainPoolPanel>();
+            _locomotivePoolWindow = UIWindow.Create<UILocomotivesPanel>();
+            _trailerPoolWindow = UIWindow.Create<UITrailersPanel>();
 
             // Adding main button
             UITabstrip toolStrip = view.FindUIComponent<UITabstrip>("MainToolstrip");

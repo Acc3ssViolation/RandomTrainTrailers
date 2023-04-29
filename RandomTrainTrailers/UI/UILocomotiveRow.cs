@@ -46,6 +46,7 @@ namespace RandomTrainTrailers.UI
             _selectedCheckbox.isChecked = _data.Selected;
             _nameField.text = Util.GetVehicleDisplayName(_data.Value.AssetName);
             _nameField.textColor = _data.Value.VehicleInfo != null ? UIConstants.TextColor : UIConstants.InvalidTextColor;
+            _nameField.tooltip = _data.Value.AssetName;
             _enabled.isChecked = _data.Value.Enabled;
 
             if (_isRowOdd)
@@ -135,7 +136,8 @@ namespace RandomTrainTrailers.UI
 
         private void OpenSettingsWindow()
         {
-            var window = UIWindow.Create<UILocomotiveSettings>(300, 460, _nameField.text);
+            var window = UIWindow.Create<UILocomotiveSettings>();
+            window.Title = _nameField.text;
             window.DestroyOnClose = true;
             ((UILocomotiveSettings)window.Content).SetData(_data.Value);
             window.Open();

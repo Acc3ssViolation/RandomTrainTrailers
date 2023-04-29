@@ -16,13 +16,13 @@ namespace RandomTrainTrailers.Definition
         /// Chance that this trailer is inverted, percentage, defaults to 0.
         /// </summary>
         [XmlAttribute("invertProbability"), DefaultValue(0)]
-        public int InvertProbability { get; set; }
+        public int InvertProbability;
 
         /// <summary>
         /// Weight for the random selection, defaults to 10. (int)
         /// </summary>
         [XmlAttribute("weight"), DefaultValue(10)]
-        public int Weight { get; set; } = 10;
+        public int Weight = 10;
 
         /// <summary>
         /// List of sub trailers. When this has elements this trailer is considered to be a Multi Trailer.

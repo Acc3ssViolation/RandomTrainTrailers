@@ -5,8 +5,14 @@ using UnityEngine;
 
 namespace RandomTrainTrailers.UI
 {
-    internal abstract class UIBaseListPanel<DataType, RowType> : UIPanel where RowType : UIPanel, IUIFastListRow where DataType : IEnableable
+    internal abstract class UIBaseListPanel<DataType, RowType> : UIPanel, IUIWindowPanel where RowType : UIPanel, IUIFastListRow where DataType : IEnableable
     {
+        public virtual float DefaultWidth => 870;
+
+        public virtual float DefaultHeight => 500;
+
+        public abstract string DefaultTitle { get; }
+
         private FilterableFastList<DataType> _itemList;
         private TrailerDefinition _trailerDefinition;
         private UIButton _deleteButton;
@@ -15,6 +21,7 @@ namespace RandomTrainTrailers.UI
         private UIButton _disableButton;
 
         protected FilterableFastList<DataType> List => _itemList;
+        protected TrailerDefinition TrailerDefinition => _trailerDefinition;
 
         protected abstract float RowHeight { get; }
 
