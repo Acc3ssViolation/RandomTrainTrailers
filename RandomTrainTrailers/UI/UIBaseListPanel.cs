@@ -5,13 +5,11 @@ using UnityEngine;
 
 namespace RandomTrainTrailers.UI
 {
-    internal abstract class UIBaseListPanel<DataType, RowType> : UIPanel, IUIWindowPanel where RowType : UIPanel, IUIFastListRow where DataType : IEnableable
+    internal abstract class UIBaseListPanel<DataType, RowType> : UIWindowPanel where RowType : UIPanel, IUIFastListRow where DataType : IEnableable
     {
-        public virtual float DefaultWidth => 870;
+        public override float DefaultWidth => 870;
 
-        public virtual float DefaultHeight => 500;
-
-        public abstract string DefaultTitle { get; }
+        public override float DefaultHeight => 500;
 
         private FilterableFastList<DataType> _itemList;
         private TrailerDefinition _trailerDefinition;

@@ -68,17 +68,17 @@ namespace RandomTrainTrailers.UI
 
         private Definition.Vehicle m_copyData;
         private TrailerImporter _trailerImporter = new TrailerImporter();
-        private UIWindow _trainPoolWindow;
-        private UIWindow _locomotivePoolWindow;
-        private UIWindow _trailerPoolWindow;
+        private UIWindowHandle<UITrainPoolPanel> _trainPoolWindow;
+        private UIWindowHandle<UILocomotivesPanel> _locomotivePoolWindow;
+        private UIWindowHandle<UITrailersPanel> _trailerPoolWindow;
 
         void LoadUserDef()
         {
             TrailerManager.Setup();
             m_userDefinition = UIDataManager.instance.EditDefinition;
-            ((UITrainPoolPanel)_trainPoolWindow.Content).SetData(m_userDefinition);
-            ((UILocomotivesPanel)_locomotivePoolWindow.Content).SetData(m_userDefinition);
-            ((UITrailersPanel)_trailerPoolWindow.Content).SetData(m_userDefinition);
+            _trainPoolWindow.Content.SetData(m_userDefinition);
+            _locomotivePoolWindow.Content.SetData(m_userDefinition);
+            _trailerPoolWindow.Content.SetData(m_userDefinition);
         }
 
         void SaveUserDef()
@@ -129,10 +129,6 @@ namespace RandomTrainTrailers.UI
             go = new GameObject("RTTMultiTrailerPanel");
             go.transform.parent = this.gameObject.transform;
             go.AddComponent<UIMultiTrailerPanel>();
-
-            go = new GameObject("RTTFlagsPanel");
-            go.transform.parent = this.gameObject.transform;
-            go.AddComponent<UIFlagsPanel>();
 
             _trainPoolWindow = UIWindow.Create<UITrainPoolPanel>();
             _locomotivePoolWindow = UIWindow.Create<UILocomotivesPanel>();
@@ -672,6 +668,18 @@ namespace RandomTrainTrailers.UI
                 _trailerPoolWindow.Open();
             };
             button.tooltip = "Open the trailer edit window.";
+            prevButton = button;
+
+            button = UIUtils.CreateButton(this);
+            button.text = "Atlas";
+            button.relativePosition = UIUtils.RightOf(prevButton);
+            button.eventClicked += (c, m) =>
+            {
+                var windowHandle = UIWindow.Create<UIAtlasViewer>();
+                windowHandle.Window.DestroyOnClose = true;
+                windowHandle.Content.SetData(m_userDefinition);
+                windowHandle.Open();
+            };
 
 
             LoadUserDef();

@@ -4,120 +4,122 @@ using UnityEngine;
 
 namespace RandomTrainTrailers.UI
 {
-    public class UIFlagsPanel : UIPanel
+    public class UIFlagsPanel : UIWindowPanel
     {
-        public static UIFlagsPanel Main { get; private set; }
+        private static UIWindowHandle<UIFlagsPanel> _main;
 
-        public const int WIDTH = 250;
-        public const int HEIGHT = 400;
+        public static UIWindowHandle<UIFlagsPanel> Main
+        {
+            get
+            {
+                if (_main == null)
+                {
+                    _main = UIWindow.Create<UIFlagsPanel>();
+                }
+                return _main;
+            }
+        }
 
-        public Dictionary<UICheckBox, CargoFlags> m_boxFlagDict = new Dictionary<UICheckBox, CargoFlags>();
-        public Dictionary<CargoFlags, UICheckBox> m_flagBoxDict = new Dictionary<CargoFlags, UICheckBox>();
+        public override float DefaultWidth => 250;
 
-        private UILabel m_label;
-        private UIPanel m_flagsPanel;
-        private UIButton m_confirmButton;
+        public override float DefaultHeight => 400;
+
+        public override string DefaultTitle => "Cargo types";
 
         public delegate void OnFlagsSet(CargoFlags flags);
 
-        private OnFlagsSet m_callback1;
+        private Dictionary<UICheckBox, CargoFlags> _boxFlagDict = new Dictionary<UICheckBox, CargoFlags>();
+        private Dictionary<CargoFlags, UICheckBox> _flagBoxDict = new Dictionary<CargoFlags, UICheckBox>();
+        private UIPanel _flagsPanel;
+        private UIButton _confirmButton;
+        private OnFlagsSet _callback;
+        private CargoFlags _flags;
+        private bool _allowEdit;
 
         public override void Start()
         {
-            Main = this;
             base.Start();
-
-            UIView view = UIView.GetAView();
-            width = WIDTH;
-            height = HEIGHT;
-            backgroundSprite = "MenuPanel2";
-            name = Mod.name + " Flags Panel";
-            canFocus = true;
-            isInteractive = true;
-            isVisible = false;
-            relativePosition = new Vector3(Mathf.FloorToInt((view.fixedWidth - width) / 2), Mathf.FloorToInt((view.fixedHeight - height) / 2));
-
             CreateComponents();
+            UpdateDisplay();
         }
 
-        public void Show(string title, CargoFlags checkedFlags, OnFlagsSet callback, bool allowEdit = true)
+        protected override void OnWindowSet(UIWindow window)
         {
-            //Util.Log("-------------------------------------------");
-            //Util.Log("checkedFlags: " + checkedFlags.ToString());
-            m_callback1 = callback;
-            m_label.text = title;
+            Util.Log($"{GetType()}.{nameof(OnWindowSet)}");
+            window.Resizable = false;
+        }
 
-            m_flagsPanel.isVisible = true;
+        public void Show(CargoFlags checkedFlags, OnFlagsSet callback, bool allowEdit = true)
+        {
+            _callback = callback;
+            _flags = checkedFlags;
+            _allowEdit = allowEdit;
+           
+            Window.Open();
+            if (_flagsPanel != null)
+                UpdateDisplay();
+        }
 
-            foreach(var kv in m_flagBoxDict)
+        private void UpdateDisplay()
+        {
+            foreach (var kv in _flagBoxDict)
             {
-                kv.Value.isChecked = ((checkedFlags & kv.Key) > 0);
-               // Util.Log(kv.Key.ToString() + " - " + kv.Value.isChecked.ToString());
+                kv.Value.isChecked = (_flags & kv.Key) > 0;
             }
-
-            Show(true);
-            m_confirmButton.isEnabled = allowEdit;
-            m_label.relativePosition = new Vector3(WIDTH / 2 - m_label.width / 2, 10);
+            _confirmButton.isEnabled = _allowEdit;
         }
 
         private void CreateComponents()
         {
-            m_label = AddUIComponent<UILabel>();
-            m_label.text = "Cargo options";
-            m_label.relativePosition = new Vector3(WIDTH / 2 - m_label.width / 2, 10);
-
-            // Drag handle
-            UIDragHandle handle = AddUIComponent<UIDragHandle>();
-            handle.target = this;
-            handle.constrainToScreen = true;
-            handle.width = WIDTH;
-            handle.height = 40;
-            handle.relativePosition = Vector3.zero;
-
-            m_flagsPanel = CreateFlagCheckboxes(new Vector3(10, handle.height + 10), 250, HEIGHT - 100, m_boxFlagDict, m_flagBoxDict);
+            _flagsPanel = CreateFlagCheckboxes(Vector3.zero, width / 2, height - 40, _boxFlagDict, _flagBoxDict);
 
             // Buttons
-            m_confirmButton = UIUtils.CreateButton(this);
-            m_confirmButton.text = "Done";
-            m_confirmButton.relativePosition = new Vector3(WIDTH / 2 - m_confirmButton.width - 10, HEIGHT - m_confirmButton.height - 10);
-            m_confirmButton.eventClicked += (c, p) =>
+            var panel = AddUIComponent<UIPanel>();
+            panel.relativePosition = UIUtils.Below(_flagsPanel);
+            panel.width = width;
+            panel.height = 30;
+            panel.anchor = UIAnchorStyle.CenterHorizontal | UIAnchorStyle.Bottom;
+
+            _confirmButton = UIUtils.CreateButton(panel);
+            _confirmButton.text = "Done";
+            _confirmButton.relativePosition = Vector3.zero;
+            _confirmButton.eventClicked += (c, p) =>
             {
                 Done();
             };
 
-            UIButton cancelButton = UIUtils.CreateButton(this);
+            UIButton cancelButton = UIUtils.CreateButton(panel);
             cancelButton.text = "Cancel";
-            cancelButton.relativePosition = new Vector3(WIDTH / 2 + 10, HEIGHT - cancelButton.height - 10);
+            cancelButton.relativePosition = UIUtils.RightOf(_confirmButton);
             cancelButton.eventClicked += (c, p) =>
             {
-                isVisible = false;
+                Window.Close();
             };
+
+            panel.FitChildrenHorizontally();
         }
 
         private void Done()
         {
-            if(m_callback1 != null)
+            if(_callback != null)
             {
                 CargoFlags flags = 0;
-                foreach(var v in m_boxFlagDict)
+                foreach(var v in _boxFlagDict)
                 {
                     if(v.Key.isChecked)
                     {
                         flags |= v.Value;
-                        //Util.Log(v.Value.ToString() + " - " + v.Key.isChecked.ToString());
                     }
                 }
-                m_callback1.Invoke(flags);
+                _callback.Invoke(flags);
             }
-            isVisible = false;
+            Window.Close();
         }
-
-        
 
         private UIPanel CreateFlagCheckboxes(Vector3 startLocation, float halfWidth, float maxHeight, Dictionary<UICheckBox, CargoFlags> checkboxDict, Dictionary<CargoFlags, UICheckBox> flagDict)
         {
             UIPanel panel = AddUIComponent<UIPanel>();
-            panel.width = halfWidth;
+            panel.width = halfWidth * 2;
             panel.relativePosition = startLocation;
 
             float y = 0;
@@ -129,7 +131,7 @@ namespace RandomTrainTrailers.UI
                 UICheckBox checkbox = UIUtils.CreateCheckBox(panel);
                 checkbox.text = flags[i].ToString();
                 checkbox.isChecked = false;
-                checkbox.width = halfWidth - 10;
+                checkbox.FitChildrenHorizontally();
                 checkbox.relativePosition = new Vector3(x, y);
                 y += checkbox.height + 5;
  
@@ -137,7 +139,6 @@ namespace RandomTrainTrailers.UI
                 {
                     y = 0;
                     x += halfWidth;
-                    panel.width += halfWidth;
                 }
 
                 flagDict.Add(flags[i], checkbox);

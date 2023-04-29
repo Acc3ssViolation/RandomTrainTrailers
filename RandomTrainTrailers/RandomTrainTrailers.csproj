@@ -99,8 +99,10 @@
     <Compile Include="UI\FilterableFastList.cs" />
     <Compile Include="UI\RowData.cs" />
     <Compile Include="UI\UIAssetRow.cs" />
+    <Compile Include="UI\UIAtlasViewer.cs" />
     <Compile Include="UI\UIBaseListPanel.cs" />
     <Compile Include="UI\UIBlacklistRow.cs" />
+    <Compile Include="UI\UICargoTypeRow.cs" />
     <Compile Include="UI\UIConstants.cs" />
     <Compile Include="UI\UIDataManager.cs" />
     <Compile Include="UI\UIFlagsPanel.cs" />

@@ -6,13 +6,13 @@ using UnityEngine;
 
 namespace RandomTrainTrailers.UI
 {
-    internal class UILocomotiveSettings : UIPanel, IUIWindowPanel
+    internal class UILocomotiveSettings : UIWindowPanel
     {
-        public float DefaultWidth => 300;
+        public override float DefaultWidth => 300;
 
-        public float DefaultHeight => 460;
+        public override float DefaultHeight => 460;
 
-        public string DefaultTitle => "{Locomotive}";
+        public override string DefaultTitle => "{Locomotive}";
 
         private Locomotive _locomotive;
 

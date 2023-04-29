@@ -166,25 +166,25 @@ namespace RandomTrainTrailers.UI
         private void OpenLocomotiveWindow()
         {
             var window = UIWindow.Create<UITrainPoolReferencePanel>();
-            window.DestroyOnClose = true;
-            ((UITrainPoolReferencePanel)window.Content).SetData(_data.Value, UITrainPoolReferencePanel.DataType.Locomotives, this);
+            window.Window.DestroyOnClose = true;
+            window.Content.SetData(_data.Value, UITrainPoolReferencePanel.DataType.Locomotives, this);
             window.Open();
         }
 
         private void OpenWagonWindow()
         {
             var window = UIWindow.Create<UITrainPoolReferencePanel>();
-            window.DestroyOnClose = true;
-            ((UITrainPoolReferencePanel)window.Content).SetData(_data.Value, UITrainPoolReferencePanel.DataType.Trailers, this);
+            window.Window.DestroyOnClose = true;
+            window.Content.SetData(_data.Value, UITrainPoolReferencePanel.DataType.Trailers, this);
             window.Open();
         }
 
         private void OpenSettingsWindow()
         {
             var window = UIWindow.Create<UITrainPoolSettings>();
-            window.Title = _data.Value.Name;
-            window.DestroyOnClose = true;
-            ((UITrainPoolSettings)window.Content).SetData(_data.Value);
+            window.Window.Title = _data.Value.Name;
+            window.Window.DestroyOnClose = true;
+            window.Content.SetData(_data.Value);
             window.Open();
         }
     }

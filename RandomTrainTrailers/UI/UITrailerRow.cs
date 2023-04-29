@@ -18,7 +18,7 @@ namespace RandomTrainTrailers.UI
         private UILabel _nameField;
         private UIButton _settings;
         private UICheckBox _enabled;
-        private UIButton _cargoType;
+        private UICargoTypeRow _cargoType;
         
         public void Deselect(bool isRowOdd)
         {
@@ -50,7 +50,7 @@ namespace RandomTrainTrailers.UI
             _nameField.textColor = _data.Value.VehicleInfos != null ? UIConstants.TextColor : UIConstants.InvalidTextColor;
             _nameField.tooltip = _data.Value.AssetName;
             _enabled.isChecked = _data.Value.Enabled;
-            _cargoType.tooltip = _data.Value.CargoType.ToString();
+            _cargoType.Flags = _data.Value.CargoType;
 
             if (_isRowOdd)
             {
@@ -135,21 +135,15 @@ namespace RandomTrainTrailers.UI
             };
 
             // Cargo type
-            // TODO: I'd actually like a row of icons, one for each cargo type. That way it's easy to quickly see what cargo types are set.
-            _cargoType = UIUtils.CreateButton(this);
-            _cargoType.size = new Vector2(44, 30);
-            _cargoType.atlas = UIUtils.GetAtlas("Thumbnails");
-            _cargoType.normalBgSprite = "ZoningIndustrial";
-            _cargoType.hoveredBgSprite = "ZoningIndustrialHovered";
-            _cargoType.pressedBgSprite = "ZoningIndustrialPressed";
+            _cargoType = AddUIComponent<UICargoTypeRow>();
+            _cargoType.Summarized = true;
             _cargoType.relativePosition = UIUtils.LeftOf(_cargoType, _settings);
             _cargoType.anchor = UIAnchorStyle.Right | UIAnchorStyle.CenterVertical;
             _cargoType.eventClicked += (c, p) => {
                 if (_data == null)
                     return;
 
-                // TODO: Flags panel is always behind these windows, probably because it is a child of UIMainPanel
-                UIFlagsPanel.Main.Show("Cargo type", _data.Value.CargoType, (flags) =>
+                UIFlagsPanel.Main.Content.Show(_data.Value.CargoType, (flags) =>
                 {
                     if (_data == null)
                         return;
@@ -172,9 +166,9 @@ namespace RandomTrainTrailers.UI
 
             // Single trailer window?
             var window = UIWindow.Create<UITrailerSettings>();
-            window.Title = _nameField.text;
-            window.DestroyOnClose = true;
-            ((UITrailerSettings)window.Content).SetData(_data.Value);
+            window.Window.Title = _nameField.text;
+            window.Window.DestroyOnClose = true;
+            window.Content.SetData(_data.Value);
             window.Open();
         }
     }

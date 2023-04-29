@@ -1,5 +1,6 @@
 ﻿using ColossalFramework.UI;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace RandomTrainTrailers.UI
@@ -198,21 +199,36 @@ namespace RandomTrainTrailers.UI
 
         private static Dictionary<string, UITextureAtlas> _atlases;
 
-        public static UITextureAtlas GetAtlas(string name)
+        private static void EnsureAtlases()
         {
-            if(_atlases == null)
+            if (_atlases == null)
             {
                 _atlases = new Dictionary<string, UITextureAtlas>();
 
                 UITextureAtlas[] atlases = Resources.FindObjectsOfTypeAll(typeof(UITextureAtlas)) as UITextureAtlas[];
-                for(int i = 0; i < atlases.Length; i++)
+                for (int i = 0; i < atlases.Length; i++)
                 {
-                    if(!_atlases.ContainsKey(atlases[i].name))
+                    if (!_atlases.ContainsKey(atlases[i].name))
+                    {
                         _atlases.Add(atlases[i].name, atlases[i]);
+                    }
                 }
             }
+        }
 
+        public static UITextureAtlas GetAtlas(string name)
+        {
+            EnsureAtlases();
             return _atlases[name];
+        }
+
+        public static IList<UITextureAtlas> Atlases
+        {
+            get
+            {
+                EnsureAtlases();
+                return _atlases.Values.ToList();
+            }
         }
     }
 }

@@ -121,7 +121,7 @@ namespace RandomTrainTrailers.UI
 
                 if(m_currentDataItem != null)
                 {
-                    UIFlagsPanel.Main.Show("Cargo type", m_currentDataItem.CargoType, (flags) =>
+                    UIFlagsPanel.Main.Content.Show(m_currentDataItem.CargoType, (flags) =>
                     {
                         if(m_currentDataItem != null)
                         {

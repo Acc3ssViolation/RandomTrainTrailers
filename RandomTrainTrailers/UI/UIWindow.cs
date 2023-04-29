@@ -5,14 +5,58 @@ using UnityEngine;
 
 namespace RandomTrainTrailers.UI
 {
-    internal interface IUIWindowPanel
+    public interface IUIWindowPanel
     {
         float DefaultWidth { get; }
         float DefaultHeight { get; }
         string DefaultTitle { get; }
+
+        void SetWindow(UIWindow window);
     }
 
-    internal class UIWindow : UIPanel
+    public abstract class UIWindowPanel : UIPanel, IUIWindowPanel
+    {
+        public abstract float DefaultWidth { get; }
+        public abstract float DefaultHeight { get; }
+        public abstract string DefaultTitle { get; }
+
+        public UIWindow Window { get; private set; }
+
+        public void SetWindow(UIWindow window)
+        {
+            Util.Log($"{GetType()}.{nameof(SetWindow)}");
+            Window = window;
+            OnWindowSet(window);
+        }
+
+        protected virtual void OnWindowSet(UIWindow window)
+        {
+        }
+    }
+
+    public class UIWindowHandle<T> where T : UIPanel
+    {
+        public UIWindow Window { get; }
+        public T Content { get; }
+
+        public UIWindowHandle(UIWindow window, T content)
+        {
+            Window = window ?? throw new ArgumentNullException(nameof(window));
+            Content = content ?? throw new ArgumentNullException(nameof(content));
+        }
+
+        public void Open()
+        {
+            Window.Open();
+        }
+
+        public void Close()
+        {
+            Window.Close();
+        }
+    }
+
+    public class UIWindow : UIPanel
     {
         public string Title
         {
@@ -33,13 +77,29 @@ namespace RandomTrainTrailers.UI
 
         public bool DestroyOnClose { get; set; }
 
+        public bool Resizable
+        {
+            get => _resizable;
+            set
+            {
+                if (_resizable != value)
+                {
+                    _resizable = value;
+                    if (_resizeHandle != null)
+                        _resizeHandle.isVisible = _resizable;
+                }
+            }
+        }
+
         public Type ContentType => _contentType;
         public UIPanel Content => _content;
 
         private string _title;
+        private bool _resizable = true;
         private UILabel _titleLabel;
         private UIPanel _content;
         private Type _contentType;
+        private UIResizeHandle _resizeHandle;
 
         public override void Awake()
         {
@@ -60,6 +120,18 @@ namespace RandomTrainTrailers.UI
         {
             Show();
             BringToFront();
+        }
+
+        public void Close()
+        {
+            if (DestroyOnClose)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                Hide();
+            }
         }
 
         private void CreateComponents()
@@ -94,25 +166,19 @@ namespace RandomTrainTrailers.UI
             closeButton.pressedBgSprite = "buttonclosepressed";
             closeButton.relativePosition = new Vector3(width - 35, 5);
             closeButton.eventClicked += (c, p) => {
-                if (DestroyOnClose)
-                {
-                    Destroy(gameObject);
-                }
-                else
-                {
-                    Hide();
-                }
+                Close();
             };
             closeButton.anchor = UIAnchorStyle.Top | UIAnchorStyle.Right;
 
             // Resize
-            var resizeHandle = AddUIComponent<UIResizeHandle>();
-            resizeHandle.height = 9;
-            resizeHandle.width = 9;
-            resizeHandle.relativePosition = new Vector3(width - resizeHandle.width, height - resizeHandle.height);
-            resizeHandle.anchor = UIAnchorStyle.Bottom | UIAnchorStyle.Right;
-            resizeHandle.hoverCursor = FindResizeCursor();
-            resizeHandle.edges = UIResizeHandle.ResizeEdge.Bottom | UIResizeHandle.ResizeEdge.Right;
+            _resizeHandle = AddUIComponent<UIResizeHandle>();
+            _resizeHandle.isVisible = _resizable;
+            _resizeHandle.height = 9;
+            _resizeHandle.width = 9;
+            _resizeHandle.relativePosition = new Vector3(width - _resizeHandle.width, height - _resizeHandle.height);
+            _resizeHandle.anchor = UIAnchorStyle.Bottom | UIAnchorStyle.Right;
+            _resizeHandle.hoverCursor = FindResizeCursor();
+            _resizeHandle.edges = UIResizeHandle.ResizeEdge.Bottom | UIResizeHandle.ResizeEdge.Right;
 
             // Content
             _content = (UIPanel)AddUIComponent(_contentType);
@@ -135,7 +201,7 @@ namespace RandomTrainTrailers.UI
             return null;
         }
 
-        public static UIWindow Create<T>() where T : UIPanel, IUIWindowPanel
+        public static UIWindowHandle<T> Create<T>() where T : UIPanel, IUIWindowPanel
         {
             // There must be a nicer way to do this :p
             var temp = new GameObject().AddComponent<T>();
@@ -144,10 +210,12 @@ namespace RandomTrainTrailers.UI
             var height = temp.DefaultHeight;
             Destroy(temp.gameObject);
 
-            return Create<T>(width, height, title);
+            var handle = Create<T>(width, height, title);
+            handle.Content.SetWindow(handle.Window);
+            return handle;
         }
 
-        private static UIWindow Create<T>(float width, float height, string title) where T : UIPanel
+        private static UIWindowHandle<T> Create<T>(float width, float height, string title) where T : UIPanel
         {
             var go = new GameObject(title);
             var view = UIView.GetAView();
@@ -162,7 +230,7 @@ namespace RandomTrainTrailers.UI
             // We need to do this here instead of in Awake, otherwise _contentType isn't set yet.
             // We could use Start() but I want Content to be set when we exit this method.
             window.CreateComponents();
-            return window;
+            return new UIWindowHandle<T>(window, (T)window.Content);
         }
     }
 }
