@@ -85,6 +85,7 @@
     <Compile Include="Definition\Vehicle.cs" />
     <Compile Include="Detour\HarmonyDetourAIs.cs" />
     <Compile Include="Detour\RedirectionHelper.cs" />
+    <Compile Include="ExtendedVehicleFlags.cs" />
     <Compile Include="LocomotiveImporter.cs" />
     <Compile Include="TrailerImporter.cs" />
     <Compile Include="TrailerRandomizer.cs" />

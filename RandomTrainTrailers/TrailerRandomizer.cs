@@ -481,6 +481,16 @@ namespace RandomTrainTrailers
 
             Singleton<VehicleManager>.instance.m_vehicles.m_buffer[trailerId].m_gateIndex = gateIndex;
             Singleton<VehicleManager>.instance.m_vehicles.m_buffer[trailerId].Spawn(trailerId);
+            Singleton<VehicleManager>.instance.m_vehicles.m_buffer[trailerId].m_flags2 |= (Vehicle.Flags2)ExtendedVehicleFlags.NoLights;
+
+            // Patch the light effects to ensure they are hidden when the NoLights flag is set
+            var effectCount = trailerInfo.m_effects?.Length ?? 0;
+            for (var i = 0; i < effectCount; i++)
+            {
+                if (trailerInfo.m_effects[i].m_effect is LightEffect)
+                    trailerInfo.m_effects[i].m_vehicleFlagsForbidden2 |= (Vehicle.Flags2)ExtendedVehicleFlags.NoLights;
+            }
+
             return true;
         }
     }
