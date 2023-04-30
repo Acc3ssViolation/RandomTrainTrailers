@@ -52,7 +52,7 @@ namespace RandomTrainTrailers.UI
         {
             var importer = new LocomotiveImporter();
             var available = UIDataManager.instance.AvailableDefinition;
-            var cargoTrains = VehiclePrefabs.cargoTrains;
+            var cargoTrains = VehiclePrefabs.CargoTrains;
             foreach (var train in cargoTrains)
             {
                 if (train.isTrailer || available.Locomotives.Any(l => l.VehicleInfo == train.info))

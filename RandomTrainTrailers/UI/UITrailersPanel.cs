@@ -42,7 +42,7 @@ namespace RandomTrainTrailers.UI
             var importer = new TrailerImporter();
             importer.SetTrailers(TrailerDefinition);
             var available = UIDataManager.instance.AvailableDefinition;
-            var cargoTrains = VehiclePrefabs.cargoTrains;
+            var cargoTrains = VehiclePrefabs.CargoTrains;
             foreach (var train in cargoTrains)
             {
                 // We only want trailer assets that aren't yet in use as a trailer or as a locomotive

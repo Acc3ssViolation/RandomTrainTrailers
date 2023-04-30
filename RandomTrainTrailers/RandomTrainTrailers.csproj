@@ -86,6 +86,8 @@
     <Compile Include="Detour\HarmonyDetourAIs.cs" />
     <Compile Include="Detour\RedirectionHelper.cs" />
     <Compile Include="ExtendedVehicleFlags.cs" />
+    <Compile Include="Loading\EffectPatchHook.cs" />
+    <Compile Include="Loading\PrefabLoading.cs" />
     <Compile Include="LocomotiveImporter.cs" />
     <Compile Include="TrailerImporter.cs" />
     <Compile Include="TrailerRandomizer.cs" />

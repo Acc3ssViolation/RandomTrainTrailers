@@ -5,6 +5,7 @@ using ColossalFramework.UI;
 using RandomTrainTrailers.UI;
 using ColossalFramework;
 using CitiesHarmony.API;
+using RandomTrainTrailers.Loading;
 
 namespace RandomTrainTrailers
 {
@@ -33,7 +34,11 @@ namespace RandomTrainTrailers
         {
             if(Mod.IsValidLoadMode(mode))
             {
-                VehiclePrefabs.FindPrefabs();
+                var loader = new PrefabLoading<VehicleInfo>();
+                loader.AddHook(new EffectPatchHook());
+                loader.AddHook(new VehiclePrefabs.VehiclePrefabHook());
+                loader.Run();
+
                 TrailerManager.Setup();
                 m_gameObject = new GameObject(Mod.name);
                 m_gameObject.AddComponent<DebugBehaviour>();
