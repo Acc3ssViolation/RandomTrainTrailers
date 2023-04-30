@@ -232,8 +232,11 @@ namespace RandomTrainTrailers
                 }
             }
 
+            // Unset MiddleTrailer on last trailer
+            ClearFlagsFromVehicle(prevVehicleId, 0, Vehicle.Flags2.MiddleTrailer);
+
             // And we're done
-            if(debug_cargoContents.Count > 0)
+            if (debug_cargoContents.Count > 0)
             {
                 Util.Log(string.Format("Cargo for {0} [{1}]\r\n", info.name, id) + debug_cargoContents.Aggregate((sequence, next) => sequence + "\r\n" + next));
             }
@@ -259,7 +262,7 @@ namespace RandomTrainTrailers
             var savedGateIndexes = GetGateIndexes(ref vehicle);
             RemoveTrailers(ref vehicle, id);
 
-            var previousVehicleId = id;
+            var prevVehicleId = id;
 
             var totalSpawnedCount = 1;
             // Spawn leading locomotives
@@ -267,7 +270,7 @@ namespace RandomTrainTrailers
             {
                 var isFirst = i == 0;
                 var locomotive = isFirst ? leadLocomotive : pool.Locomotives[randomizer.Int32((uint)pool.Locomotives.Count)].Reference;
-                var spawnedCount = SpawnLocomotive(out var trailerId, previousVehicleId, locomotive, randomizer, isFirst);
+                var spawnedCount = SpawnLocomotive(out var trailerId, prevVehicleId, locomotive, randomizer, isFirst);
 
                 // Prevent spawning too many locomotives
                 if ((isFirst || spawnedCount > 1) && !locomotive.IsSingleUnit)
@@ -277,7 +280,7 @@ namespace RandomTrainTrailers
                     continue;
 
                 totalSpawnedCount += spawnedCount;
-                previousVehicleId = trailerId;
+                prevVehicleId = trailerId;
             }
 
             // Spawn rest of the train
@@ -285,12 +288,15 @@ namespace RandomTrainTrailers
             for (var i = 0; i < wagonCount && totalSpawnedCount < trainLength; i++)
             {
                 var trailer = pool.Trailers[randomizer.Int32((uint)pool.Trailers.Count)].Reference;
-                var spawnedCount = SpawnTrailerDefinition(out var trailerId, previousVehicleId, trailer, randomizer, 0);
+                var spawnedCount = SpawnTrailerDefinition(out var trailerId, prevVehicleId, trailer, randomizer, 0);
                 if (spawnedCount == 0)
                     continue;
                 totalSpawnedCount += spawnedCount;
-                previousVehicleId = trailerId;
+                prevVehicleId = trailerId;
             }
+
+            // Unset MiddleTrailer on last trailer
+            ClearFlagsFromVehicle(prevVehicleId, 0, Vehicle.Flags2.MiddleTrailer);
 
             Util.Log($"Spawned {locomotiveCount} locomotives for a total train length of {trainLength} for {vehicle.Info.name} [{id}] using pool {pool.Name}");
         }
@@ -482,6 +488,7 @@ namespace RandomTrainTrailers
             Singleton<VehicleManager>.instance.m_vehicles.m_buffer[trailerId].m_gateIndex = gateIndex;
             Singleton<VehicleManager>.instance.m_vehicles.m_buffer[trailerId].Spawn(trailerId);
             Singleton<VehicleManager>.instance.m_vehicles.m_buffer[trailerId].m_flags2 |= (Vehicle.Flags2)ExtendedVehicleFlags.NoLights;
+            Singleton<VehicleManager>.instance.m_vehicles.m_buffer[trailerId].m_flags2 |= Vehicle.Flags2.MiddleTrailer;
 
             // Patch the light effects to ensure they are hidden when the NoLights flag is set
             var effectCount = trailerInfo.m_effects?.Length ?? 0;
@@ -492,6 +499,13 @@ namespace RandomTrainTrailers
             }
 
             return true;
+        }
+
+        private static void ClearFlagsFromVehicle(ushort vehicleId, Vehicle.Flags flags, Vehicle.Flags2 flags2)
+        {
+            ref Vehicle vehicle = ref Singleton<VehicleManager>.instance.m_vehicles.m_buffer[vehicleId];
+            vehicle.m_flags &= ~flags;
+            vehicle.m_flags2 &= ~flags2;
         }
     }
 }
