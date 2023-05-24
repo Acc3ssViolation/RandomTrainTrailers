@@ -108,6 +108,7 @@
     <Compile Include="UI\UIConstants.cs" />
     <Compile Include="UI\UIDataManager.cs" />
     <Compile Include="UI\UIFlagsPanel.cs" />
+    <Compile Include="UI\UITrailerImportPanel.cs" />
     <Compile Include="UI\UITrailerSettings.cs" />
     <Compile Include="UI\UIPreviewPanel.cs" />
     <Compile Include="UI\UITrailerRow.cs" />

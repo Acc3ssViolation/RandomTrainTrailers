@@ -74,11 +74,6 @@ namespace RandomTrainTrailers
                 }
             });
 
-            /*UICheckBox checkBox = (UICheckBox)group.AddCheckbox("[Experimental] Enable cargo features", Mod.enableUseCargo, (b) => {
-                Mod.enableUseCargo.value = b;
-            });
-            checkBox.tooltip = "Enables the ability to have trailers be decided based on the cargo contents of the train rather than being completely random.";*/
-
             UICheckBox checkBox = (UICheckBox)group.AddCheckbox("Enable full log", Util.enableLogs, (b) => {
                 Util.enableLogs.value = b;
             });

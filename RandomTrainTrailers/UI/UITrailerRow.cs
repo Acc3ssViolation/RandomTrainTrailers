@@ -158,18 +158,20 @@ namespace RandomTrainTrailers.UI
 
         private void OpenSettingsWindow()
         {
-            // TODO: Replace with new UI
             if (_data.Value.IsMultiTrailer)
             {
+                // TODO: Replace with new UI
                 UIMultiTrailerPanel.main.Show(_data.Value);
             }
-
-            // Single trailer window?
-            var window = UIWindow.Create<UITrailerSettings>();
-            window.Window.Title = _nameField.text;
-            window.Window.DestroyOnClose = true;
-            window.Content.SetData(_data.Value);
-            window.Open();
+            else
+            {
+                // Single trailer window
+                var window = UIWindow.Create<UITrailerSettings>();
+                window.Window.Title = _nameField.text;
+                window.Window.DestroyOnClose = true;
+                window.Content.SetData(_data.Value);
+                window.Open();
+            }
         }
     }
 }

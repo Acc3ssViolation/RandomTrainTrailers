@@ -8,7 +8,7 @@ namespace RandomTrainTrailers.UI
     {
         public override float DefaultWidth => 480;
         public override float DefaultHeight => 490;
-        public override string DefaultTitle => "{Trailer}";
+        public override string DefaultTitle => "Create Trailer";
 
         private Trailer _trailer;
 
