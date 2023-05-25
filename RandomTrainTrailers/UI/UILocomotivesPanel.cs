@@ -71,7 +71,7 @@ namespace RandomTrainTrailers.UI
         {
             // TODO: Use new panel
             Util.Log("CreateLocomotive 1");
-            var findAsset = UIFindAssetPanel.main;
+            var findAsset = UIFindAssetPanel.Main.Content;
             findAsset.Show((vehicle) =>
             {
                 if (vehicle == null)

@@ -1,7 +1,6 @@
 ﻿using ColossalFramework.UI;
 using RandomTrainTrailers.Definition;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 
@@ -10,7 +9,7 @@ namespace RandomTrainTrailers.UI
     internal class UITrailersPanel : UIBaseListPanel<Trailer, UITrailerRow>
     {
         private UIButton _autoImportButton;
-        private UIButton _importButton;
+        private UIButton _createButton;
         private UIButton _setCargoButton;
 
         public override string DefaultTitle => "Trailers";
@@ -40,14 +39,14 @@ namespace RandomTrainTrailers.UI
                 ImportAllTrailers();
             };
 
-            _importButton = UIUtils.CreateButton(panel);
-            _importButton.text = "Create Trailer";
-            _importButton.width = 180;
-            _importButton.relativePosition = UIUtils.RightOf(_autoImportButton);
-            _importButton.anchor = UIAnchorStyle.Left | UIAnchorStyle.CenterVertical;
-            _importButton.eventClicked += (_, __) =>
+            _createButton = UIUtils.CreateButton(panel);
+            _createButton.text = "Create Trailer";
+            _createButton.width = 180;
+            _createButton.relativePosition = UIUtils.RightOf(_autoImportButton);
+            _createButton.anchor = UIAnchorStyle.Left | UIAnchorStyle.CenterVertical;
+            _createButton.eventClicked += (_, __) =>
             {
-                ImportTrailer();
+                CreateTrailer();
             };
         }
 
@@ -71,7 +70,7 @@ namespace RandomTrainTrailers.UI
 
         private void ImportAllTrailers()
         {
-            ConfirmPanel.ShowModal(Mod.name, $"Are you sure you want to import all available trailer assets?", delegate (UIComponent comp, int ret)
+            ConfirmPanel.ShowModal(Mod.name, $"This will import all trailers from legacy vehicle configurations and trailer collections. Are you sure you want to do this?", delegate (UIComponent comp, int ret)
             {
                 if (ret == 1)
                 {
@@ -80,9 +79,9 @@ namespace RandomTrainTrailers.UI
             });
         }
 
-        private void ImportTrailer()
+        private void CreateTrailer()
         {
-            UIFindAssetPanel.main.Show((vehicle) =>
+            UIFindAssetPanel.Main.Content.Show((vehicle) =>
             {
                 var window = UIWindow.Create<UITrailerImportPanel>();
                 window.Window.DestroyOnClose = true;
@@ -121,19 +120,33 @@ namespace RandomTrainTrailers.UI
 
         private void ImportAllTrailersImpl()
         {
-            var importer = new TrailerImporter();
-            importer.SetTrailers(TrailerDefinition);
             var available = UIDataManager.instance.AvailableDefinition;
-            var cargoTrains = VehiclePrefabs.CargoTrains;
-            foreach (var train in cargoTrains)
+            foreach (var collection in available.Collections)
             {
-                // We only want trailer assets that aren't yet in use as a trailer or as a locomotive
-                if (!train.isTrailer || available.Trailers.Any(l => (l.VehicleInfos?.Any(i => i == train.info)) ?? false) || available.Locomotives.Any(l => l.VehicleInfo == train.info))
-                    continue;
+                foreach (var trailer in collection.Trailers)
+                {
+                    if (trailer.IsCollection)
+                        continue;
+                    if (available.Trailers.Any(l => l.AssetName == trailer.AssetName))
+                        continue;
 
-                var trailer = importer.ImportFromAsset(train.info);
-                Util.Log($"Imported '{trailer.AssetName}' as trailer for cargo '{trailer.CargoType}'");
-                UIDataManager.instance.EditDefinition.Trailers.Add(trailer);
+                    Util.Log($"Imported '{trailer.AssetName}' as trailer from collection '{collection.Name}'");
+                    UIDataManager.instance.EditDefinition.Trailers.Add(trailer.Copy());
+                }
+            }
+
+            foreach (var vehicle in available.Vehicles)
+            {
+                foreach (var trailer in vehicle.Trailers)
+                {
+                    if (trailer.IsCollection)
+                        continue;
+                    if (available.Trailers.Any(l => l.AssetName == trailer.AssetName))
+                        continue;
+
+                    Util.Log($"Imported '{trailer.AssetName}' as trailer from vehicle '{vehicle.AssetName}'");
+                    UIDataManager.instance.EditDefinition.Trailers.Add(trailer.Copy());
+                }
             }
 
             UIDataManager.instance.Invalidate();

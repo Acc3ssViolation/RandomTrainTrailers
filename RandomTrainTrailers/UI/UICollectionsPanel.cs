@@ -171,7 +171,7 @@ namespace RandomTrainTrailers.UI
             m_addTrailer.eventClicked += (c, m) =>
             {
                 // Show panel and add trailer maybe idk
-                UIFindAssetPanel.main.Show((data) =>
+                UIFindAssetPanel.Main.Content.Show((data) =>
                 {
                     if(m_selectedCollection != null)
                     {
@@ -188,7 +188,7 @@ namespace RandomTrainTrailers.UI
             m_addMultiTrailer.eventClicked += (c, m) =>
             {
                 // Show panel and add multi trailer based on the single trailer
-                UIFindAssetPanel.main.Show((data) =>
+                UIFindAssetPanel.Main.Content.Show((data) =>
                 {
                     if(m_selectedCollection != null)
                     {

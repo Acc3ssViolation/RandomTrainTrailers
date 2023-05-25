@@ -118,11 +118,7 @@ namespace RandomTrainTrailers.UI
             relativePosition = new Vector3(Mathf.Floor((view.fixedWidth - width) / 2), Mathf.Floor((view.fixedHeight - height) / 2));
 
             // Add window for adding new sets
-           var  go = new GameObject("RTTFindAssetPanel");
-            go.transform.parent = this.gameObject.transform;
-            go.AddComponent<UIFindAssetPanel>();
-
-            go = new GameObject("RTTCollectionsPanel");
+            var go = new GameObject("RTTCollectionsPanel");
             go.transform.parent = this.gameObject.transform;
             go.AddComponent<UICollectionsPanel>();
 
@@ -240,7 +236,7 @@ namespace RandomTrainTrailers.UI
             button.relativePosition = new Vector3(425f, verticalOffset);
             button.eventClicked += (c, p) =>
             {
-                UIFindAssetPanel.main.Show((data) => {
+                UIFindAssetPanel.Main.Content.Show((data) => {
                     
 
                     if(m_userDefinition != null)
@@ -328,7 +324,7 @@ namespace RandomTrainTrailers.UI
             m_addTrailer.eventClicked += (c, m) =>
             {
                 // Show panel and add trailer maybe idk
-                UIFindAssetPanel.main.Show((data) =>
+                UIFindAssetPanel.Main.Content.Show((data) =>
                 {
                     if(m_selectedVehicleData != null)
                     {
@@ -346,7 +342,7 @@ namespace RandomTrainTrailers.UI
             m_addCollection.eventClicked += (c, m) =>
             {
                 // Show panel and add collection maybe idk
-                UIFindAssetPanel.main.Show((data) =>
+                UIFindAssetPanel.Main.Content.Show((data) =>
                 {
                     if(m_selectedVehicleData != null)
                     {
@@ -367,7 +363,7 @@ namespace RandomTrainTrailers.UI
             m_addMultiTrailer.eventClicked += (c, m) =>
             {
                 // Show panel and add multi trailer based on the single trailer
-                UIFindAssetPanel.main.Show((data) =>
+                UIFindAssetPanel.Main.Content.Show((data) =>
                 {
                     if(m_selectedVehicleData != null)
                     {
@@ -406,7 +402,7 @@ namespace RandomTrainTrailers.UI
             m_addBlacklist.eventClicked += (c, m) =>
             {
                 // Show panel and add blacklist item
-                UIFindAssetPanel.main.Show((data) =>
+                UIFindAssetPanel.Main.Content.Show((data) =>
                 {
                     if(m_selectedVehicleData != null)
                     {

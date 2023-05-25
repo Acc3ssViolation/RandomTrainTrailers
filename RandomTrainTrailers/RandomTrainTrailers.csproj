@@ -78,6 +78,7 @@
     <Compile Include="Definition\BlacklistItem.cs" />
     <Compile Include="Definition\IEnableable.cs" />
     <Compile Include="Definition\Locomotive.cs" />
+    <Compile Include="Definition\TrailerExtensions.cs" />
     <Compile Include="Definition\TrainPool.cs" />
     <Compile Include="Definition\TrainPoolExtensions.cs" />
     <Compile Include="Definition\Trailer.cs" />

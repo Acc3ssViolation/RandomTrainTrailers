@@ -18,7 +18,7 @@ namespace RandomTrainTrailers.UI
 
         public override float DefaultWidth => 600;
         public override float DefaultHeight => 500;
-        public override string DefaultTitle => "Locomotives in pool";
+        public override string DefaultTitle => GetTitle(DataType.Locomotives);
 
         private TrainPool _pool;
         private DataType _type;
@@ -188,6 +188,8 @@ namespace RandomTrainTrailers.UI
             if (_availableList == null || _assignedList == null || _pool == null)
                 return;
 
+            Window.Title = GetTitle(_type);
+
             var assigned = new List<RowData<ItemReference>>();
             var available = new List<RowData<ItemReference>>();
 
@@ -225,6 +227,13 @@ namespace RandomTrainTrailers.UI
 
             _availableList.Data = available;
             _assignedList.Data = assigned;
+        }
+
+        private static string GetTitle(DataType type)
+        {
+            if (type == DataType.Locomotives)
+                return "Locomotives in pool";
+            return "Trailers in pool";
         }
     }
 }

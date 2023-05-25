@@ -1,5 +1,6 @@
 ﻿using ColossalFramework.UI;
 using RandomTrainTrailers.Definition;
+using System.Linq;
 using UnityEngine;
 
 namespace RandomTrainTrailers.UI
@@ -101,7 +102,7 @@ namespace RandomTrainTrailers.UI
 
         private void UpdatePreview()
         {
-            _previewPanel.VehicleInfo = _trailer.VehicleInfos?[0];
+            _previewPanel.VehicleInfos = _trailer.GetVehicleRenderInfos();
         }
     }
 }

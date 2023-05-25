@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace RandomTrainTrailers.UI
 {
-    public class UIFindAssetPanel : UIPanel
+    public class UIFindAssetPanel : UIWindowPanel
     {
         public enum DisplayMode
         {
@@ -14,82 +14,56 @@ namespace RandomTrainTrailers.UI
             Collections,
         }
 
-        public static UIFindAssetPanel main { get; private set; }
+        private static UIWindowHandle<UIFindAssetPanel> _main;
 
-        Action<VehiclePrefabs.VehicleData> m_callback;
-        UIDropDown m_typeDropdown;
-        UIFastList m_fastList;
-        UITextField m_searchField;
-        UIButton m_select;
+        public static UIWindowHandle<UIFindAssetPanel> Main
+        {
+            get
+            {
+                if (_main == null)
+                {
+                    _main = UIWindow.Create<UIFindAssetPanel>();
+                }
+                return _main;
+            }
+        }
+
         public const int HEIGHT = 550;
         public const int WIDTH = 700;
         public const int WIDTHLEFT = 500;
         public const int WIDTHRIGHT = 200;
+
+        public override float DefaultWidth => WIDTH;
+
+        public override float DefaultHeight => HEIGHT;
+
+        public override string DefaultTitle => "Select asset";
+
+        private Action<VehiclePrefabs.VehicleData> m_callback;
+        private UIDropDown m_typeDropdown;
+        private UIFastList m_fastList;
+        private UITextField m_searchField;
+        private UIButton m_select;
+
         private DisplayMode m_mode;
         private DisplayMode m_prevMode;
 
-        UITextureSprite m_preview;
-        PreviewRenderer m_previewRenderer;
+        private UITextureSprite m_preview;
+        private PreviewRenderer m_previewRenderer;
 
-        VehiclePrefabs.VehicleData m_lastSelectedData;
-
-        public override void Awake()
-        {
-            if(main == null)
-            {
-                main = this;
-            }
-            base.Awake();
-        }
+        private VehiclePrefabs.VehicleData m_lastSelectedData;
 
         public override void Start()
         {
             base.Start();
-            UIView view = UIView.GetAView();
-
-            name = "FindTrainAssetPanel";
-            backgroundSprite = "UnlockingPanel2";
-            isVisible = false;
-            canFocus = true;
-            isInteractive = true;
-            width = WIDTH;
-            height = HEIGHT;
-            relativePosition = new Vector3(Mathf.Floor((view.fixedWidth - width) / 2), Mathf.Floor((view.fixedHeight - height) / 2));
-
             CreateComponents();
         }
 
         private void CreateComponents()
         {
-            float verticalOffset = 50;
-
-            // header text
-            UILabel label = AddUIComponent<UILabel>();
-            label.text = "Find Asset";
-            label.relativePosition = new Vector3(WIDTH / 2 - label.width / 2, 13);
-
-            // drag
-            UIDragHandle handle = AddUIComponent<UIDragHandle>();
-            handle.target = this;
-            handle.constrainToScreen = true;
-            handle.width = WIDTH;
-            handle.height = 40;
-            handle.relativePosition = Vector3.zero;
-
-            // close button
-            UIButton closeButton = UIUtils.CreateButton(this);
-            closeButton.size = new Vector2(30, 30);
-            closeButton.normalBgSprite = "buttonclose";
-            closeButton.hoveredBgSprite = "buttonclosehover";
-            closeButton.pressedBgSprite = "buttonclosepressed";
-            closeButton.relativePosition = new Vector3(WIDTH - 35, 5);
-
-            closeButton.eventClicked += (c, p) => {
-                Close();
-            };
-
+            float verticalOffset = 0;
             // dropdown
-            label = AddUIComponent<UILabel>();
+            var label = AddUIComponent<UILabel>();
             label.text = "Asset type: ";
             label.textScale = 0.8f;
             label.padding = new RectOffset(0, 0, 8, 0);
@@ -185,7 +159,7 @@ namespace RandomTrainTrailers.UI
                         Util.LogError("Error with callback in UIFindAssetPanel");
                         Util.LogError(e);
                     }
-                    Close();
+                    CloseWithoutCallback();
                 }
             };
 
@@ -232,6 +206,9 @@ namespace RandomTrainTrailers.UI
 
         private void UpdateFastList()
         {
+            if (m_fastList == null)
+                return;
+
             var pos = m_fastList.listPosition;
 
             FastList<object> newRowsData = new FastList<object>();
@@ -318,10 +295,10 @@ namespace RandomTrainTrailers.UI
             }
         }
 
-        private void Close()
+        private void CloseWithoutCallback()
         {
             m_callback = null;
-            Hide();
+            Window.Close();
         }
 
         public void Show(Action<VehiclePrefabs.VehicleData> callback, DisplayMode mode)
@@ -329,7 +306,7 @@ namespace RandomTrainTrailers.UI
             m_prevMode = m_mode;
             m_mode = mode;
             m_callback = callback;
-            Show(true);
+            Window.Open();
             UpdateFastList();
         }
     }

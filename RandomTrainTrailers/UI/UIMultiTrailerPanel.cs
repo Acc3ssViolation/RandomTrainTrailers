@@ -101,7 +101,7 @@ namespace RandomTrainTrailers.UI
             m_addTrailer.eventClicked += (c, m) =>
             {
                 // Show panel and add trailer maybe idk
-                UIFindAssetPanel.main.Show((data) =>
+                UIFindAssetPanel.Main.Content.Show((data) =>
                 {
                     if(m_selectedTrailer != null)
                     {

@@ -90,6 +90,10 @@ namespace RandomTrainTrailers.UI
             _nameField.relativePosition = UIUtils.RightOf(_selectedCheckbox);
             _nameField.width = 250;
             _nameField.anchor = UIAnchorStyle.Left | UIAnchorStyle.CenterVertical;
+            _nameField.eventClicked += (_, __) =>
+            {
+                _selectedCheckbox.isChecked = !_selectedCheckbox.isChecked;
+            };
 
             // Delete button
             _deleteButton = UIUtils.CreateButton(this);
