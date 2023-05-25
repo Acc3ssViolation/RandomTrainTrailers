@@ -40,14 +40,14 @@ namespace RandomTrainTrailers.UI
         {
             if(settingsPanel != null) return;
 
-            mainPanel = UILegacyMainPanel.main;
+            mainPanel = UILegacyMainPanel.Main;
 
             settingsPanel = AddUIComponent<UIPanel>();
             settingsPanel.relativePosition = Vector3.zero;
             UIHelper settingsPanelHelper = new UIHelper(settingsPanel);
 
             upDownPanel = AddUIComponent<UIPanel>();
-            upDownPanel.relativePosition = new Vector3(UILegacyMainPanel.main.TrailerRowWidth - 70, 0);
+            upDownPanel.relativePosition = new Vector3(UILegacyMainPanel.Main.TrailerRowWidth - 70, 0);
 
             // Name label
             labelAssetName = AddUIComponent<UILabel>();
@@ -94,7 +94,7 @@ namespace RandomTrainTrailers.UI
             buttonRemove.normalBgSprite = "buttonclose";
             buttonRemove.hoveredBgSprite = "buttonclosehover";
             buttonRemove.pressedBgSprite = "buttonclosepressed";
-            buttonRemove.relativePosition = new Vector3(UILegacyMainPanel.main.TrailerRowWidth - 35, 25);
+            buttonRemove.relativePosition = new Vector3(UILegacyMainPanel.Main.TrailerRowWidth - 35, 25);
             buttonRemove.eventClicked += (c, p) => {
                 if(!checkEvents) { return; }
 

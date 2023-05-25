@@ -153,7 +153,7 @@ namespace RandomTrainTrailers.UI
             {
                 m_selectedTrailer.AssetName = text;
 
-                UILegacyMainPanel.main.UpdatePanels();
+                UILegacyMainPanel.Main.UpdatePanels();
                 if(UICollectionsPanel.main.isVisible)
                 {
                     UICollectionsPanel.main.UpdatePanels();

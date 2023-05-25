@@ -95,6 +95,7 @@ namespace RandomTrainTrailers.UI
 
         public Type ContentType => _contentType;
         public UIPanel Content => _content;
+        public event Action<UIWindow> CloseClicked;
 
         private string _title;
         private bool _resizable = true;
@@ -168,6 +169,7 @@ namespace RandomTrainTrailers.UI
             closeButton.pressedBgSprite = "buttonclosepressed";
             closeButton.relativePosition = new Vector3(width - 35, 5);
             closeButton.eventClicked += (c, p) => {
+                CloseClicked?.Invoke(this);
                 Close();
             };
             closeButton.anchor = UIAnchorStyle.Top | UIAnchorStyle.Right;

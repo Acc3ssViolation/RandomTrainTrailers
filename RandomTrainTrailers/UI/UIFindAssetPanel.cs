@@ -28,14 +28,14 @@ namespace RandomTrainTrailers.UI
             }
         }
 
-        public const int HEIGHT = 550;
+        public const int HEIGHT = 500;
         public const int WIDTH = 700;
         public const int WIDTHLEFT = 500;
         public const int WIDTHRIGHT = 200;
 
-        public override float DefaultWidth => WIDTH;
+        public override float DefaultWidth => WIDTH + 20;
 
-        public override float DefaultHeight => HEIGHT;
+        public override float DefaultHeight => HEIGHT + 60;
 
         public override string DefaultTitle => "Select asset";
 
@@ -249,7 +249,7 @@ namespace RandomTrainTrailers.UI
             else
             {
                 // Collections
-                var collections = UILegacyMainPanel.main.UserDefinition?.Collections;
+                var collections = UILegacyMainPanel.Main.UserDefinition?.Collections;
                 if(collections != null)
                 {
                     foreach(var collection in collections)

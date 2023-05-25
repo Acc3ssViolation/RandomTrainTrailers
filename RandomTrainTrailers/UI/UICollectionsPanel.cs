@@ -100,14 +100,14 @@ namespace RandomTrainTrailers.UI
             button.relativePosition = new Vector3(355f, verticalOffset);
             button.eventClicked += (c, p) =>
             {
-                if(UILegacyMainPanel.main.UserDefinition != null)
+                if(UILegacyMainPanel.Main.UserDefinition != null)
                 {
                     int number = 1;
                     bool added = false;
                     do
                     {
                         string name = "New Trailer Collection " + number;
-                        if(UILegacyMainPanel.main.UserDefinition.Collections.Where((collection) => {
+                        if(UILegacyMainPanel.Main.UserDefinition.Collections.Where((collection) => {
                             return collection.Name == name;
                         }).Count() > 0)
                         {
@@ -115,7 +115,7 @@ namespace RandomTrainTrailers.UI
                         }
                         else
                         {
-                            UILegacyMainPanel.main.UserDefinition.Collections.Add(new TrailerCollection(name));
+                            UILegacyMainPanel.Main.UserDefinition.Collections.Add(new TrailerCollection(name));
                             added = true;
                         }
                     } while(!added);
@@ -132,13 +132,13 @@ namespace RandomTrainTrailers.UI
             button.relativePosition = new Vector3(450f, verticalOffset);
             button.eventClicked += (c, p) =>
             {
-                if(m_selectedCollection != null && UILegacyMainPanel.main.UserDefinition != null)
+                if(m_selectedCollection != null && UILegacyMainPanel.Main.UserDefinition != null)
                 {
                     ConfirmPanel.ShowModal(Mod.name, "Are you sure you want to delete the collection " + m_selectedCollection.Name + "?", delegate (UIComponent comp, int ret)
                     {
                         if(ret == 1)
                         {
-                            UILegacyMainPanel.main.UserDefinition.Collections.Remove(m_selectedCollection);
+                            UILegacyMainPanel.Main.UserDefinition.Collections.Remove(m_selectedCollection);
                             UpdateCollectionList();
                         }
                     });
@@ -256,7 +256,7 @@ namespace RandomTrainTrailers.UI
 
         private void UpdateCurrentCollectionName(string name)
         {
-            var def = UILegacyMainPanel.main.UserDefinition;
+            var def = UILegacyMainPanel.Main.UserDefinition;
             if(def != null && m_selectedCollection != null)
             {
                 foreach(var vehicle in def.Vehicles)
@@ -272,7 +272,7 @@ namespace RandomTrainTrailers.UI
 
                 m_selectedCollection.Name = name;
 
-                UILegacyMainPanel.main.UpdatePanels();
+                UILegacyMainPanel.Main.UpdatePanels();
                 UpdateCollectionList();
             }
         }
@@ -280,11 +280,11 @@ namespace RandomTrainTrailers.UI
         private void VehicleDropdown_eventSelectedIndexChanged(UIComponent component, int value)
         {
             m_selectedCollection = null;
-            if(UILegacyMainPanel.main.UserDefinition != null)
+            if(UILegacyMainPanel.Main.UserDefinition != null)
             {
-                if(value >= 0 && value < UILegacyMainPanel.main.UserDefinition.Collections.Count)
+                if(value >= 0 && value < UILegacyMainPanel.Main.UserDefinition.Collections.Count)
                 {
-                    m_selectedCollection = UILegacyMainPanel.main.UserDefinition.Collections[value];
+                    m_selectedCollection = UILegacyMainPanel.Main.UserDefinition.Collections[value];
                 }
             }
             m_collectionDropdown.tooltip = m_selectedCollection != null ? m_selectedCollection.Name : "???";
@@ -310,9 +310,9 @@ namespace RandomTrainTrailers.UI
         public void UpdateCollectionList()
         {
             m_collectionDropdown.items = new string[0];
-            if(UILegacyMainPanel.main.UserDefinition != null)
+            if(UILegacyMainPanel.Main.UserDefinition != null)
             {
-                foreach(var collection in UILegacyMainPanel.main.UserDefinition.Collections)
+                foreach(var collection in UILegacyMainPanel.Main.UserDefinition.Collections)
                 {
                     m_collectionDropdown.AddItem(collection.Name);
                 }

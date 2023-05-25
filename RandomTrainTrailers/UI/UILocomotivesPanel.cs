@@ -31,7 +31,7 @@ namespace RandomTrainTrailers.UI
             _createButton.relativePosition = UIUtils.RightOf(_importButton);
             _createButton.text = "Create";
             _createButton.anchor = UIAnchorStyle.Left | UIAnchorStyle.CenterVertical;
-            _createButton.eventClicked -= (_, __) =>
+            _createButton.eventClicked += (_, __) =>
             {
                 CreateLocomotive();
             };
@@ -69,18 +69,15 @@ namespace RandomTrainTrailers.UI
 
         private void CreateLocomotive()
         {
-            // TODO: Use new panel
-            Util.Log("CreateLocomotive 1");
-            var findAsset = UIFindAssetPanel.Main.Content;
-            findAsset.Show((vehicle) =>
+            UIFindAssetPanel.Main.Content.Show((vehicle) =>
             {
                 if (vehicle == null)
                     return;
 
                 var available = UIDataManager.instance.AvailableDefinition;
-                if (available.Locomotives.Any(l => l.VehicleInfo == vehicle.info) || available.Trailers.Any(l => l.VehicleInfos?.Contains(vehicle.info) ?? false))
+                if (available.Locomotives.Any(l => l.VehicleInfo == vehicle.info))
                 {
-                    Util.ShowWarningMessage($"Vehicle {vehicle.localeName} is already in use as a locomotive or trailer");
+                    Util.ShowWarningMessage($"Vehicle {vehicle.localeName} is already in use as a locomotive");
                     return;
                 }
 
@@ -91,7 +88,6 @@ namespace RandomTrainTrailers.UI
                 UIDataManager.instance.Invalidate();
                 UpdateData();
             }, UIFindAssetPanel.DisplayMode.Both);
-            Util.Log("CreateLocomotive 2");
         }
 
         protected override bool Filter(Locomotive item, string filter)

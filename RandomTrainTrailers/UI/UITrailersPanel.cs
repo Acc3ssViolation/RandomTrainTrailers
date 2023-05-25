@@ -40,8 +40,7 @@ namespace RandomTrainTrailers.UI
             };
 
             _createButton = UIUtils.CreateButton(panel);
-            _createButton.text = "Create Trailer";
-            _createButton.width = 180;
+            _createButton.text = "Create";
             _createButton.relativePosition = UIUtils.RightOf(_autoImportButton);
             _createButton.anchor = UIAnchorStyle.Left | UIAnchorStyle.CenterVertical;
             _createButton.eventClicked += (_, __) =>

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using ICities;
 using RandomTrainTrailers.Detour;
-using ColossalFramework.UI;
 using RandomTrainTrailers.UI;
 using ColossalFramework;
 using CitiesHarmony.API;
@@ -46,11 +45,8 @@ namespace RandomTrainTrailers
                 // Create UI
                 if(enableUI == true)
                 {
-                    UIView view = UIView.GetAView();
-                    UIObject = new GameObject("RandomTrainTrailers");
-                    UIObject.transform.SetParent(view.transform);
-                    UIObject.AddComponent<UILegacyMainPanel>();
-
+                    var window = UIWindow.Create<UIMainPanel>();
+                    UIObject = window.Window.gameObject;
                     Util.Log("UI is enabled");
                 }
                 else
@@ -69,7 +65,6 @@ namespace RandomTrainTrailers
 
             if(UIObject != null)
             {
-                UILegacyMainPanel.main.OnLevelUnloading();
                 GameObject.Destroy(UIObject);
             }
         }

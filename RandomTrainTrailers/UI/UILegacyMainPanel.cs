@@ -1,9 +1,7 @@
-﻿using ColossalFramework.Globalization;
-using ColossalFramework.UI;
+﻿using ColossalFramework.UI;
 using RandomTrainTrailers.Definition;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using UnityEngine;
 
 namespace RandomTrainTrailers.UI
@@ -12,11 +10,10 @@ namespace RandomTrainTrailers.UI
      *  Main UI panel of the mod.
      *  I didn't know anything about UI, so thanks to SamsamTS for putting your stuff up on Github for others to see and learn from.
      */
-    public class UILegacyMainPanel : UIPanel
+    public class UILegacyMainPanel : UIWindowPanel
     {
-        public static UILegacyMainPanel main { get; private set; }
+        public static UILegacyMainPanel Main { get; private set; }
 
-        private UIButton toolbarButton;
         private UIDropDown vehicleDropdown;
         private UIFastList trailerFastList;
         private UIFastList blacklistFastList;
@@ -29,10 +26,6 @@ namespace RandomTrainTrailers.UI
         // Widths
         public int TrailerRowWidth { get; private set; }
         public int BlacklistRowWidth { get; private set; }
-
-        // buttons
-        private UIButton m_saveButton;
-        private UIButton m_loadButton;
 
         // vehicle options
         private UIIntField m_randomChance;
@@ -52,7 +45,7 @@ namespace RandomTrainTrailers.UI
         private UIButton m_addMultiTrailer;
         private UIButton m_addBlacklist;
 
-        public const int HEIGHT = 550;
+        public const int HEIGHT = 500;
         public const int WIDTH = 770;
 
         public TrailerDefinition UserDefinition
@@ -63,59 +56,29 @@ namespace RandomTrainTrailers.UI
             }
         }
 
+        public override float DefaultWidth => WIDTH + 20;
+        public override float DefaultHeight => HEIGHT + 60;
+        public override string DefaultTitle => "Random Train Trailers";
+
         public TrailerDefinition m_userDefinition;
         public Definition.Vehicle m_selectedVehicleData;
 
         private Definition.Vehicle m_copyData;
         private TrailerImporter _trailerImporter = new TrailerImporter();
-        private UIWindowHandle<UITrainPoolPanel> _trainPoolWindow;
-        private UIWindowHandle<UILocomotivesPanel> _locomotivePoolWindow;
-        private UIWindowHandle<UITrailersPanel> _trailerPoolWindow;
 
-        void LoadUserDef()
+        public void SetData(TrailerDefinition trailerDefinition)
         {
-            TrailerManager.Setup();
-            m_userDefinition = UIDataManager.instance.EditDefinition;
-            _trainPoolWindow.Content.SetData(m_userDefinition);
-            _locomotivePoolWindow.Content.SetData(m_userDefinition);
-            _trailerPoolWindow.Content.SetData(m_userDefinition);
-        }
-
-        void SaveUserDef()
-        {
-            if(m_userDefinition != null)
-            {
-                TrailerManager.StoreUserDefinitionOnDisk(m_userDefinition);
-            }
-        }
-
-        internal void OnLevelUnloading()
-        {
-            SaveUserDef();
-        }
-
-        public override void Awake()
-        {
-            if(main == null)
-            {
-                main = this;
-            }
-            base.Awake();
+            m_userDefinition = trailerDefinition;
+            UpdateTrainList();
         }
 
         public override void Start()
         {
             base.Start();
-            UIView view = UIView.GetAView();
+            Main = this;
 
+            // Didn't even realize there was still a reference to the old Coupled Trains mod in here, I'm keeping it :3
             name = "CoupledTrainsOptionsPanel";
-            backgroundSprite = "UnlockingPanel2";
-            isVisible = false;
-            canFocus = true;
-            isInteractive = true;
-            width = WIDTH;
-            height = HEIGHT;
-            relativePosition = new Vector3(Mathf.Floor((view.fixedWidth - width) / 2), Mathf.Floor((view.fixedHeight - height) / 2));
 
             // Add window for adding new sets
             var go = new GameObject("RTTCollectionsPanel");
@@ -126,99 +89,15 @@ namespace RandomTrainTrailers.UI
             go.transform.parent = this.gameObject.transform;
             go.AddComponent<UIMultiTrailerPanel>();
 
-            UIWindow.GlobalParent = transform;
-            _trainPoolWindow = UIWindow.Create<UITrainPoolPanel>();
-            _locomotivePoolWindow = UIWindow.Create<UILocomotivesPanel>();
-            _trailerPoolWindow = UIWindow.Create<UITrailersPanel>();
-
-            // Adding main button
-            UITabstrip toolStrip = view.FindUIComponent<UITabstrip>("MainToolstrip");
-            toolbarButton = toolStrip.AddUIComponent<UIButton>();
-
-            toolbarButton.normalBgSprite = "SubBarPublicTransportTrain";
-            toolbarButton.focusedFgSprite = "ToolbarIconGroup6Focused";
-            toolbarButton.hoveredFgSprite = "ToolbarIconGroup6Hovered";
-
-            toolbarButton.size = new Vector2(43f, 49f);
-            toolbarButton.name = Mod.name + " Manager";
-            toolbarButton.tooltip = toolbarButton.name;
-            toolbarButton.relativePosition = new Vector3(0, 5);
-
-            toolbarButton.eventButtonStateChanged += (c, s) =>
-            {
-                if(s == UIButton.ButtonState.Focused)
-                {
-                    if(!isVisible)
-                    {
-                        isVisible = true;
-                    }
-                }
-                else
-                {
-                    isVisible = false;
-                    toolbarButton.Unfocus();
-                }
-            };
-
-            // Locale
-            Locale locale = (Locale)typeof(LocaleManager).GetField("m_Locale", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(LocaleManager.instance);
-            Locale.Key key = new Locale.Key
-            {
-                m_Identifier = "TUTORIAL_ADVISER_TITLE",
-                m_Key = toolbarButton.name
-            };
-            if(!locale.Exists(key))
-            {
-                locale.AddLocalizedString(key, toolbarButton.name);
-            }
-            key = new Locale.Key
-            {
-                m_Identifier = "TUTORIAL_ADVISER",
-                m_Key = toolbarButton.name
-            };
-            if(!locale.Exists(key))
-            {
-                locale.AddLocalizedString(key, "The " + Mod.name + " editor allows you to edit the configurations for the RTT mod. This allows you to decide which trains have their trailers randomized and gives control over this randomization. Check the workshop page and the discussion pages for more info.");
-            }
-
-            // No idea why this is done, but I'm sure SamsamTS knows what he's doing
-            view.FindUIComponent<UITabContainer>("TSContainer").AddUIComponent<UIPanel>().color = new Color32(0, 0, 0, 0);
-
             // Create our own components
             CreateComponents();
         }
 
         private void CreateComponents()
         {
-            float verticalOffset = 50;
-
-            // header text
-            UILabel label = AddUIComponent<UILabel>();
-            label.text = "Random Train Trailers";
-            label.relativePosition = new Vector3(WIDTH / 2 - label.width / 2, 13);
-
-            // drag
-            UIDragHandle handle = AddUIComponent<UIDragHandle>();
-            handle.target = this;
-            handle.constrainToScreen = true;
-            handle.width = WIDTH;
-            handle.height = 40;
-            handle.relativePosition = Vector3.zero;            
-
-            // close button
-            UIButton closeButton = UIUtils.CreateButton(this);
-            closeButton.size = new Vector2(30, 30);
-            closeButton.normalBgSprite = "buttonclose";
-            closeButton.hoveredBgSprite = "buttonclosehover";
-            closeButton.pressedBgSprite = "buttonclosepressed";
-            closeButton.relativePosition = new Vector3(WIDTH - 35, 5);
-            var b = UIView.GetAView().FindUIComponent<UITabstrip>("MainToolstrip").closeButton;
-            closeButton.eventClicked += (c, p) => {
-                b.SimulateClick();
-            };
-
+            float verticalOffset = 0;
             // dropdown
-            label = AddUIComponent<UILabel>();
+            var label = AddUIComponent<UILabel>();
             label.text = "Train consist: ";
             label.textScale = 0.8f;
             label.padding = new RectOffset(0, 0, 8, 0);
@@ -613,73 +492,6 @@ namespace RandomTrainTrailers.UI
             m_labelNoVehicles.text = "Press Add New to add a new Random Train Trailers Definition";
             m_labelNoVehicles.relativePosition = new Vector3((WIDTH - m_labelNoVehicles.width) / 2, HEIGHT / 2);
 
-
-            // BUTTONS
-            m_saveButton = UIUtils.CreateButton(this);
-            m_saveButton.text = "Save";
-            m_saveButton.relativePosition = new Vector3(10, HEIGHT - m_saveButton.height - 10);
-            m_saveButton.eventClicked += (c, m) =>
-            {
-                SaveUserDef();
-                TrailerManager.Setup();
-            };
-            m_saveButton.tooltip = "Saves config to disk and applies it to the current game.";
-
-            m_loadButton = UIUtils.CreateButton(this);
-            m_loadButton.text = "Load";
-            m_loadButton.relativePosition = m_saveButton.relativePosition + new Vector3(m_loadButton.width + 10, 0);
-            m_loadButton.eventClicked += (c, m) =>
-            {
-                LoadUserDef();
-                UpdateTrainList();
-                UpdatePanels();
-                TrailerManager.Setup();
-            };
-            m_loadButton.tooltip = "Loads config from disk and applies it to the current game.";
-
-            // TEST: Button to open train pool window
-            button = UIUtils.CreateButton(this);
-            button.text = "Trains";
-            button.relativePosition = m_saveButton.relativePosition + new Vector3(0, -(m_saveButton.height * 2 + 10));
-            button.eventClicked += (c, m) =>
-            {
-                _trainPoolWindow.Open();
-            };
-            button.tooltip = "Open the train edit window.";
-            var prevButton = button;
-
-            button = UIUtils.CreateButton(this);
-            button.text = "Locomotives";
-            button.relativePosition = UIUtils.RightOf(prevButton);
-            button.eventClicked += (c, m) =>
-            {
-                _locomotivePoolWindow.Open();
-            };
-            button.tooltip = "Open the locomotive edit window.";
-
-            button = UIUtils.CreateButton(this);
-            button.text = "Trailers";
-            button.relativePosition = UIUtils.Below(prevButton);
-            button.eventClicked += (c, m) =>
-            {
-                _trailerPoolWindow.Open();
-            };
-            button.tooltip = "Open the trailer edit window.";
-            prevButton = button;
-
-            button = UIUtils.CreateButton(this);
-            button.text = "Atlas";
-            button.relativePosition = UIUtils.RightOf(prevButton);
-            button.eventClicked += (c, m) =>
-            {
-                var windowHandle = UIWindow.Create<UIAtlasViewer>();
-                windowHandle.Window.DestroyOnClose = true;
-                windowHandle.Content.SetData(m_userDefinition);
-                windowHandle.Open();
-            };
-
-
-            LoadUserDef();
             UpdateTrainList();
         }
 
@@ -835,20 +647,5 @@ namespace RandomTrainTrailers.UI
             blacklistFastList.rowHeight = UIBlacklistRow.HEIGHT;
             blacklistFastList.rowsData = newRowsData2;
         }
-
-        public override void OnDestroy()
-        {
-            if(main == this)
-            {
-                main = null;
-            }
-            
-            base.OnDestroy();
-
-            Util.Log("Destroying OptionsPanel");
-
-            if(toolbarButton != null) GameObject.Destroy(toolbarButton);
-        }
-
     }
 }
