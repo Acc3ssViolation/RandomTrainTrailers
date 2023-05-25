@@ -49,7 +49,7 @@ namespace RandomTrainTrailers
                     UIView view = UIView.GetAView();
                     UIObject = new GameObject("RandomTrainTrailers");
                     UIObject.transform.SetParent(view.transform);
-                    UIObject.AddComponent<UIMainPanel>();
+                    UIObject.AddComponent<UILegacyMainPanel>();
 
                     Util.Log("UI is enabled");
                 }
@@ -69,7 +69,7 @@ namespace RandomTrainTrailers
 
             if(UIObject != null)
             {
-                UIMainPanel.main.OnLevelUnloading();
+                UILegacyMainPanel.main.OnLevelUnloading();
                 GameObject.Destroy(UIObject);
             }
         }

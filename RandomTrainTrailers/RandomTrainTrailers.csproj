@@ -119,7 +119,7 @@
     <Compile Include="UI\UIFastList.cs" />
     <Compile Include="UI\UIFindAssetPanel.cs" />
     <Compile Include="UI\UIIntField.cs" />
-    <Compile Include="UI\UIMainPanel.cs" />
+    <Compile Include="UI\UILegacyMainPanel.cs" />
     <Compile Include="UI\UISubTrailerRow.cs" />
     <Compile Include="UI\UILegacyTrailerRow.cs" />
     <Compile Include="UI\UILocomotivesPanel.cs" />

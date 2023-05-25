@@ -35,14 +35,14 @@ namespace RandomTrainTrailers.UI
             m_buttonRemove.normalBgSprite = "buttonclose";
             m_buttonRemove.hoveredBgSprite = "buttonclosehover";
             m_buttonRemove.pressedBgSprite = "buttonclosepressed";
-            m_buttonRemove.relativePosition = new Vector3(UIMainPanel.main.BlacklistRowWidth - 35, 25);
+            m_buttonRemove.relativePosition = new Vector3(UILegacyMainPanel.main.BlacklistRowWidth - 35, 25);
             m_buttonRemove.eventClicked += (c, p) => {
 
                 ConfirmPanel.ShowModal(Mod.name, "Are you sure you want to remove " + m_assetName.text + "?", delegate (UIComponent comp, int ret)
                 {
                     if(ret == 1)
                     {
-                        UIMainPanel.main.RemoveBlacklist(m_currentDataItem);
+                        UILegacyMainPanel.main.RemoveBlacklist(m_currentDataItem);
                     }
                 });
             };

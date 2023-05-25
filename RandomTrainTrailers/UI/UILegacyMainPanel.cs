@@ -12,9 +12,9 @@ namespace RandomTrainTrailers.UI
      *  Main UI panel of the mod.
      *  I didn't know anything about UI, so thanks to SamsamTS for putting your stuff up on Github for others to see and learn from.
      */
-    public class UIMainPanel : UIPanel
+    public class UILegacyMainPanel : UIPanel
     {
-        public static UIMainPanel main { get; private set; }
+        public static UILegacyMainPanel main { get; private set; }
 
         private UIButton toolbarButton;
         private UIDropDown vehicleDropdown;

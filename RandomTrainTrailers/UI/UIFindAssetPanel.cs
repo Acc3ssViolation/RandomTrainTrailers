@@ -249,7 +249,7 @@ namespace RandomTrainTrailers.UI
             else
             {
                 // Collections
-                var collections = UIMainPanel.main.UserDefinition?.Collections;
+                var collections = UILegacyMainPanel.main.UserDefinition?.Collections;
                 if(collections != null)
                 {
                     foreach(var collection in collections)
