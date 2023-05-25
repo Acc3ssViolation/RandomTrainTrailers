@@ -17,7 +17,7 @@ namespace RandomTrainTrailers.UI
 
         public override float DefaultWidth => 480;
         public override float DefaultHeight => 530;
-        public override string DefaultTitle => "{Trailer}";
+        public override string DefaultTitle => "Create Trailer";
 
         private Action<Trailer> _createdCallback;
         private VehicleInfo _vehicleInfo;

@@ -11,9 +11,22 @@ namespace RandomTrainTrailers.UI
     {
         private UIButton _autoImportButton;
         private UIButton _importButton;
+        private UIButton _setCargoButton;
 
         public override string DefaultTitle => "Trailers";
         protected override float RowHeight => UITrailerRow.Height;
+
+        protected override void CreateExtraSelectionButtons(UIPanel panel, UIComponent lastButton)
+        {
+            _setCargoButton = UIUtils.CreateButton(panel);
+            _setCargoButton.text = "Cargo";
+            _setCargoButton.relativePosition = UIUtils.RightOf(lastButton);
+            _setCargoButton.anchor = UIAnchorStyle.Left | UIAnchorStyle.CenterVertical;
+            _setCargoButton.eventClicked += (_, __) =>
+            {
+                EditSelectedCargo();
+            };
+        }
 
         protected override void CreateEditButtons(UIPanel panel)
         {
@@ -36,6 +49,24 @@ namespace RandomTrainTrailers.UI
             {
                 ImportTrailer();
             };
+        }
+
+        private void EditSelectedCargo()
+        {
+            var rows = List.GetSelectedRows();
+            if (rows.Count == 0)
+                return;
+
+            var combinedFlags = CargoFlags.None;
+            foreach (var row in rows)
+                combinedFlags |= row.Value.CargoType;
+
+            UIFlagsPanel.Main.Content.Show(combinedFlags, (flags) =>
+            {
+                foreach (var row in rows)
+                    row.Value.CargoType = flags;
+                List.Refresh();
+            });
         }
 
         private void ImportAllTrailers()

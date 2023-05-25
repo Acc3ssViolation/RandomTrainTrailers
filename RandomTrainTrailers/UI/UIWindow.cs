@@ -58,6 +58,8 @@ namespace RandomTrainTrailers.UI
 
     public class UIWindow : UIPanel
     {
+        public static Transform GlobalParent { get; set; }
+
         public string Title
         {
             get
@@ -218,8 +220,8 @@ namespace RandomTrainTrailers.UI
         private static UIWindowHandle<T> Create<T>(float width, float height, string title) where T : UIPanel
         {
             var go = new GameObject(title);
-            var view = UIView.GetAView();
-            go.transform.SetParent(view.transform);
+            var parent = GlobalParent ?? UIView.GetAView().transform;
+            go.transform.SetParent(parent);
 
             var window = go.AddComponent<UIWindow>();
             window._contentType = typeof(T);

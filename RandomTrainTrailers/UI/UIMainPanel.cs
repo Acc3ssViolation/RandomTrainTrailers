@@ -130,6 +130,7 @@ namespace RandomTrainTrailers.UI
             go.transform.parent = this.gameObject.transform;
             go.AddComponent<UIMultiTrailerPanel>();
 
+            UIWindow.GlobalParent = transform;
             _trainPoolWindow = UIWindow.Create<UITrainPoolPanel>();
             _locomotivePoolWindow = UIWindow.Create<UILocomotivesPanel>();
             _trailerPoolWindow = UIWindow.Create<UITrailersPanel>();
