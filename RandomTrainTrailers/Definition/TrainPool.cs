@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using ColossalFramework.Math;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace RandomTrainTrailers.Definition
@@ -50,7 +50,7 @@ namespace RandomTrainTrailers.Definition
         public override bool IsAvailable => Reference != null;
     }
 
-    public class TrainPool : IEnableable
+    public class TrainPool : IEnableable, IRandomTrailerCollection
     {
         public class TrailerReference : ItemReference<TrailerReference, Trailer>
         {
@@ -159,6 +159,17 @@ namespace RandomTrainTrailers.Definition
                 copy.Trailers.Add(item);
             }
             return copy;
+        }
+
+        public Trailer GetTrailer(Randomizer randomizer)
+        {
+            return Trailers[randomizer.Int32((uint)Trailers.Count)].Reference;
+        }
+
+        public Trailer GetTrailerForCargo(int cargoIndex, Randomizer randomizer)
+        {
+            // TODO: Implement properly
+            return GetTrailer(randomizer);
         }
     }
 }

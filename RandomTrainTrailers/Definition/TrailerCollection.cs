@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ColossalFramework.Math;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -8,7 +9,7 @@ namespace RandomTrainTrailers.Definition
     /// <summary>
     /// Represents a collection of trailers.
     /// </summary>
-    public class TrailerCollection
+    public class TrailerCollection : IRandomTrailerCollection
     {
         public class CargoData
         {
@@ -120,12 +121,7 @@ namespace RandomTrainTrailers.Definition
             return copy;
         }
 
-        public Trailer GetRandomTrailer()
-        {
-            return Trailers[GetRandomTrailerIndex()];
-        }
-
-        public int GetRandomTrailerIndex()
+        private int GetRandomTrailerIndex()
         {
             if (m_trailerCDF == null)
             {
@@ -149,6 +145,26 @@ namespace RandomTrainTrailers.Definition
             }
 
             return randomTrailerIndex;
+        }
+
+        public Trailer GetTrailer(Randomizer randomizer)
+        {
+            var index = GetRandomTrailerIndex();
+            if (index < 0)
+                return null;
+            return Trailers[index];
+        }
+
+        public Trailer GetTrailerForCargo(int cargoIndex, Randomizer randomizer)
+        {
+            if (m_cargoData == null)
+                return null;
+
+            var index = m_cargoData.GetRandomTrailerIndex(cargoIndex);
+            if (index < 0)
+                return null;
+
+            return m_cargoData.m_trailers[cargoIndex][index];
         }
     }
 }
