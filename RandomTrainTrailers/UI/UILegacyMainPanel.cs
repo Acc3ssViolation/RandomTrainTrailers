@@ -576,6 +576,9 @@ namespace RandomTrainTrailers.UI
 
         public void UpdateTrainList()
         {
+            if (vehicleDropdown == null)
+                return;
+
             vehicleDropdown.items = new string[0];
             if(m_userDefinition != null)
             {

@@ -44,6 +44,7 @@ namespace RandomTrainTrailers
 
         public IList<TrailerDefinition> GetDefinitions()
         {
+            // Always return a copy of the list so it can't be modified
             return _loadedDefinitions.ToList();
         }
 

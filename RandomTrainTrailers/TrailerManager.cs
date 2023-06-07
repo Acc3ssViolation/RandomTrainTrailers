@@ -39,7 +39,9 @@ namespace RandomTrainTrailers
             ConfigurationManager.instance.Reset();
 
             // Load default
-            ConfigurationManager.instance.Add(ConfigurationManager.Default, DefaultTrailerConfig.DefaultDefinition);
+            var defaultDefinition = DefaultTrailerConfig.DefaultDefinition;
+            if (defaultDefinition != null)
+                ConfigurationManager.instance.Add(ConfigurationManager.Default, defaultDefinition);
 
             // Load mods and assets
             var loader = new SharedTrailerConfigLoader();
@@ -338,6 +340,7 @@ namespace RandomTrainTrailers
                 if (!pool.Enabled)
                     continue;
 
+                var isUsed = false;
                 foreach (var locomotiveRef in pool.Locomotives)
                 {
                     var locomotive = locomotiveRef.Reference;
@@ -350,7 +353,11 @@ namespace RandomTrainTrailers
                         _leadVehicleToPool[locomotive.AssetName] = poolsForLocomotive;
                     }
                     poolsForLocomotive.Add(pool);
+                    isUsed = true;
                 }
+
+                if (isUsed)
+                    pool.BuildDistribution();
             }
 
             // All vehicles should now be valid
@@ -367,55 +374,9 @@ namespace RandomTrainTrailers
                     _vehicleDict[vehicle.AssetName] = vehicle;
                 }
 
-                // Cargo
+                // Ensure cargo distributions are created
                 foreach(var collection in vehicle.m_trailerCollections)
-                {
-                    if(collection.m_trailerCollection.m_cargoData != null)
-                    {
-                        continue;
-                    }
-
-                    collection.m_trailerCollection.m_cargoData = new TrailerCollection.CargoData();
-
-                    // Use lists in the adding process
-                    var lists = new List<Trailer>[CargoParcel.ResourceTypes.Length];
-                    for(int i = 0; i < lists.Length; i++)
-                    {
-                        lists[i] = new List<Trailer>();
-                    }
-
-                    foreach(var trailer in collection.m_trailerCollection.Trailers)
-                    {
-                        if(trailer.IsCollection) continue;
-
-                        if(trailer.CargoType == CargoFlags.None)
-                        {
-                            // add to all
-                            for(int i = 0; i < lists.Length; i++)
-                            {
-                                lists[i].Add(trailer);
-                            }
-                        }
-                        else
-                        {
-                            // Add to flagged types
-                            for(int i = 0; i < CargoParcel.ResourceTypes.Length; i++)
-                            {
-                                if((trailer.CargoType & CargoParcel.ResourceTypes[i]) > 0)
-                                {
-                                    lists[i].Add(trailer);
-                                }
-                            }
-                        }
-                    }
-
-                    // Convert lists to arrays and store them
-
-                    for(int i = 0; i < lists.Length; i++)
-                    {
-                        collection.m_trailerCollection.m_cargoData.m_trailers[i] = lists[i].ToArray();
-                    }
-                }
+                    collection.m_trailerCollection.BuildDistribution();
             }
 
             GC.Collect();

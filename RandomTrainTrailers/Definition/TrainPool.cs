@@ -1,5 +1,6 @@
 ﻿using ColossalFramework.Math;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace RandomTrainTrailers.Definition
@@ -131,6 +132,9 @@ namespace RandomTrainTrailers.Definition
         [XmlAttribute("enabled")]
         public bool Enabled { get; set; } = true;
 
+        [XmlIgnore]
+        private WeightedTrailerDistribution _trailerDistribution;
+
         public TrainPool()
         {
             Name = string.Empty;
@@ -161,15 +165,22 @@ namespace RandomTrainTrailers.Definition
             return copy;
         }
 
+        public void BuildDistribution(bool force = false)
+        {
+            if (!force && _trailerDistribution != null)
+                return;
+
+            _trailerDistribution = new WeightedTrailerDistribution(Trailers.Select(t => t.Reference));
+        }
+
         public Trailer GetTrailer(Randomizer randomizer)
         {
-            return Trailers[randomizer.Int32((uint)Trailers.Count)].Reference;
+            return _trailerDistribution?.GetTrailer(randomizer);
         }
 
         public Trailer GetTrailerForCargo(int cargoIndex, Randomizer randomizer)
         {
-            // TODO: Implement properly
-            return GetTrailer(randomizer);
+            return _trailerDistribution?.GetTrailerForCargo(cargoIndex, randomizer);
         }
     }
 }

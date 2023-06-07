@@ -304,6 +304,9 @@ namespace RandomTrainTrailers
 
         private static int FindNextCargoIndexWithTailers(int[] trailers, int cargoIndex)
         {
+            if (cargoIndex < 0)
+                cargoIndex = 0;
+
             while (cargoIndex < trailers.Length && trailers[cargoIndex] <= 0)
                 cargoIndex++;
             if (cargoIndex >= trailers.Length)

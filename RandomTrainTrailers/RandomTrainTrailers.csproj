@@ -137,6 +137,7 @@
     <Compile Include="Util.cs" />
     <Compile Include="VehicleExtensions.cs" />
     <Compile Include="VehiclePrefabs.cs" />
+    <Compile Include="WeightedTrailerDistribution.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
