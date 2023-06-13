@@ -91,6 +91,7 @@
     <Compile Include="Loading\EffectPatchHook.cs" />
     <Compile Include="Loading\PrefabLoading.cs" />
     <Compile Include="LocomotiveImporter.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="TrailerImporter.cs" />
     <Compile Include="TrailerRandomizer.cs" />
     <Compile Include="Mod.cs" />

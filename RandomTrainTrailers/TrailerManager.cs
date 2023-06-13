@@ -10,6 +10,11 @@ using System.Xml.Serialization;
 
 namespace RandomTrainTrailers
 {
+    public class TrailerManagerInspector : Singleton<TrailerManagerInspector>
+    {
+        public IList<TrainPool> Pools => TrailerManager.TrainPools;
+    }
+
     public static class TrailerManager
     {
         public static readonly SavedInt GlobalTrailerLimit = new SavedInt("globalTrailerLimit", Mod.settingsFile, -1, true);
@@ -25,8 +30,12 @@ namespace RandomTrainTrailers
         private static HashSet<string> _removedCollections = new HashSet<string>();
         private static HashSet<string> _removedVehicles = new HashSet<string>();
 
+        public static IList<TrainPool> TrainPools => _leadVehicleToPool.Values.SelectMany(p => p).Distinct().ToList();
+
         public static void Setup()
         {
+            TrailerManagerInspector.Ensure();
+
             _removedTrailers.Clear();
             _removedCollections.Clear();
             _removedVehicles.Clear();

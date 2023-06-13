@@ -13,6 +13,16 @@ namespace RandomTrainTrailers
     /// </summary>
     static class TrailerRandomizer
     {
+        private static DeferredLogger _logger;
+
+        private static void BeginLogger()
+        {
+            if (_logger == null)
+                _logger = new DeferredLogger();
+            else
+                _logger.Clear();
+        }
+
         /// <summary>
         /// Randomizes a vehicle's trailers based on the given config
         /// </summary>
@@ -21,9 +31,11 @@ namespace RandomTrainTrailers
         /// <param name="config">The randomization config to use</param>
         public static void RandomizeTrailers(ref Vehicle vehicle, ushort id, Definition.Vehicle config, Randomizer randomizer)
         {
-            if(config == null || vehicle.Info.m_trailers == null || vehicle.Info.m_trailers.Length == 0) { return; }
+            if (config == null || vehicle.Info.m_trailers == null || vehicle.Info.m_trailers.Length == 0) { return; }
 
-            if(vehicle.Info.m_vehicleAI.VerticalTrailers())
+            BeginLogger();
+
+            if (vehicle.Info.m_vehicleAI.VerticalTrailers())
             {
                 Util.LogWarning("Trying to randomize trailers for vehicle with vertical trailers, not a supported usecase, vehicle may appear strangely");
             }
@@ -77,7 +89,6 @@ namespace RandomTrainTrailers
             }
 
             // Spawn new trailers
-            var debug_spawnedTrailers = new List<string>();
             // Select which collection to use
             var trailerCollection = config.GetRandomCollection();
 
@@ -113,7 +124,7 @@ namespace RandomTrainTrailers
                                 prevVehicleId = newTrailerId;
                                 emptiesCount[cargoTypeIndex] -= spawnedTrailerCount - 1;        // Remove additionally spawned multi-trailers from our empties reserve
 
-                                debug_spawnedTrailers.Add(string.Format("Spawned Filled Cargo Type: {0}, was supposed to be {1}",
+                                _logger.Add(string.Format("Spawned Filled Cargo Type: {0}, was supposed to be {1}",
                                     CargoParcel.FlagIndexToName(assignedCargoIndex),
                                     CargoParcel.FlagIndexToName(cargoTypeIndex)));
                             }
@@ -134,7 +145,7 @@ namespace RandomTrainTrailers
 
                                 emptiesCount[cargoTypeIndex] -= spawnedTrailerCount;
 
-                                debug_spawnedTrailers.Add(string.Format("Spawned Empty Cargo Type: {0}, was supposed to be {1}",
+                                _logger.Add(string.Format("Spawned Empty Cargo Type: {0}, was supposed to be {1}",
                                     CargoParcel.FlagIndexToName(assignedCargoIndex),
                                     CargoParcel.FlagIndexToName(cargoTypeIndex)));
                             }
@@ -149,7 +160,7 @@ namespace RandomTrainTrailers
                             i += spawnedTrailerCount - 1;
                             prevVehicleId = newTrailerId;
 
-                            debug_spawnedTrailers.Add("Spawned Random");
+                            _logger.Add("Spawned Random");
                         }
                     }
 
@@ -167,7 +178,7 @@ namespace RandomTrainTrailers
                     {
                         prevVehicleId = trailerId;
 
-                        debug_spawnedTrailers.Add("Spawned Default");
+                        _logger.Add("Spawned Default");
                     }
                 }
                 else
@@ -183,7 +194,7 @@ namespace RandomTrainTrailers
                     {
                         prevVehicleId = trailerId;
 
-                        debug_spawnedTrailers.Add("Spawned Default");
+                        _logger.Add("Spawned Default");
                     }
                 }
             }
@@ -196,18 +207,19 @@ namespace RandomTrainTrailers
             {
                 Util.Log(string.Format("Cargo for {0} [{1}]\r\n", info.name, id) + debug_cargoContents.Aggregate((sequence, next) => sequence + "\r\n" + next));
             }
-            if(debug_spawnedTrailers.Count > 0)
+            if(_logger.Length > 0)
             {
                 Util.Log(string.Format("Collection {2} was used for {0} [{1}]\r\n", info.name, id, trailerCollection.Name));
 
-                Util.Log(string.Format("Spawned trailers for {0} [{1}]\r\n", info.name, id) +
-                    debug_spawnedTrailers.Aggregate((sequence, next) => sequence + "\r\n" + next) + 
-                    string.Format("\r\n{0} filled trailers were assigned out of {1} available", assignedCargoWagons, availableCargoWagons));
+                Util.Log(string.Format("Spawned trailers for {0} [{1}]: {0} filled trailers were assigned out of {1} available", info.name, id, assignedCargoWagons, availableCargoWagons));
+                _logger.Log();
             }
         }
 
         public static void GenerateTrain(ref Vehicle vehicle, ushort id, TrainPool pool, Locomotive leadLocomotive, Randomizer randomizer)
         {
+            BeginLogger();
+
             var trainLength = randomizer.Int32(pool.MinTrainLength, pool.MaxTrainLength);
             if (TrailerManager.GlobalTrailerLimit > 0 && trainLength > TrailerManager.GlobalTrailerLimit.value)
                 trainLength = TrailerManager.GlobalTrailerLimit.value;
@@ -259,8 +271,8 @@ namespace RandomTrainTrailers
                         {
                             // Switch to spawning empty trailers
                             spawnEmpties = true;
-                            cargoIndex = FindNextCargoIndexWithTailers(trailers, cargoIndex);
                             trailers = trailerCounts.EmptyTrailers;
+                            cargoIndex = FindNextCargoIndexWithTailers(trailers, cargoIndex);
                         }
                         else
                         {
@@ -273,6 +285,8 @@ namespace RandomTrainTrailers
 
                     if (spawnedCount == 0)
                         continue;
+
+                    _logger.Add($"Trailer: Empty = {spawnEmpties}, Desired cargo {cargoIndex}, got cargo {assignedCargoIndex}");
 
                     // Subtract the spawned trailers from the available trailer count for this cargo type
                     trailers[cargoIndex] -= spawnedCount;
@@ -291,6 +305,8 @@ namespace RandomTrainTrailers
                     if (spawnedCount == 0)
                         continue;
 
+                    _logger.Add($"Trailer: Gate index {gateIndex}");
+
                     totalSpawnedCount += spawnedCount;
                     prevVehicleId = trailerId;
                 }
@@ -300,6 +316,7 @@ namespace RandomTrainTrailers
             ClearFlagsFromVehicle(prevVehicleId, 0, Vehicle.Flags2.MiddleTrailer);
 
             Util.Log($"Spawned {locomotiveCount} locomotives for a total train length of {trainLength} for {vehicle.Info.name} [{id}] using pool {pool.Name}");
+            _logger.Log();
         }
 
         private static int FindNextCargoIndexWithTailers(int[] trailers, int cargoIndex)
@@ -359,6 +376,8 @@ namespace RandomTrainTrailers
 
         private static TrailerCount CalculateTrailerCount(int[] cargoContents, int totalTrailerCount, int cargoCapacity)
         {
+            var log = new DeferredLogger();
+
             var result = TrailerCount.Create();
             var assignedCargoWagons = 0;
             if (totalTrailerCount > 0)
@@ -366,7 +385,8 @@ namespace RandomTrainTrailers
                 for (int i = 0; i < cargoContents.Length; i++)
                 {
                     result.LoadedTrailers[i] = (cargoContents[i] * totalTrailerCount + cargoCapacity - 1) / cargoCapacity;
-                    assignedCargoWagons += cargoContents[i];
+                    assignedCargoWagons += result.LoadedTrailers[i];
+                    log.Add($"{result.LoadedTrailers[i]} trailers for cargo index {i}");
                 }
 
                 // Assign what cargo types the empties should have
@@ -377,7 +397,7 @@ namespace RandomTrainTrailers
                     int k = 0;
                     while (emptySlots > 0)
                     {
-                        while (cargoContents[k % cargoContents.Length] == 0) { k++; }
+                        while (result.LoadedTrailers[k % result.LoadedTrailers.Length] == 0) { k++; }
                         result.EmptyTrailers[k % result.EmptyTrailers.Length]++;
                         emptySlots--;
                         k++;
@@ -388,7 +408,13 @@ namespace RandomTrainTrailers
                     // All in generic goods, the above algorithm would run forever
                     result.EmptyTrailers[8] = totalTrailerCount;
                 }
+
+                for (var i = 0; i < result.EmptyTrailers.Length; i++)
+                    log.Add($"{result.EmptyTrailers[i]} empty trailers for cargo index {i}");
             }
+
+            log.Log();
+
             return result;
         }
 
@@ -422,6 +448,8 @@ namespace RandomTrainTrailers
             }
 
             lastId = previousId;
+
+            _logger.Add($"Locomotive: {locomotive.AssetName}");
 
             return spawnedCount;
         }
@@ -473,7 +501,6 @@ namespace RandomTrainTrailers
             }
 
             byte gateIndex = CargoParcel.FlagIndexToGateIndex(assignedCargoIndex);
-
             return SpawnTrailerDefinition(out lastTrailerId, prevVehicleId, trailer, randomizer, empty ? CargoParcel.GetEmptyGateIndex(gateIndex) : gateIndex);
         }
 
@@ -570,6 +597,8 @@ namespace RandomTrainTrailers
             Singleton<VehicleManager>.instance.m_vehicles.m_buffer[trailerId].Spawn(trailerId);
             Singleton<VehicleManager>.instance.m_vehicles.m_buffer[trailerId].m_flags2 |= (Vehicle.Flags2)ExtendedVehicleFlags.NoLights;
             Singleton<VehicleManager>.instance.m_vehicles.m_buffer[trailerId].m_flags2 |= Vehicle.Flags2.MiddleTrailer;
+
+            _logger.Add($"Created vehicle [{trailerId}] '{trailerInfo.name}', Inverted = {inverted}, Gate Index = {gateIndex}");
 
             return true;
         }
