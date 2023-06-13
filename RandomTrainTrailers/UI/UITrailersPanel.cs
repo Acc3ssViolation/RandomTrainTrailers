@@ -120,6 +120,7 @@ namespace RandomTrainTrailers.UI
         private void ImportAllTrailersImpl()
         {
             var available = UIDataManager.instance.AvailableDefinition;
+            var addedTrailers = new HashSet<string>();
             foreach (var collection in available.Collections)
             {
                 foreach (var trailer in collection.Trailers)
@@ -128,9 +129,13 @@ namespace RandomTrainTrailers.UI
                         continue;
                     if (available.Trailers.Any(l => l.AssetName == trailer.AssetName))
                         continue;
+                    // Had some problems with trailers existing in multiple places, this should filter that out
+                    if (addedTrailers.Contains(trailer.AssetName))
+                        continue;
 
                     Util.Log($"Imported '{trailer.AssetName}' as trailer from collection '{collection.Name}'");
                     UIDataManager.instance.EditDefinition.Trailers.Add(trailer.Copy());
+                    addedTrailers.Add(trailer.AssetName);
                 }
             }
 
