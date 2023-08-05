@@ -61,6 +61,15 @@ namespace RandomTrainTrailers
                         list.Add(trailer);
                 }
             }
+
+            // Fix for distributions without any cargo settings
+            if (_trailersPerCargoType.All(l => l == null))
+            {
+                // Workaround for ArrayTypeMismatchException on CS's Mono version, we can't just assign _trailers to an IList<>
+                var trailerList = new List<Trailer>(_trailers);
+                for (var cargoIndex = 0; cargoIndex < CargoTypeCount; cargoIndex++)
+                    _trailersPerCargoType[cargoIndex] = trailerList;
+            }
         }
     }
 }

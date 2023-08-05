@@ -57,11 +57,16 @@ namespace RandomTrainTrailers
 
         public static VehicleInfo FindVehicle(string prefabName, string packageName)
         {
+            // Prevent unnecessary logging
+            var restore = CODebugBase<LogChannel>.IsChannelEnabled(LogChannel.Serialization);
+            CODebugBase<LogChannel>.DisableChannels(LogChannel.Serialization);
             var prefab = PrefabCollection<VehicleInfo>.FindLoaded(prefabName) ??
                          PrefabCollection<VehicleInfo>.FindLoaded(prefabName + "_Data") ??
                          PrefabCollection<VehicleInfo>.FindLoaded(PathEscaper.Escape(prefabName) + "_Data") ??
                          PrefabCollection<VehicleInfo>.FindLoaded(packageName + "." + prefabName + "_Data") ??
                          PrefabCollection<VehicleInfo>.FindLoaded(packageName + "." + PathEscaper.Escape(prefabName) + "_Data");
+            if (restore)
+                CODebugBase<LogChannel>.EnableChannels(LogChannel.Serialization);
 
             return prefab;
         }
