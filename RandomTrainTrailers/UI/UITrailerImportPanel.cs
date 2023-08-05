@@ -184,7 +184,8 @@ namespace RandomTrainTrailers.UI
 
         private void CreateBasicTrailer()
         {
-            var trailer = new Trailer(_vehicleInfo)
+            var info = GetVehicleRenderInfo(_data.startIndex);
+            var trailer = new Trailer(info.VehicleInfo)
             {
                 CargoType = _data.cargo,
             };

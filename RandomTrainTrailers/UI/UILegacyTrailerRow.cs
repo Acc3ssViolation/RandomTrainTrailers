@@ -85,7 +85,7 @@ namespace RandomTrainTrailers.UI
             buttonEditMulti.eventClicked += (c, e) => {
                 if(!checkEvents) { return; }
 
-                UIMultiTrailerPanel.main.Show(m_currentDataItem);
+                UIMultiTrailerPanel.Main.Content.Show(m_currentDataItem);
             };
 
             // Button for removing prefab

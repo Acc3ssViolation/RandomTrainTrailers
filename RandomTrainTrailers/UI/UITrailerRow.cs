@@ -164,8 +164,8 @@ namespace RandomTrainTrailers.UI
         {
             if (_data.Value.IsMultiTrailer)
             {
-                // TODO: Replace with new UI
-                UIMultiTrailerPanel.main.Show(_data.Value);
+                // TODO: Replace with a new UI
+                UIMultiTrailerPanel.Main.Content.Show(_data.Value, false);
             }
             else
             {

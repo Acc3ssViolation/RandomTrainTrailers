@@ -4,9 +4,21 @@ using UnityEngine;
 
 namespace RandomTrainTrailers.UI
 {
-    public class UIMultiTrailerPanel : UIPanel
+    public class UIMultiTrailerPanel : UIWindowPanel
     {
-        public static UIMultiTrailerPanel main { get; private set; }
+        private static UIWindowHandle<UIMultiTrailerPanel> _main;
+
+        public static UIWindowHandle<UIMultiTrailerPanel> Main
+        {
+            get
+            {
+                if (_main == null)
+                {
+                    _main = UIWindow.Create<UIMultiTrailerPanel>();
+                }
+                return _main;
+            }
+        }
 
         private UIFastList m_trailerFastList;
         private UIPanel m_propertiesPanel;
@@ -16,78 +28,47 @@ namespace RandomTrainTrailers.UI
         private UITextField m_nameField;
 
         public Trailer CurrentMultiTrailer { get { return m_selectedTrailer; } }
+
+        public override float DefaultWidth => WIDTH;
+
+        public override float DefaultHeight => HEIGHT;
+
+        public override string DefaultTitle => "Multi Trailer Editor";
+
+        private bool m_allowEditName;
         private Trailer m_selectedTrailer;
 
-        public const int HEIGHT = 550;
+        public const int HEIGHT = 500;
         public const int WIDTH = 550;
-
-        public override void Awake()
-        {
-            if(main == null)
-            {
-                main = this;
-            }
-            base.Awake();
-        }
 
         public override void Start()
         {
             base.Start();
-            UIView view = UIView.GetAView();
-
-            name = "RTTCollectionsEditor";
-            backgroundSprite = "UnlockingPanel2";
-            isVisible = false;
-            canFocus = true;
-            isInteractive = true;
-            width = WIDTH;
-            height = HEIGHT;
-            relativePosition = new Vector3(Mathf.Floor((view.fixedWidth - width) / 2), Mathf.Floor((view.fixedHeight - height) / 2));
-
             CreateComponents();
+        }
+
+        protected override void OnWindowSet(UIWindow window)
+        {
+            base.OnWindowSet(window);
+            window.Resizable = false;
         }
 
         private void CreateComponents()
         {
-            float verticalOffset = 50;
-
-            // header text
-            UILabel label = AddUIComponent<UILabel>();
-            label.text = "Multi Trailer Editor";
-            label.relativePosition = new Vector3(WIDTH / 2 - label.width / 2, 13);
-
-            // drag
-            UIDragHandle handle = AddUIComponent<UIDragHandle>();
-            handle.target = this;
-            handle.constrainToScreen = true;
-            handle.width = WIDTH;
-            handle.height = 40;
-            handle.relativePosition = Vector3.zero;
-
-            // close button
-            UIButton closeButton = UIUtils.CreateButton(this);
-            closeButton.size = new Vector2(30, 30);
-            closeButton.normalBgSprite = "buttonclose";
-            closeButton.hoveredBgSprite = "buttonclosehover";
-            closeButton.pressedBgSprite = "buttonclosepressed";
-            closeButton.relativePosition = new Vector3(WIDTH - 35, 5);
-            closeButton.eventClicked += (c, p) =>
-            {
-                Hide();
-            };
+            var verticalOffset = 20f;
 
             // Panels
             m_propertiesPanel = AddUIComponent<UIPanel>();
-            m_propertiesPanel.relativePosition = new Vector3(10, verticalOffset + 60);
+            m_propertiesPanel.relativePosition = new Vector3(10, verticalOffset);
             m_propertiesPanel.width = (WIDTH - 25) / 2;
             m_propertiesPanel.height = HEIGHT - verticalOffset - 70;
             //vehiclePanel.backgroundSprite = "UnlockingPanel";
-            label = AddUIComponent<UILabel>();
+            var label = AddUIComponent<UILabel>();
             label.text = "Settings";
             label.relativePosition = m_propertiesPanel.relativePosition + new Vector3(0, -20);
 
             m_trailerPanel = AddUIComponent<UIPanel>();
-            m_trailerPanel.relativePosition = new Vector3(m_propertiesPanel.relativePosition.x + m_propertiesPanel.width + 5, verticalOffset + 60);
+            m_trailerPanel.relativePosition = new Vector3(m_propertiesPanel.relativePosition.x + m_propertiesPanel.width + 5, verticalOffset);
             m_trailerPanel.width = (WIDTH - 25) / 2;
             m_trailerPanel.height = m_propertiesPanel.height;
             //trailerPanel.backgroundSprite = "UnlockingItemBackground";
@@ -160,6 +141,8 @@ namespace RandomTrainTrailers.UI
                 }
             };
             y += padding + m_nameField.height;
+
+            UpdatePanels();
         }
 
         /// <summary>
@@ -208,15 +191,18 @@ namespace RandomTrainTrailers.UI
                 m_trailerPanel.isVisible = false;
             }
 
+            m_nameField.readOnly = !m_allowEditName;
             m_trailerFastList.rowHeight = UISubTrailerRow.HEIGHT;
             m_trailerFastList.rowsData = newRowsData;
         }
 
-        public void Show(Trailer multiTrailer)
+        public void Show(Trailer multiTrailer, bool allowEditName = true)
         {
+            m_allowEditName = allowEditName;
             m_selectedTrailer = multiTrailer;
-            base.Show(true);
-            UpdatePanels();
+            Window.Open();
+            if (m_propertiesPanel != null)
+                UpdatePanels();
         }
     }
 }

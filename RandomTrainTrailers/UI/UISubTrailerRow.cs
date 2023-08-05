@@ -87,11 +87,11 @@ namespace RandomTrainTrailers.UI
             buttonUp.eventClicked += (c, p) => {
                 if(!checkEvents) { return; }
 
-                if(UIMultiTrailerPanel.main.CurrentMultiTrailer != null)
+                if(UIMultiTrailerPanel.Main.Content.CurrentMultiTrailer != null)
                 {
-                    UIMultiTrailerPanel.main.CurrentMultiTrailer.SubTrailers.SwapChecked(m_currentDataItem.index, m_currentDataItem.index - 1);
+                    UIMultiTrailerPanel.Main.Content.CurrentMultiTrailer.SubTrailers.SwapChecked(m_currentDataItem.index, m_currentDataItem.index - 1);
                     //Update UI
-                    UIMultiTrailerPanel.main.UpdatePanels();
+                    UIMultiTrailerPanel.Main.Content.UpdatePanels();
                 }
             };
             buttonUp.tooltip = "Moves the trailer up.";
@@ -106,11 +106,11 @@ namespace RandomTrainTrailers.UI
             buttonDown.eventClicked += (c, p) => {
                 if(!checkEvents) { return; }
                 
-                if(UIMultiTrailerPanel.main.CurrentMultiTrailer != null)
+                if(UIMultiTrailerPanel.Main.Content.CurrentMultiTrailer != null)
                 {
-                    UIMultiTrailerPanel.main.CurrentMultiTrailer.SubTrailers.SwapChecked(m_currentDataItem.index, m_currentDataItem.index + 1);
+                    UIMultiTrailerPanel.Main.Content.CurrentMultiTrailer.SubTrailers.SwapChecked(m_currentDataItem.index, m_currentDataItem.index + 1);
                     //Update UI
-                    UIMultiTrailerPanel.main.UpdatePanels();
+                    UIMultiTrailerPanel.Main.Content.UpdatePanels();
                 }
                 
             };
@@ -130,7 +130,7 @@ namespace RandomTrainTrailers.UI
                 {
                     if(ret == 1)
                     {
-                        UIMultiTrailerPanel.main.RemoveTrailer(m_currentDataItem.data);
+                        UIMultiTrailerPanel.Main.Content.RemoveTrailer(m_currentDataItem.data);
                     }
                 });
             };

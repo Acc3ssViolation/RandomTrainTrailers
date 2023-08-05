@@ -256,6 +256,7 @@ namespace RandomTrainTrailers
             
             if (pool.UseCargo && vehicle.Info.m_vehicleAI is CargoTrainAI cargoTrainAI)
             {
+                // TODO: I have the suspicion this doesn't really work properly based on the trains I'm getting in-game
                 var cargoCounts = GetCargoContents(ref vehicle);
                 var trailerCounts = CalculateTrailerCount(cargoCounts, wagonCount, cargoTrainAI.m_cargoCapacity);
                 var cargoIndex = 0;
@@ -276,6 +277,7 @@ namespace RandomTrainTrailers
                         }
                         else
                         {
+                            // TODO: This branch seems to be taken a lot?
                             // Ran out of trailers... spawn generic goods
                             cargoIndex = 8;
                         }
