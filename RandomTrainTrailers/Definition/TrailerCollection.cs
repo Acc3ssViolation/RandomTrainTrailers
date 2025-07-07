@@ -29,6 +29,9 @@ namespace RandomTrainTrailers.Definition
         public List<Trailer> Trailers { get; set; }
 
         [XmlIgnore]
+        public CargoFlags AvailableCargoTypes => _trailerDistribution.AvailableCargoTypes;
+
+        [XmlIgnore]
         private WeightedTrailerDistribution _trailerDistribution;
 
         public TrailerCollection() : this("New Collection")
@@ -72,6 +75,8 @@ namespace RandomTrainTrailers.Definition
 
         public Trailer GetTrailerForCargo(int cargoIndex, Randomizer randomizer)
         {
+            if (AvailableCargoTypes == CargoFlags.None)
+                Util.LogError($"Tried getting cargo trailer for collection '{Name}' which has no cargo info");
             return _trailerDistribution?.GetTrailerForCargo(cargoIndex, randomizer);
         }
     }

@@ -20,6 +20,8 @@ namespace RandomTrainTrailers
 
         public string Name => throw new NotImplementedException();
 
+        public CargoFlags AvailableCargoTypes { get; private set; }
+
         public Trailer GetTrailer(Randomizer randomizer)
         {
             return _trailers[randomizer.Int32((uint)_trailers.Length)];
@@ -27,7 +29,7 @@ namespace RandomTrainTrailers
 
         public Trailer GetTrailerForCargo(int cargoIndex, Randomizer randomizer)
         {
-            if (cargoIndex < 0 || cargoIndex >= _trailers.Length)
+            if (cargoIndex < 0 || cargoIndex >= _trailersPerCargoType.Length)
                 return null;
 
             var list = _trailersPerCargoType[cargoIndex];
@@ -41,6 +43,7 @@ namespace RandomTrainTrailers
         {
             _trailersPerCargoType = new List<Trailer>[CargoTypeCount];
             _trailers = trailers.ToArray();
+            AvailableCargoTypes = CargoFlags.None;
 
             foreach (var trailer in trailers)
             {
@@ -49,6 +52,7 @@ namespace RandomTrainTrailers
                     if (((int)trailer.CargoType & (1 << cargoIndex)) == 0)
                         continue;
 
+                    AvailableCargoTypes |= (CargoFlags)(1 << cargoIndex);
                     var list = _trailersPerCargoType[cargoIndex];
                     if (list == null)
                     {
@@ -60,15 +64,6 @@ namespace RandomTrainTrailers
                     for (var i = 0; i < trailer.Weight; i++)
                         list.Add(trailer);
                 }
-            }
-
-            // Fix for distributions without any cargo settings
-            if (_trailersPerCargoType.All(l => l == null))
-            {
-                // Workaround for ArrayTypeMismatchException on CS's Mono version, we can't just assign _trailers to an IList<>
-                var trailerList = new List<Trailer>(_trailers);
-                for (var cargoIndex = 0; cargoIndex < CargoTypeCount; cargoIndex++)
-                    _trailersPerCargoType[cargoIndex] = trailerList;
             }
         }
     }

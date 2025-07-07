@@ -101,7 +101,7 @@ namespace RandomTrainTrailers
                 // Check if we can randomize or if we should use the default m_trailers
                 if(i >= config.StartOffset && i < desiredTrailerCount - config.EndOffset)
                 {
-                    if(config.UseCargoContents)
+                    if(config.UseCargoContents && trailerCollection.AvailableCargoTypes != CargoFlags.None)
                     {
                         // Randomize based on cargo
                         // If we have cargo of the current type, spawn a wagon for it
@@ -254,7 +254,7 @@ namespace RandomTrainTrailers
             // Spawn rest of the train
             var wagonCount = trainLength - locomotiveCount;
             
-            if (pool.UseCargo && vehicle.Info.m_vehicleAI is CargoTrainAI cargoTrainAI)
+            if (pool.UseCargo && pool.AvailableCargoTypes != CargoFlags.None && vehicle.Info.m_vehicleAI is CargoTrainAI cargoTrainAI)
             {
                 // TODO: I have the suspicion this doesn't really work properly based on the trains I'm getting in-game
                 var cargoCounts = GetCargoContents(ref vehicle);
