@@ -89,7 +89,7 @@ namespace RandomTrainTrailers
         public static TrailerDefinition GetUserDefinitionFromDisk()
         {
             // User definition is stored in the game app data
-            string path = Path.Combine(ColossalFramework.IO.DataLocation.localApplicationData, "RTT-Definition.xml");
+            string path = Path.Combine(ColossalFramework.IO.DataLocation.localApplicationData, Constants.DefinitionFileName);
             try
             {
                 if(File.Exists(path))
@@ -116,7 +116,7 @@ namespace RandomTrainTrailers
         public static bool StoreUserDefinitionOnDisk(TrailerDefinition definition)
         {
             // User definition is stored in the game app data
-            string path = Path.Combine(ColossalFramework.IO.DataLocation.localApplicationData, "RTT-Definition.xml");
+            string path = Path.Combine(ColossalFramework.IO.DataLocation.localApplicationData, Constants.DefinitionFileName);
             try
             {
                 using(StreamWriter sw = new StreamWriter(path, false))
@@ -136,7 +136,7 @@ namespace RandomTrainTrailers
         private static void LoadUserDefinition()
         {
             // User definition is stored in the game app data
-            string path = Path.Combine(ColossalFramework.IO.DataLocation.localApplicationData, "RTT-Definition.xml");
+            string path = Path.Combine(ColossalFramework.IO.DataLocation.localApplicationData, Constants.DefinitionFileName);
             try
             {
                 if(File.Exists(path))

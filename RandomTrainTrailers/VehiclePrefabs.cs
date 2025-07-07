@@ -13,6 +13,7 @@ namespace RandomTrainTrailers
             public string localeName;
             public VehicleInfo info;
             public bool isTrailer;
+            public bool isWorkshopAsset;
         }
 
         public enum VehicleType

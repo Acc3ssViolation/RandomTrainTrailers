@@ -17,6 +17,8 @@ namespace RandomTrainTrailers.UI
             Collections,
         }
 
+        private static readonly WorkshopDefinitionCache _workshopCache = new WorkshopDefinitionCache();
+
         public static UIFindAssetPanel main { get; private set; }
 
         Action<VehiclePrefabs.VehicleData> m_callback;
@@ -280,8 +282,8 @@ namespace RandomTrainTrailers.UI
                 {
                     foreach(var collection in collections)
                     {
-                        if(string.IsNullOrEmpty(m_searchField.text) ||
-                        collection.Name.ToLower().Contains(m_searchField.text.ToLower()))
+                        if (string.IsNullOrEmpty(m_searchField.text) ||
+                            collection.Name.ToLower().Contains(m_searchField.text.ToLower()))
                         {
                             newRowsData.Add(new VehiclePrefabs.VehicleData() {
                                 localeName = collection.Name
@@ -296,8 +298,8 @@ namespace RandomTrainTrailers.UI
                 {
                     foreach(var collection in collections)
                     {
-                        if(string.IsNullOrEmpty(m_searchField.text) ||
-                        collection.Name.ToLower().Contains(m_searchField.text.ToLower()))
+                        if (string.IsNullOrEmpty(m_searchField.text) ||
+                            collection.Name.ToLower().Contains(m_searchField.text.ToLower()))
                         {
                             newRowsData.Add(new VehiclePrefabs.VehicleData()
                             {
@@ -308,7 +310,20 @@ namespace RandomTrainTrailers.UI
                     }
                 }
 
-                // TODO: Add configs from mods and assets to the list and indicate them as such
+                // Add configs from mods and assets to the list and indicate them as such
+                var workshopCollections = _workshopCache.GetTrailerCollections();
+                foreach (var collection in workshopCollections)
+                {
+                    if (string.IsNullOrEmpty(m_searchField.text) ||
+                        collection.Name.ToLower().Contains(m_searchField.text.ToLower()))
+                    {
+                        newRowsData.Add(new VehiclePrefabs.VehicleData()
+                        {
+                            localeName = collection.Name,
+                            isWorkshopAsset = true,
+                        });
+                    }
+                }
             }
 
 
