@@ -26,30 +26,5 @@ namespace RandomTrainTrailers
         /// <param name="name">Name of the asset/mod</param>
         /// <param name="isMod">Indicates if it's from a mod directory</param>
         public abstract void OnFileFound(string path, string name, bool isMod);
-
-        /// <summary>
-        /// Tries to deserialize an xml file, returns null on failure.
-        /// Exceptions are logged via Logging.
-        /// </summary>
-        /// <typeparam name="T">The type to deserialize</typeparam>
-        /// <param name="path">Path of the .xml file</param>
-        /// <returns>Deserialized object or null on failure</returns>
-        protected T XMLDeserialize<T>(string path) where T : class
-        {
-            T result = null;
-            var xmlSerializer = new XmlSerializer(typeof(T));
-            try
-            {
-                using(var streamReader = new System.IO.StreamReader(path))
-                {
-                    result = xmlSerializer.Deserialize(streamReader) as T;
-                }
-            }
-            catch(Exception e)
-            {
-                Util.LogException(e);
-            }
-            return result;
-        }
     }
 }

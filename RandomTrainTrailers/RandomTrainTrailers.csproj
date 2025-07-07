@@ -73,6 +73,7 @@
     <Compile Include="CargoParcel.cs" />
     <Compile Include="AbstractConfigLoader.cs" />
     <Compile Include="ConfigurationManager.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="DebugBehaviour.cs" />
     <Compile Include="DefaultTrailerConfig.cs" />
     <Compile Include="Definition\BlacklistItem.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="SharedTrailerConfigLoader.cs" />
     <Compile Include="Definition\TrailerDefinition.cs" />
     <Compile Include="TrailerManager.cs" />
+    <Compile Include="WorkshopDefinitionCache.cs" />
     <Compile Include="UI\FilterableFastList.cs" />
     <Compile Include="UI\RowData.cs" />
     <Compile Include="UI\UIAssetRow.cs" />

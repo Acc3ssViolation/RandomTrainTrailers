@@ -8,13 +8,13 @@ namespace RandomTrainTrailers
         {
             get
             {
-                return "RTT-Definition.xml";
+                return Constants.DefinitionFileName;
             }
         }
 
         public override void OnFileFound(string path, string name, bool isMod)
         {
-            var config = XMLDeserialize<TrailerDefinition>(path);
+            var config = Util.XMLDeserialize<TrailerDefinition>(path);
             if(config == null)
             {
                 Util.LogError("Unable to load RTT config for " + (isMod ? "mod ": "asset ") + name);
